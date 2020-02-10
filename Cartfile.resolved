@@ -1,0 +1,6 @@
+binary "https://code.videolan.org/videolan/VLCKit/raw/master/Packaging/VLCKit.json" "3.3.2"
+github "Alamofire/Alamofire" "5.0.0-rc.3"
+github "SwiftyJSON/SwiftyJSON" "4.3.0"
+github "daltoniam/Starscream" "3.1.1"
+github "dduan/Just" "0.8.0"
+github "evgenyneu/keychain-swift" "19.0.0"

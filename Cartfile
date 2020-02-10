@@ -1,0 +1,5 @@
+binary "https://code.videolan.org/videolan/VLCKit/raw/master/Packaging/VLCKit.json" ~> 3.3.0
+github "daltoniam/Starscream" ~> 3.1.1
+github "SwiftyJSON/SwiftyJSON" ~> 4.0
+github "evgenyneu/keychain-swift" ~> 19.0
+github "dduan/Just"

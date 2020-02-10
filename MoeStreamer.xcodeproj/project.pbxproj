@@ -1,0 +1,499 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2B84385A23F0208D00291BDA /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B84385923F0208D00291BDA /* SwiftyJSON.framework */; };
+		2B84385B23F0209100291BDA /* SwiftyJSON.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2B84385923F0208D00291BDA /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2B9DB59E23F0074500950421 /* ListenMoe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DB59D23F0074500950421 /* ListenMoe.swift */; };
+		2B9DB5A023F0085E00950421 /* ServiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DB59F23F0085E00950421 /* ServiceController.swift */; };
+		2BA283F623F08201008E0DEB /* KeychainSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BA283F523F08201008E0DEB /* KeychainSwift.framework */; };
+		2BA283F723F0820F008E0DEB /* KeychainSwift.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BA283F523F08201008E0DEB /* KeychainSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2BA283F923F140EA008E0DEB /* Just.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BA283F823F140EA008E0DEB /* Just.framework */; };
+		2BA283FA23F140EF008E0DEB /* Just.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BA283F823F140EA008E0DEB /* Just.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2BA283FC23F14607008E0DEB /* ViewWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA283FB23F14607008E0DEB /* ViewWrappers.swift */; };
+		2BA9071923F0731300782C94 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA9071823F0731300782C94 /* Settings.swift */; };
+		2BA9071B23F07DF200782C94 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA9071A23F07DF200782C94 /* SettingsView.swift */; };
+		2BCFF60023F1CEEE00A58EFE /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCFF5FF23F1CEEE00A58EFE /* LogView.swift */; };
+		2BCFF60223F1DF9700A58EFE /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCFF60123F1DF9700A58EFE /* Logger.swift */; };
+		2BD486C223EFE3030066F1C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD486C123EFE3030066F1C4 /* AppDelegate.swift */; };
+		2BD486C423EFE3030066F1C4 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD486C323EFE3030066F1C4 /* MainView.swift */; };
+		2BD486C623EFE3070066F1C4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2BD486C523EFE3070066F1C4 /* Assets.xcassets */; };
+		2BD486CC23EFE3070066F1C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2BD486CA23EFE3070066F1C4 /* Main.storyboard */; };
+		2BD486D523EFE6C20066F1C4 /* MenuItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD486D423EFE6C20066F1C4 /* MenuItemController.swift */; };
+		2BD486D823EFF3A40066F1C4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486D723EFF3A40066F1C4 /* AudioToolbox.framework */; };
+		2BD486DA23EFF3AB0066F1C4 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486D923EFF3AB0066F1C4 /* AVFoundation.framework */; };
+		2BD486DC23EFF3B10066F1C4 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486DB23EFF3B10066F1C4 /* CFNetwork.framework */; };
+		2BD486DE23EFF3B70066F1C4 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486DD23EFF3B70066F1C4 /* CoreFoundation.framework */; };
+		2BD486E023EFF3BD0066F1C4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486DF23EFF3BD0066F1C4 /* CoreGraphics.framework */; };
+		2BD486E223EFF3D00066F1C4 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486E123EFF3D00066F1C4 /* CoreMedia.framework */; };
+		2BD486E423EFF3D60066F1C4 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486E323EFF3D60066F1C4 /* CoreText.framework */; };
+		2BD486E623EFF3DA0066F1C4 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486E523EFF3DA0066F1C4 /* CoreVideo.framework */; };
+		2BD486E823EFF3E00066F1C4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486E723EFF3E00066F1C4 /* Foundation.framework */; };
+		2BD486EF23EFF4040066F1C4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486EE23EFF4040066F1C4 /* QuartzCore.framework */; };
+		2BD486F123EFF40A0066F1C4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486F023EFF40A0066F1C4 /* Security.framework */; };
+		2BD486F323EFF40F0066F1C4 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486F223EFF40F0066F1C4 /* VideoToolbox.framework */; };
+		2BD486F423EFF41B0066F1C4 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486E923EFF3E60066F1C4 /* libbz2.tbd */; };
+		2BD486F523EFF41F0066F1C4 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486EB23EFF3F40066F1C4 /* libiconv.tbd */; };
+		2BD486F723EFF4350066F1C4 /* VLCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486F623EFF4350066F1C4 /* VLCKit.framework */; };
+		2BD486FA23EFF7520066F1C4 /* VLCKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BD486F623EFF4350066F1C4 /* VLCKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2BD486FC23EFFE0B0066F1C4 /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD486FB23EFFE0B0066F1C4 /* AudioController.swift */; };
+		2BD486FE23F0046D0066F1C4 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; };
+		2BD486FF23F0047E0066F1C4 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; };
+		2BD4870023F0047E0066F1C4 /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2BD4870123F004830066F1C4 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2BD486F923EFF7490066F1C4 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2BA283F723F0820F008E0DEB /* KeychainSwift.framework in CopyFiles */,
+				2BD486FA23EFF7520066F1C4 /* VLCKit.framework in CopyFiles */,
+				2BD4870023F0047E0066F1C4 /* Starscream.framework in CopyFiles */,
+				2B84385B23F0209100291BDA /* SwiftyJSON.framework in CopyFiles */,
+				2BA283FA23F140EF008E0DEB /* Just.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2B84385923F0208D00291BDA /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
+		2B9DB59D23F0074500950421 /* ListenMoe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenMoe.swift; sourceTree = "<group>"; };
+		2B9DB59F23F0085E00950421 /* ServiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceController.swift; sourceTree = "<group>"; };
+		2BA283F523F08201008E0DEB /* KeychainSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KeychainSwift.framework; path = Carthage/Build/Mac/KeychainSwift.framework; sourceTree = "<group>"; };
+		2BA283F823F140EA008E0DEB /* Just.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Just.framework; path = Carthage/Build/Mac/Just.framework; sourceTree = "<group>"; };
+		2BA283FB23F14607008E0DEB /* ViewWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewWrappers.swift; sourceTree = "<group>"; };
+		2BA9071823F0731300782C94 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		2BA9071A23F07DF200782C94 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2BCFF5FF23F1CEEE00A58EFE /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
+		2BCFF60123F1DF9700A58EFE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		2BD486BE23EFE3030066F1C4 /* MoeStreamer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoeStreamer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BD486C123EFE3030066F1C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2BD486C323EFE3030066F1C4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		2BD486C523EFE3070066F1C4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2BD486CB23EFE3070066F1C4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2BD486CD23EFE3070066F1C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2BD486CE23EFE3070066F1C4 /* MoeStreamer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MoeStreamer.entitlements; sourceTree = "<group>"; };
+		2BD486D423EFE6C20066F1C4 /* MenuItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemController.swift; sourceTree = "<group>"; };
+		2BD486D723EFF3A40066F1C4 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		2BD486D923EFF3AB0066F1C4 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		2BD486DB23EFF3B10066F1C4 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		2BD486DD23EFF3B70066F1C4 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		2BD486DF23EFF3BD0066F1C4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2BD486E123EFF3D00066F1C4 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		2BD486E323EFF3D60066F1C4 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		2BD486E523EFF3DA0066F1C4 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		2BD486E723EFF3E00066F1C4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		2BD486E923EFF3E60066F1C4 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		2BD486EA23EFF3F00066F1C4 /* libbz2.1.0.5.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.5.tbd; path = usr/lib/libbz2.1.0.5.tbd; sourceTree = SDKROOT; };
+		2BD486EB23EFF3F40066F1C4 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		2BD486EC23EFF3FE0066F1C4 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		2BD486EE23EFF4040066F1C4 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		2BD486F023EFF40A0066F1C4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		2BD486F223EFF40F0066F1C4 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		2BD486F623EFF4350066F1C4 /* VLCKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VLCKit.framework; path = Carthage/Build/Mac/VLCKit.framework; sourceTree = "<group>"; };
+		2BD486FB23EFFE0B0066F1C4 /* AudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioController.swift; sourceTree = "<group>"; };
+		2BD486FD23F0046D0066F1C4 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/Mac/Starscream.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2BD486BB23EFE3030066F1C4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BA283F923F140EA008E0DEB /* Just.framework in Frameworks */,
+				2BD486F523EFF41F0066F1C4 /* libiconv.tbd in Frameworks */,
+				2BD486F423EFF41B0066F1C4 /* libbz2.tbd in Frameworks */,
+				2BD486E223EFF3D00066F1C4 /* CoreMedia.framework in Frameworks */,
+				2BD486F323EFF40F0066F1C4 /* VideoToolbox.framework in Frameworks */,
+				2B84385A23F0208D00291BDA /* SwiftyJSON.framework in Frameworks */,
+				2BD486E823EFF3E00066F1C4 /* Foundation.framework in Frameworks */,
+				2BA283F623F08201008E0DEB /* KeychainSwift.framework in Frameworks */,
+				2BD486FE23F0046D0066F1C4 /* Starscream.framework in Frameworks */,
+				2BD486DE23EFF3B70066F1C4 /* CoreFoundation.framework in Frameworks */,
+				2BD486FF23F0047E0066F1C4 /* Starscream.framework in Frameworks */,
+				2BD486EF23EFF4040066F1C4 /* QuartzCore.framework in Frameworks */,
+				2BD486DC23EFF3B10066F1C4 /* CFNetwork.framework in Frameworks */,
+				2BD486DA23EFF3AB0066F1C4 /* AVFoundation.framework in Frameworks */,
+				2BD486E423EFF3D60066F1C4 /* CoreText.framework in Frameworks */,
+				2BD486E023EFF3BD0066F1C4 /* CoreGraphics.framework in Frameworks */,
+				2BD4870123F004830066F1C4 /* Starscream.framework in Frameworks */,
+				2BD486D823EFF3A40066F1C4 /* AudioToolbox.framework in Frameworks */,
+				2BD486F723EFF4350066F1C4 /* VLCKit.framework in Frameworks */,
+				2BD486F123EFF40A0066F1C4 /* Security.framework in Frameworks */,
+				2BD486E623EFF3DA0066F1C4 /* CoreVideo.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2BD486B523EFE3030066F1C4 = {
+			isa = PBXGroup;
+			children = (
+				2BD486C023EFE3030066F1C4 /* MoeStreamer */,
+				2BD486BF23EFE3030066F1C4 /* Products */,
+				2BD486D623EFF3A40066F1C4 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		2BD486BF23EFE3030066F1C4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2BD486BE23EFE3030066F1C4 /* MoeStreamer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2BD486C023EFE3030066F1C4 /* MoeStreamer */ = {
+			isa = PBXGroup;
+			children = (
+				2BD486C323EFE3030066F1C4 /* MainView.swift */,
+				2BA9071A23F07DF200782C94 /* SettingsView.swift */,
+				2BCFF5FF23F1CEEE00A58EFE /* LogView.swift */,
+				2B9DB59D23F0074500950421 /* ListenMoe.swift */,
+				2BCFF60123F1DF9700A58EFE /* Logger.swift */,
+				2BA9071823F0731300782C94 /* Settings.swift */,
+				2B9DB59F23F0085E00950421 /* ServiceController.swift */,
+				2BA283FB23F14607008E0DEB /* ViewWrappers.swift */,
+				2BD486FB23EFFE0B0066F1C4 /* AudioController.swift */,
+				2BD486C123EFE3030066F1C4 /* AppDelegate.swift */,
+				2BD486D423EFE6C20066F1C4 /* MenuItemController.swift */,
+				2BD486C523EFE3070066F1C4 /* Assets.xcassets */,
+				2BD486CA23EFE3070066F1C4 /* Main.storyboard */,
+				2BD486CD23EFE3070066F1C4 /* Info.plist */,
+				2BD486CE23EFE3070066F1C4 /* MoeStreamer.entitlements */,
+			);
+			path = MoeStreamer;
+			sourceTree = "<group>";
+		};
+		2BD486D623EFF3A40066F1C4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2BA283F823F140EA008E0DEB /* Just.framework */,
+				2BA283F523F08201008E0DEB /* KeychainSwift.framework */,
+				2B84385923F0208D00291BDA /* SwiftyJSON.framework */,
+				2BD486FD23F0046D0066F1C4 /* Starscream.framework */,
+				2BD486F623EFF4350066F1C4 /* VLCKit.framework */,
+				2BD486F223EFF40F0066F1C4 /* VideoToolbox.framework */,
+				2BD486F023EFF40A0066F1C4 /* Security.framework */,
+				2BD486EE23EFF4040066F1C4 /* QuartzCore.framework */,
+				2BD486EC23EFF3FE0066F1C4 /* OpenGL.framework */,
+				2BD486EB23EFF3F40066F1C4 /* libiconv.tbd */,
+				2BD486EA23EFF3F00066F1C4 /* libbz2.1.0.5.tbd */,
+				2BD486E923EFF3E60066F1C4 /* libbz2.tbd */,
+				2BD486E723EFF3E00066F1C4 /* Foundation.framework */,
+				2BD486E523EFF3DA0066F1C4 /* CoreVideo.framework */,
+				2BD486E323EFF3D60066F1C4 /* CoreText.framework */,
+				2BD486E123EFF3D00066F1C4 /* CoreMedia.framework */,
+				2BD486DF23EFF3BD0066F1C4 /* CoreGraphics.framework */,
+				2BD486DD23EFF3B70066F1C4 /* CoreFoundation.framework */,
+				2BD486DB23EFF3B10066F1C4 /* CFNetwork.framework */,
+				2BD486D923EFF3AB0066F1C4 /* AVFoundation.framework */,
+				2BD486D723EFF3A40066F1C4 /* AudioToolbox.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2BD486BD23EFE3030066F1C4 /* MoeStreamer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BD486D123EFE3070066F1C4 /* Build configuration list for PBXNativeTarget "MoeStreamer" */;
+			buildPhases = (
+				2BD486BA23EFE3030066F1C4 /* Sources */,
+				2BD486BB23EFE3030066F1C4 /* Frameworks */,
+				2BD486BC23EFE3030066F1C4 /* Resources */,
+				2BD486F923EFF7490066F1C4 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MoeStreamer;
+			productName = SneakyMusicStreamer;
+			productReference = 2BD486BE23EFE3030066F1C4 /* MoeStreamer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2BD486B623EFE3030066F1C4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1130;
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = zhiayang;
+				TargetAttributes = {
+					2BD486BD23EFE3030066F1C4 = {
+						CreatedOnToolsVersion = 11.3;
+					};
+				};
+			};
+			buildConfigurationList = 2BD486B923EFE3030066F1C4 /* Build configuration list for PBXProject "MoeStreamer" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2BD486B523EFE3030066F1C4;
+			productRefGroup = 2BD486BF23EFE3030066F1C4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2BD486BD23EFE3030066F1C4 /* MoeStreamer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2BD486BC23EFE3030066F1C4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BD486CC23EFE3070066F1C4 /* Main.storyboard in Resources */,
+				2BD486C623EFE3070066F1C4 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2BD486BA23EFE3030066F1C4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2BD486C423EFE3030066F1C4 /* MainView.swift in Sources */,
+				2BCFF60223F1DF9700A58EFE /* Logger.swift in Sources */,
+				2BA9071B23F07DF200782C94 /* SettingsView.swift in Sources */,
+				2BD486FC23EFFE0B0066F1C4 /* AudioController.swift in Sources */,
+				2BCFF60023F1CEEE00A58EFE /* LogView.swift in Sources */,
+				2BD486D523EFE6C20066F1C4 /* MenuItemController.swift in Sources */,
+				2B9DB5A023F0085E00950421 /* ServiceController.swift in Sources */,
+				2BA9071923F0731300782C94 /* Settings.swift in Sources */,
+				2B9DB59E23F0074500950421 /* ListenMoe.swift in Sources */,
+				2BA283FC23F14607008E0DEB /* ViewWrappers.swift in Sources */,
+				2BD486C223EFE3030066F1C4 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2BD486CA23EFE3070066F1C4 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2BD486CB23EFE3070066F1C4 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2BD486CF23EFE3070066F1C4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		2BD486D023EFE3070066F1C4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		2BD486D223EFE3070066F1C4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MoeStreamer/MoeStreamer.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 49F59MY7Q4;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/MoeStreamer/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		2BD486D323EFE3070066F1C4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MoeStreamer/MoeStreamer.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 49F59MY7Q4;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/MoeStreamer/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2BD486B923EFE3030066F1C4 /* Build configuration list for PBXProject "MoeStreamer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BD486CF23EFE3070066F1C4 /* Debug */,
+				2BD486D023EFE3070066F1C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2BD486D123EFE3070066F1C4 /* Build configuration list for PBXNativeTarget "MoeStreamer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BD486D223EFE3070066F1C4 /* Debug */,
+				2BD486D323EFE3070066F1C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2BD486B623EFE3030066F1C4 /* Project object */;
+}
