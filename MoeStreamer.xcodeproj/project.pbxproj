@@ -46,6 +46,7 @@
 		2BD486FF23F0047E0066F1C4 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; };
 		2BD4870023F0047E0066F1C4 /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2BD4870123F004830066F1C4 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; };
+		2BD83F8A23F2A01A00422034 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2BD83F8923F2A01A00422034 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -103,6 +104,7 @@
 		2BD486F623EFF4350066F1C4 /* VLCKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VLCKit.framework; path = Carthage/Build/Mac/VLCKit.framework; sourceTree = "<group>"; };
 		2BD486FB23EFFE0B0066F1C4 /* AudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioController.swift; sourceTree = "<group>"; };
 		2BD486FD23F0046D0066F1C4 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/Mac/Starscream.framework; sourceTree = "<group>"; };
+		2BD83F8923F2A01A00422034 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,9 +139,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2B79C81423F1FD19001C87CD /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				2B79C81523F1FD53001C87CD /* views */,
+				2BD486C123EFE3030066F1C4 /* AppDelegate.swift */,
+				2BD486D423EFE6C20066F1C4 /* MenuItemController.swift */,
+			);
+			path = ui;
+			sourceTree = "<group>";
+		};
+		2B79C81523F1FD53001C87CD /* views */ = {
+			isa = PBXGroup;
+			children = (
+				2BD486C323EFE3030066F1C4 /* MainView.swift */,
+				2BA9071A23F07DF200782C94 /* SettingsView.swift */,
+				2BCFF5FF23F1CEEE00A58EFE /* LogView.swift */,
+				2BA283FB23F14607008E0DEB /* ViewWrappers.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		2B79C81623F1FD72001C87CD /* src */ = {
+			isa = PBXGroup;
+			children = (
+				2B79C81423F1FD19001C87CD /* ui */,
+				2B9DB59D23F0074500950421 /* ListenMoe.swift */,
+				2BA9071823F0731300782C94 /* Settings.swift */,
+				2BCFF60123F1DF9700A58EFE /* Logger.swift */,
+				2B9DB59F23F0085E00950421 /* ServiceController.swift */,
+				2BD486FB23EFFE0B0066F1C4 /* AudioController.swift */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
 		2BD486B523EFE3030066F1C4 = {
 			isa = PBXGroup;
 			children = (
+				2BD83F8923F2A01A00422034 /* README.md */,
 				2BD486C023EFE3030066F1C4 /* MoeStreamer */,
 				2BD486BF23EFE3030066F1C4 /* Products */,
 				2BD486D623EFF3A40066F1C4 /* Frameworks */,
@@ -157,17 +194,7 @@
 		2BD486C023EFE3030066F1C4 /* MoeStreamer */ = {
 			isa = PBXGroup;
 			children = (
-				2BD486C323EFE3030066F1C4 /* MainView.swift */,
-				2BA9071A23F07DF200782C94 /* SettingsView.swift */,
-				2BCFF5FF23F1CEEE00A58EFE /* LogView.swift */,
-				2B9DB59D23F0074500950421 /* ListenMoe.swift */,
-				2BCFF60123F1DF9700A58EFE /* Logger.swift */,
-				2BA9071823F0731300782C94 /* Settings.swift */,
-				2B9DB59F23F0085E00950421 /* ServiceController.swift */,
-				2BA283FB23F14607008E0DEB /* ViewWrappers.swift */,
-				2BD486FB23EFFE0B0066F1C4 /* AudioController.swift */,
-				2BD486C123EFE3030066F1C4 /* AppDelegate.swift */,
-				2BD486D423EFE6C20066F1C4 /* MenuItemController.swift */,
+				2B79C81623F1FD72001C87CD /* src */,
 				2BD486C523EFE3070066F1C4 /* Assets.xcassets */,
 				2BD486CA23EFE3070066F1C4 /* Main.storyboard */,
 				2BD486CD23EFE3070066F1C4 /* Info.plist */,
@@ -263,6 +290,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BD83F8A23F2A01A00422034 /* README.md in Resources */,
 				2BD486CC23EFE3070066F1C4 /* Main.storyboard in Resources */,
 				2BD486C623EFE3070066F1C4 /* Assets.xcassets in Resources */,
 			);

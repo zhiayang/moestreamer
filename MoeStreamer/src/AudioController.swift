@@ -6,10 +6,10 @@ import Cocoa
 import VLCKit
 import Foundation
 
-class AudioController : ObservableObject
+class AudioController
 {
-	@Published private var muted = Settings.get(key: "muted", default: false)
-	private var oldVolume: Int32 = 0
+	private var muted: Bool = Settings.get(.audioMuted())
+	private var volume: Int = Settings.get(.audioVolume())
 
 	private let pauseable: Bool
 	private let vlcMP = VLCMediaPlayer()
@@ -17,6 +17,8 @@ class AudioController : ObservableObject
 	init(url: URL, pauseable: Bool)
 	{
 		self.vlcMP.media = VLCMedia(url: url)
+		self.vlcMP.audio.volume = Int32(self.volume)
+
 		self.pauseable = pauseable
 	}
 
@@ -29,10 +31,15 @@ class AudioController : ObservableObject
 			self.vlcMP.audio.volume = Int32(vol)
 		}
 
-		self.oldVolume = Int32(vol)
+		self.volume = vol
 
 		// also change the saved volume
-		Settings.set(key: "volume", value: Double(vol))
+		Settings.set(.audioVolume(), value: vol)
+	}
+
+	func getVolume() -> Int
+	{
+		return self.volume
 	}
 
 	func isMuted() -> Bool
@@ -48,33 +55,46 @@ class AudioController : ObservableObject
 
 	func mute()
 	{
-		self.oldVolume = self.vlcMP.audio.volume
 		self.vlcMP.audio.volume = 0
 		self.muted = true
 
-		Settings.set(key: "muted", value: true)
+		Settings.set(.audioMuted(), value: true)
 	}
 
 	func unmute()
 	{
-		self.vlcMP.audio.volume = self.oldVolume
+		self.vlcMP.audio.volume = Int32(self.volume)
 		self.muted = false
 
-		Settings.set(key: "muted", value: false)
+		Settings.set(.audioMuted(), value: false)
+	}
+
+	func isPlaying() -> Bool
+	{
+		return self.vlcMP.isPlaying
+	}
+
+	func togglePlay()
+	{
+		if self.isPlaying() {
+			self.pause()
+		} else {
+			self.play()
+		}
 	}
 
 	func play()
 	{
-		vlcMP.play()
+		self.vlcMP.play()
 	}
 
 	func pause()
 	{
-		self.pauseable ? vlcMP.pause() : vlcMP.stop()
+		self.pauseable ? self.vlcMP.pause() : self.vlcMP.stop()
 	}
 
 	func stop()
 	{
-		vlcMP.stop()
+		self.vlcMP.stop()
 	}
 }

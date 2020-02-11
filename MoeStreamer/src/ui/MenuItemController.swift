@@ -7,30 +7,38 @@ import Cocoa
 import SwiftUI
 import Foundation
 
+class CustomPopover : NSPopover
+{
+	override func keyDown(with event: NSEvent) {
+		print("key down")
+	}
+}
+
 class MenuItemController : NSObject, NSPopoverDelegate
 {
 	private var statusBar: NSStatusBar
 	private var statusItem: NSStatusItem
 	private var statusBarButton: NSStatusBarButton
 
-	private var popover: NSPopover
+	private var popover: CustomPopover
+
+
+	private var viewWrapper = ViewWrapper()
+	private var musicCon: ServiceController! = nil
 	private var rootView: MainView! = nil
 
-	private var showingSettings: Bool = false
 
 	override init()
 	{
-		self.popover = NSPopover()
+		self.popover = CustomPopover()
 		self.statusBar = NSStatusBar()
 		self.statusItem = statusBar.statusItem(withLength: 28.0)
 		self.statusBarButton = statusItem.button!
 
 		super.init()
 
-		self.rootView = MainView(popover: Binding(get: { self.popover }, set: { x in
-			self.popover = x
-		}))
-
+		self.musicCon = ListenMoeController(activityView: self.viewWrapper)
+		self.rootView = MainView(controller: self.musicCon, viewWrapper: self.viewWrapper)
 		
 		statusBarButton.image = NSImage(named: "Icon")
 		statusBarButton.image?.size = NSSize(width: 16.0, height: 16.0)

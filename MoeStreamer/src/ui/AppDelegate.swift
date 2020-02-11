@@ -13,6 +13,10 @@ class AppDelegate: NSObject, NSApplicationDelegate
 	func applicationDidFinishLaunching(_ aNotification: Notification)
 	{
 		self.menuItem = MenuItemController()
+
+		if Settings.get(.shouldNotifySongChange()) {
+			Notifier.create()
+		}
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification)
