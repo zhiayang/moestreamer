@@ -23,19 +23,26 @@ class ListenMoeSession
 	]
 
 	private var just: JustOf<HTTP> = Just
-	private var activityView: ViewWrapper
+	private var activityView: ViewModel?
 
-	init(activityView: ViewWrapper, performLogin: Bool)
+	init(activityView: ViewModel?, performLogin: Bool)
 	{
 		self.activityView = activityView
 		self.just = JustOf<HTTP>(defaults: JustSessionDefaults(headers: self.defaultHeaders))
 
 		if performLogin {
-			self.login()
+			DispatchQueue.global().async {
+				self.login()
+			}
 		}
 	}
 
-	func login(force: Bool = false, activityView: ViewWrapper? = nil, onSuccess: (() -> Void)? = nil)
+	func setViewModel(viewModel: ViewModel)
+	{
+		self.activityView = viewModel
+	}
+
+	func login(force: Bool = false, activityView: ViewModel? = nil, onSuccess: (() -> Void)? = nil)
 	{
 		self.username = Settings.get(.listenMoeUsername())
 		self.password = Settings.getKeychain(.listenMoePassword())
@@ -53,7 +60,7 @@ class ListenMoeSession
 			return
 		}
 
-		actView.spin()
+		actView?.spin()
 
 		let route = self.apiURL.appendingPathComponent("login")
 		just.post(route, json: [ "username": self.username, "password": self.password ]) { (resp) in
@@ -61,7 +68,6 @@ class ListenMoeSession
 			// we can't do this in this thread, because we're not supposed to poke the UI
 			// from another thread -- and the http response handler presumably does not run
 			// in the UI thread (for obvious reasons).
-			defer { DispatchQueue.main.async { actView.unspin() } }
 
 			if (200...299).contains(resp.statusCode!)
 			{
@@ -78,8 +84,14 @@ class ListenMoeSession
 				// call the handler, if any
 				onSuccess?()
 
-				// after logging in, we should always poke the master activity view to update capabilities
-				self.activityView.poke()
+				// this is a nasty (visual) hack -- we need the parent to be poked so it
+				// can update buttons (eg. logging in lets us favourite songs). BUT, if we
+				// poke the parent before the child animation is finished, then the child's animation
+				// will be cancelled. this is important for the login button in the settings page.
+				// so, we must delay the poking by some amount of time.
+				DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+					self.activityView?.poke()
+				}
 			}
 			else if resp.statusCode! == 401
 			{
@@ -90,6 +102,8 @@ class ListenMoeSession
 				let msg = "\(resp.statusCode!) - \(JSON(parseJSON: resp.text!)["message"].string!)"
 				Logger.log("listen.moe", msg: msg, withView: actView)
 			}
+
+			actView?.unspin()
 		}
 	}
 
@@ -153,14 +167,14 @@ class ListenMoeSession
 					con.setCurrentSong(song: s, quiet: true)
 
 					Logger.log("listen.moe", msg: "favourited \(s.title)", withView: self.activityView)
-					self.activityView.poke()
+					self.activityView?.poke()
 				}
 			}, onFailure: { _ in
 				var s = song
 				s.isFavourite.cancel()
 
 				con.setCurrentSong(song: s, quiet: true)
-				self.activityView.poke()
+				self.activityView?.poke()
 			})
 		}
 	}
@@ -178,14 +192,14 @@ class ListenMoeSession
 					con.setCurrentSong(song: s, quiet: true)
 
 					Logger.log("listen.moe", msg: "unfavourited \(s.title)", withView: self.activityView)
-					self.activityView.poke()
+					self.activityView?.poke()
 				}
 			}, onFailure: { _ in
 				var s = song
 				s.isFavourite.cancel()
 
 				con.setCurrentSong(song: s, quiet: true)
-				self.activityView.poke()
+				self.activityView?.poke()
 			})
 		}
 	}
@@ -204,22 +218,20 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 	private var loginSession: ListenMoeSession
 
 	private var currentSong: Song? = nil
-	private var activityView: ViewWrapper
+	private var activityView: ViewModel?
 	private var pingTimer: Timer? = nil
 
 	private var audioCon: AudioController
 
-	required init(activityView: ViewWrapper)
+	required init()
 	{
 		self.socket = WebSocket(url: self.websocketURL)
-		self.activityView = activityView
-		
 
 		// uwu 
 		self.socket.disableSSLCertValidation = true
 
 		// try to login.
-		self.loginSession = ListenMoeSession(activityView: activityView,
+		self.loginSession = ListenMoeSession(activityView: nil,
 											 performLogin: Settings.get(.shouldAutoLogin()))
 
 		self.audioCon = AudioController(url: self.streamURL, pauseable: false)
@@ -228,12 +240,18 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 		self.socket.connect()
 	}
 
+	func setViewModel(viewModel: ViewModel)
+	{
+		self.activityView = viewModel
+		self.loginSession.setViewModel(viewModel: viewModel)
+	}
+
 	func audioController() -> AudioController
 	{
 		return self.audioCon
 	}
 
-	func sessionLogin(activityView: ViewWrapper, force: Bool)
+	func sessionLogin(activityView: ViewModel?, force: Bool)
 	{
 		// try to login again.
 		self.loginSession.login(force: force, activityView: activityView) {
@@ -247,7 +265,7 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 
 	func getCapabilities() -> ServiceCapabilities
 	{
-		if self.loginSession.isLoggedIn() {
+		if self.loginSession.isLoggedIn() || true {
 			return [ .favourite ]
 		} else {
 			return [ ]
@@ -260,7 +278,7 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 	{
 		self.stop()
 
-		self.activityView.spin()
+		self.activityView?.spin()
 		self.socket.connect()
 	}
 
@@ -296,15 +314,21 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 
 	func setCurrentSong(song: Song, quiet: Bool = false)
 	{
-		if !quiet && self.currentSong?.id != song.id {
-			Logger.log(msg: "song: \(song.title)  --  \(song.artists.joined(separator: ", "))"
-				.appending(song.isFavourite.bool ? " (fav)" : ""))
+		if self.currentSong?.id != song.id
+		{
+			if !quiet
+			{
+				Logger.log(msg: "song: \(song.title)")
+				Notifier.instance?.notify(song: song)
+			}
 
-			Notifier.instance?.notify(song: song)
+//			self.activityView?.onSongChange(song: song)
+			Statistics.instance.logSongPlayed()
 		}
 
 		self.currentSong = song
-		self.activityView.poke()
+		self.activityView?.onSongChange(song: song)
+//		self.activityView?.poke()
 	}
 
 	func toggleFavourite()
@@ -322,7 +346,7 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 				self.loginSession.unfavouriteSong(song: self.currentSong!, con: self)
 			}
 
-			self.activityView.poke()
+			self.activityView?.onSongChange(song: self.currentSong)
 		}
 	}
 
@@ -376,7 +400,7 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 				s.isFavourite = self.loginSession.isFavourite(song: s) ? .Yes : .No
 				self.setCurrentSong(song: s)
 
-				self.activityView.unspin()
+				self.activityView?.unspin()
 			}
 		}
 		else if json["op"].int == 10

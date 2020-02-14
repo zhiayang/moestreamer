@@ -44,6 +44,7 @@ class Logger : ObservableObject
 	public static var instance = Logger()
 
 	@Published var lines: [LogItem] = [ ]
+	@Published var msgRepeatCount: Int = 1
 
 	init()
 	{
@@ -52,11 +53,23 @@ class Logger : ObservableObject
 	func add(_ item: LogItem)
 	{
 		DispatchQueue.main.async {
-			self.lines.append(item)
+			if let last = self.lines.last, last == item
+			{
+				self.msgRepeatCount += 1
+			}
+			else
+			{
+				if self.msgRepeatCount > 1 {
+					self.lines.append(.Log(sender: nil, msg: "(repeated \(self.msgRepeatCount) times)"))
+				}
+
+				self.msgRepeatCount = 1
+				self.lines.append(item)
+			}
 		}
 	}
 
-	static func log(_ id: String, msg: String, withView: ViewWrapper? = nil)
+	static func log(_ id: String, msg: String, withView: ViewModel? = nil)
 	{
 		let x = LogItem.Log(sender: id, msg: msg)
 		print(x.string())
@@ -67,7 +80,7 @@ class Logger : ObservableObject
 		}
 	}
 
-	static func log(msg: String, withView: ViewWrapper? = nil)
+	static func log(msg: String, withView: ViewModel? = nil)
 	{
 		let x = LogItem.Log(sender: nil, msg: msg)
 		print(x.string())
@@ -80,7 +93,7 @@ class Logger : ObservableObject
 
 
 
-	static func error(_ id: String, msg: String, withView: ViewWrapper? = nil)
+	static func error(_ id: String, msg: String, withView: ViewModel? = nil)
 	{
 		let x = LogItem.Error(sender: id, msg: msg)
 		print(x.string())
@@ -91,7 +104,7 @@ class Logger : ObservableObject
 		}
 	}
 
-	static func error(msg: String, withView: ViewWrapper? = nil)
+	static func error(msg: String, withView: ViewModel? = nil)
 	{
 		let x = LogItem.Error(sender: nil, msg: msg)
 		print(x.string())

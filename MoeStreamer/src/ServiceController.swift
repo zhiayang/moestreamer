@@ -6,11 +6,13 @@ import Cocoa
 import Foundation
 import UserNotifications
 
-struct Song
+struct Song : Equatable
 {
+	let id: Int
 	var title: String = ""
 	var album: (String?, NSImage?) = (nil, nil)
 	var artists: [String] = [ ]
+	var isFavourite: FavouriteState = .No
 
 	enum FavouriteState
 	{
@@ -18,18 +20,6 @@ struct Song
 		case No
 		case PendingYes
 		case PendingNo
-
-		func icon() -> NSImage
-		{
-			switch self
-			{
-				case .Yes:     return #imageLiteral(resourceName: "Favourited")
-				case .No:      return #imageLiteral(resourceName: "FavouritedHollow")
-
-				case .PendingYes, .PendingNo:
-					return #imageLiteral(resourceName: "FavouritedHalf")
-			}
-		}
 
 		mutating func toggle()
 		{
@@ -73,8 +63,10 @@ struct Song
 		var bool: Bool { get { self == .Yes || self == .PendingYes } }
 	}
 
-	var isFavourite: FavouriteState = .No
-	let id: Int
+	static func == (lhs: Song, rhs: Song) -> Bool
+	{
+		return lhs.id == rhs.id
+	}
 }
 
 struct ServiceCapabilities : OptionSet
@@ -96,12 +88,13 @@ protocol ServiceController : AnyObject
 	func stop()
 
 	func toggleFavourite()
-	func sessionLogin(activityView: ViewWrapper, force: Bool)
+	func sessionLogin(activityView: ViewModel?, force: Bool)
 
 	func audioController() -> AudioController
 	func getCapabilities() -> ServiceCapabilities
 
-	init(activityView: ViewWrapper)
+	init()
+	func setViewModel(viewModel: ViewModel)
 }
 
 

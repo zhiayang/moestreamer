@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "mac",
-      "filename" : "pending_favourited.png",
+      "filename" : "pause.png",
       "scale" : "1x"
     },
     {
       "idiom" : "mac",
-      "filename" : "pending_favourited@2x.png",
+      "filename" : "pause@2x.png",
       "scale" : "2x"
     }
   ],
@@ -16,6 +16,7 @@
     "author" : "xcode"
   },
   "properties" : {
-    "template-rendering-intent" : "template"
+    "template-rendering-intent" : "template",
+    "preserves-vector-representation" : true
   }
 }

@@ -6,13 +6,13 @@ import Cocoa
 import SwiftUI
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate
+class AppDelegate : NSObject, NSApplicationDelegate
 {
-	var menuItem: MenuItemController!
+	var controller: ViewController!
 
 	func applicationDidFinishLaunching(_ aNotification: Notification)
 	{
-		self.menuItem = MenuItemController()
+		self.controller = ViewController()
 
 		if Settings.get(.shouldNotifySongChange()) {
 			Notifier.create()

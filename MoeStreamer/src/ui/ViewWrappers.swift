@@ -15,6 +15,7 @@ class SavedSettingModel<T> : ObservableObject
 	private let setter: (SettingKey, T) -> Void
 
 	private let didset: ((T) -> Void)?
+	private let willset: ((T) -> Bool)?
 
 	@Published var value: T {
 		didSet {
@@ -23,20 +24,25 @@ class SavedSettingModel<T> : ObservableObject
 			}
 			self.setter(self.key, self.value)
 
-			self.didset?(self.value)
+			if self.willset?(self.value) ?? true {
+				self.didset?(self.value)
+			} else {
+				self.value = oldValue
+			}
 		}
 	}
 
 	init(_ key: SettingKey, disableLogging: Bool = false,
 		 getter: @escaping (SettingKey) -> T = Settings.get,
 		 setter: @escaping (SettingKey, T) -> Void = Settings.set,
-		 didset: ((T) -> Void)? = nil)
+		 didset: ((T) -> Void)? = nil, willset: ((T) -> Bool)? = nil)
 	{
 		self.key = key
 
 		self.getter = getter
 		self.setter = setter
 		self.didset = didset
+		self.willset = willset
 
 		self.value = self.getter(self.key)
 
@@ -44,46 +50,14 @@ class SavedSettingModel<T> : ObservableObject
 	}
 }
 
-class ViewWrapper : ObservableObject
+protocol ViewModel
 {
-	@Published var dummy: Bool = false
-	@Published var status: String = ""
-	@Published var spinning: Int = 0
-
-	func spin()
-	{
-		self.spinning += 1
-	}
-
-	func unspin()
-	{
-		if self.spinning > 0 { self.spinning -= 1 }
-	}
-
-	func setStatus(s: String, timeout: TimeInterval? = nil)
-	{
-		DispatchQueue.main.async {
-			withAnimation(.easeIn(duration: 0.25)) {
-				self.status = s
-			}
-		}
-
-		if let t = timeout {
-			// can't update the UI in background threads.
-			DispatchQueue.main.asyncAfter(deadline: .now() + t) {
-				withAnimation(.easeOut(duration: 0.6)) {
-					self.status = ""
-				}
-			}
-		}
-	}
-
 	func poke()
-	{
-		DispatchQueue.main.async {
-			self.dummy.toggle()
-		}
-	}
+	func spin()
+	func unspin()
+	
+	func setStatus(s: String, timeout: TimeInterval?)
+	func onSongChange(song: Song?)
 }
 
 struct VolumeSlider : NSViewRepresentable
@@ -252,7 +226,7 @@ struct BetterTextField<FieldType: NSTextField> : NSViewRepresentable
 
 public extension View
 {
-	func toolTip(_ toolTip: String) -> some View
+	func tooltip(_ toolTip: String) -> some View
 	{
 		self.overlay(TooltipView(toolTip: toolTip))
 	}

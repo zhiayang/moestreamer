@@ -6,21 +6,40 @@ import Cocoa
 import VLCKit
 import Foundation
 
-class AudioController
+class AudioController : NSObject, VLCMediaPlayerDelegate
 {
 	private var muted: Bool = Settings.get(.audioMuted())
 	private var volume: Int = Settings.get(.audioVolume())
+	private var streamBuffer: Int = Settings.get(.streamBufferMs())
+
+	private var stopped = true
 
 	private let pauseable: Bool
-	private let vlcMP = VLCMediaPlayer()
+	private let streamUrl: URL
+	private let vlcMP: VLCMediaPlayer
 
 	init(url: URL, pauseable: Bool)
 	{
-		self.vlcMP.media = VLCMedia(url: url)
-		self.vlcMP.audio.volume = Int32(self.volume)
-
+		self.vlcMP = VLCMediaPlayer()
 		self.pauseable = pauseable
+		self.streamUrl = url;
+
+		super.init()
+
+		self.vlcMP.delegate = self
+		self.reset()
 	}
+
+	private func reset()
+	{
+		self.vlcMP.media = VLCMedia(url: self.streamUrl)
+		self.vlcMP.media.addOptions([ "network-caching": self.streamBuffer ])
+
+		self.vlcMP.audio.volume = self.muted ? 0 : Int32(self.volume)
+
+		self.stopped = false
+	}
+
 
 	func setVolume(volume: Int)
 	{
@@ -85,6 +104,10 @@ class AudioController
 
 	func play()
 	{
+		if self.stopped {
+			self.reset()
+		}
+		
 		self.vlcMP.play()
 	}
 
@@ -95,6 +118,29 @@ class AudioController
 
 	func stop()
 	{
+		self.stopped = true
 		self.vlcMP.stop()
+	}
+
+
+
+	func mediaPlayerStateChanged(_ notif: Notification!)
+	{
+		switch self.vlcMP.state
+		{
+			case .buffering:
+				Logger.log("audio", msg: "unexpected buffering")
+
+			case .error:
+				Logger.error("audio", msg: "stream error")
+				self.reset()
+
+			case .ended:
+				Logger.error("audio", msg: "unexpected end of stream")
+				self.reset()
+
+			default:
+				break
+		}
 	}
 }

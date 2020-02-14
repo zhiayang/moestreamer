@@ -11,6 +11,7 @@ enum SettingKey
 	case shouldAutoLogin(key: String = "automaticallyLogin", default: Bool = true)
 	case shouldAutoRefresh(key: String = "refreshMetadataOnOpen", default: Bool = true)
 	case shouldNotifySongChange(key: String = "notifyOnSongChange", default: Bool = false)
+	case shouldUseKeyboardShortcuts(key: String = "useKeyboardShortcuts", default: Bool = false)
 
 	case audioMuted(key: String = "muted", default: Bool = false)
 	case audioVolume(key: String = "volume", default: Int = 50)
@@ -18,30 +19,39 @@ enum SettingKey
 	case listenMoeUsername(key: String = "listenMoe_username", default: String = "")
 	case listenMoePassword(key: String = "listenMoe_password", default: String = "")
 
+	case statSongsPlayed(key: String = "stat_songsPlayed", default: Int = 0)
+
+	case streamBufferMs(key: String = "streamBufferMilliseconds", default: Int = 2000)
 
 	var key: String {
 		switch self
 		{
-			case .shouldAutoLogin(let key, _):        return key
-			case .shouldAutoRefresh(let key, _):      return key
-			case .shouldNotifySongChange(let key, _): return key
-			case .audioMuted(let key, _):             return key
-			case .audioVolume(let key, _):            return key
-			case .listenMoeUsername(let key, _):      return key
-			case .listenMoePassword(let key, _):      return key
+			case .shouldAutoLogin(let key, _):            return key
+			case .shouldAutoRefresh(let key, _):          return key
+			case .shouldNotifySongChange(let key, _):     return key
+			case .shouldUseKeyboardShortcuts(let key, _): return key
+			case .audioMuted(let key, _):                 return key
+			case .audioVolume(let key, _):                return key
+			case .listenMoeUsername(let key, _):          return key
+			case .listenMoePassword(let key, _):          return key
+			case .statSongsPlayed(let key, _):            return key
+			case .streamBufferMs(let key, _):             return key
 		}
 	}
 
 	var defaultValue: Any {
 		switch self
 		{
-			case .shouldAutoLogin(_, let def):        return def
-			case .shouldAutoRefresh(_, let def):      return def
-			case .shouldNotifySongChange(_, let def): return def
-			case .audioMuted(_, let def):             return def
-			case .audioVolume(_, let def):            return def
-			case .listenMoeUsername(_, let def):      return def
-			case .listenMoePassword(_, let def):      return def
+			case .shouldAutoLogin(_, let def):            return def
+			case .shouldAutoRefresh(_, let def):          return def
+			case .shouldNotifySongChange(_, let def):     return def
+			case .shouldUseKeyboardShortcuts(_, let def): return def
+			case .audioMuted(_, let def):                 return def
+			case .audioVolume(_, let def):                return def
+			case .listenMoeUsername(_, let def):          return def
+			case .listenMoePassword(_, let def):          return def
+			case .statSongsPlayed(_, let def):            return def
+			case .streamBufferMs(_, let def):             return def
 		}
 	}
 

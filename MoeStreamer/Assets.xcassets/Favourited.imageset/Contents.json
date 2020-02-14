@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "mac",
-      "filename" : "round_favorite_black_48pt_1x.png",
+      "filename" : "favourited.png",
       "scale" : "1x"
     },
     {
       "idiom" : "mac",
-      "filename" : "round_favorite_black_48pt_2x.png",
+      "filename" : "favourited@2x.png",
       "scale" : "2x"
     }
   ],
