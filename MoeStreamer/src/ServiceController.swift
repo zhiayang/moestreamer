@@ -87,14 +87,16 @@ protocol ServiceController : AnyObject
 	func pause()
 	func stop()
 
+	func nextSong()
+
 	func toggleFavourite()
-	func sessionLogin(activityView: ViewModel?, force: Bool)
 
 	func audioController() -> AudioController
 	func getCapabilities() -> ServiceCapabilities
 
 	init()
 	func setViewModel(viewModel: ViewModel)
+	func getViewModel()-> ViewModel?
 }
 
 

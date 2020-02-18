@@ -43,16 +43,32 @@ class Logger : ObservableObject
 {
 	public static var instance = Logger()
 
-	@Published var lines: [LogItem] = [ ]
-	@Published var msgRepeatCount: Int = 1
+	var lines: [LogItem] = [ ]
+	var msgRepeatCount: Int = 1
 
 	init()
 	{
 	}
 
+	func clear()
+	{
+		self.lines = [ ]
+	}
+
+	func getLines() -> [LogItem]
+	{
+		return self.lines
+	}
+
+	func getMsgRepeatCount() -> Int
+	{
+		return self.msgRepeatCount
+	}
+
+
 	func add(_ item: LogItem)
 	{
-		DispatchQueue.main.async {
+		DispatchQueue.global().async {
 			if let last = self.lines.last, last == item
 			{
 				self.msgRepeatCount += 1
@@ -65,6 +81,10 @@ class Logger : ObservableObject
 
 				self.msgRepeatCount = 1
 				self.lines.append(item)
+			}
+
+			if self.lines.count > Settings.get(.logLinesRetain()) {
+				_ = self.lines.removeFirst()
 			}
 		}
 	}

@@ -60,6 +60,7 @@ class ListenMoeSession
 			return
 		}
 
+		self.token = nil
 		actView?.spin()
 
 		let route = self.apiURL.appendingPathComponent("login")
@@ -218,10 +219,10 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 	private var loginSession: ListenMoeSession
 
 	private var currentSong: Song? = nil
-	private var activityView: ViewModel?
+	private var activityView: ViewModel? = nil
 	private var pingTimer: Timer? = nil
 
-	private var audioCon: AudioController
+	private var audioCon: StreamAudioController
 
 	required init()
 	{
@@ -232,9 +233,9 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 
 		// try to login.
 		self.loginSession = ListenMoeSession(activityView: nil,
-											 performLogin: Settings.get(.shouldAutoLogin()))
+											 performLogin: Settings.get(.listenMoeAutoLogin()))
 
-		self.audioCon = AudioController(url: self.streamURL, pauseable: false)
+		self.audioCon = StreamAudioController(url: self.streamURL, pauseable: false)
 
 		self.socket.delegate = self
 		self.socket.connect()
@@ -244,6 +245,11 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 	{
 		self.activityView = viewModel
 		self.loginSession.setViewModel(viewModel: viewModel)
+	}
+
+	func getViewModel() -> ViewModel?
+	{
+		return self.activityView
 	}
 
 	func audioController() -> AudioController
@@ -265,7 +271,7 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 
 	func getCapabilities() -> ServiceCapabilities
 	{
-		if self.loginSession.isLoggedIn() || true {
+		if self.loginSession.isLoggedIn() {
 			return [ .favourite ]
 		} else {
 			return [ ]
@@ -305,6 +311,11 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 		}
 
 		self.pingTimer?.invalidate()
+	}
+
+	func nextSong()
+	{
+		// we cannot
 	}
 
 	func getCurrentSong() -> Song?
@@ -367,7 +378,9 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 		else if json["op"].int == 1
 		{
 			let song = json["d"]["song"]
-			do {
+
+			DispatchQueue.global().async {
+				
 				var s = Song(id: song["id"].int!)
 
 				s.title = song["title"].string!
@@ -381,6 +394,8 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 
 				// the strategy here is to find the first album entry with cover art.
 				var album: (String?, NSImage?) = (nil, nil)
+				var coverArtURL: URL? = nil
+
 				for x in song["albums"].array!
 				{
 					let cov = x["image"].string
@@ -389,7 +404,7 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 						album.0 = x["name"].string!
 						if let img = cov {
 							let url = self.coverArtURL.appendingPathComponent(img)
-							album.1 = NSImage(contentsOf: url)
+							coverArtURL = url
 						}
 					}
 				}
@@ -400,7 +415,19 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 				s.isFavourite = self.loginSession.isFavourite(song: s) ? .Yes : .No
 				self.setCurrentSong(song: s)
 
-				self.activityView?.unspin()
+				if let cov = coverArtURL
+				{
+					DispatchQueue.global().async {
+						var _s = s
+						_s.album.1 = NSImage(contentsOf: cov)
+
+						self.setCurrentSong(song: _s)
+					}
+				}
+				else
+				{
+					self.activityView?.unspin()
+				}
 			}
 		}
 		else if json["op"].int == 10

@@ -6,7 +6,7 @@ import Cocoa
 import SwiftUI
 import Foundation
 
-class SavedSettingModel<T> : ObservableObject
+class SavedSettingModel<T: Equatable> : ObservableObject
 {
 	private let key: SettingKey
 	private let nolog: Bool
@@ -19,6 +19,10 @@ class SavedSettingModel<T> : ObservableObject
 
 	@Published var value: T {
 		didSet {
+			if self.value == oldValue {
+				return
+			}
+
 			if !self.nolog {
 				Logger.log("config", msg: "set \(self.key.name)=\(self.value)")
 			}
@@ -45,7 +49,6 @@ class SavedSettingModel<T> : ObservableObject
 		self.willset = willset
 
 		self.value = self.getter(self.key)
-
 		self.nolog = disableLogging
 	}
 }
@@ -58,170 +61,6 @@ protocol ViewModel
 	
 	func setStatus(s: String, timeout: TimeInterval?)
 	func onSongChange(song: Song?)
-}
-
-struct VolumeSlider : NSViewRepresentable
-{
-	@Binding var value: Int
-
-	func makeNSView(context: Context) -> NSSlider
-	{
-		let slider = NSSlider(value: Double(self.value), minValue: 0, maxValue: 100,
-							  target: context.coordinator,
-							  action: #selector(Coordinator.valueChanged(_:)))
-
-		return slider
-	}
-
-	func updateNSView(_ view: NSSlider, context: Context)
-	{
-		view.doubleValue = Double(self.value)
-	}
-
-	func makeCoordinator() -> Coordinator
-	{
-		return Coordinator(value: $value)
-	}
-
-	final class Coordinator : NSObject
-	{
-		var value: Binding<Int>
-
-		init(value: Binding<Int>)
-		{
-			self.value = value
-		}
-
-		@objc func valueChanged(_ sender: NSSlider)
-		{
-			self.value.wrappedValue = Int(sender.doubleValue)
-		}
-	}
-}
-
-
-struct ActivityIndicator : NSViewRepresentable
-{
-	public typealias Context = NSViewRepresentableContext<Self>
-	public typealias NSViewType = NSProgressIndicator
-
-	private let controlSize: NSControl.ControlSize
-
-	init(size: NSControl.ControlSize = .mini)
-	{
-		self.controlSize = size
-	}
-
-	public func makeNSView(context: Context) -> NSViewType
-	{
-		let nsView = NSProgressIndicator()
-		nsView.isIndeterminate = true
-		nsView.controlSize = self.controlSize
-		nsView.style = .spinning
-
-		return nsView
-	}
-
-	public func updateNSView(_ nsView: NSViewType, context: Context)
-	{
-		nsView.startAnimation(self)
-	}
-}
-
-struct BetterTextField<FieldType: NSTextField> : NSViewRepresentable
-{
-	@Binding var text: String
-	@Binding var field: FieldType?
-
-	var placeholder: String
-	var changeHandler: ((String, FieldType) -> Void)? = nil
-	var finishHandler: ((String, FieldType) -> Void)? = nil
-	var enterHandler: ((String, FieldType) -> Void)? = nil
-
-	init(placeholder: String, text: Binding<String>, field: Binding<FieldType?>,
-		 onTextChanged: ((String, FieldType) -> Void)? = nil,
-		 onFinishEditing: ((String, FieldType) -> Void)? = nil,
-		 onEnter: ((String, FieldType) -> Void)? = nil)
-	{
-		self._text = text
-		self._field = field
-
-		self.placeholder = placeholder
-		self.changeHandler = onTextChanged
-		self.finishHandler = onFinishEditing
-		self.enterHandler = onEnter
-	}
-
-	func makeNSView(context: Context) -> FieldType
-	{
-		let textField = FieldType(string: text)
-
-		textField.delegate = context.coordinator
-		textField.placeholderString = self.placeholder
-
-		textField.target = context.coordinator
-		textField.action = #selector(Coordinator.enterAction(_:))
-		textField.cell?.sendsActionOnEndEditing = false
-
-		DispatchQueue.main.async {
-			self.field = textField
-		}
-
-		return textField
-	}
-
-	func updateNSView(_ nsView: FieldType, context: Context)
-	{
-		nsView.stringValue = text
-	}
-
-	func makeCoordinator() -> Coordinator
-	{
-		return Coordinator(setter: {
-			self.text = $0
-			self.changeHandler?($0, $1)
-		}, finaliser: self.finishHandler, enteriser: self.enterHandler)
-	}
-
-
-
-
-	final class Coordinator : NSObject, NSTextFieldDelegate
-	{
-		var setter: (String, FieldType) -> Void
-		var finaliser: ((String, FieldType) -> Void)?
-		var enteriser: ((String, FieldType) -> Void)?
-
-		init(setter: @escaping (String, FieldType) -> Void,
-			 finaliser: ((String, FieldType) -> Void)?,
-			 enteriser: ((String, FieldType) -> Void)?)
-		{
-			self.setter = setter
-			self.finaliser = finaliser
-			self.enteriser = enteriser
-		}
-
-		func controlTextDidChange(_ obj: Notification)
-		{
-			if let textField = obj.object as? FieldType {
-				setter(textField.stringValue, textField)
-			}
-		}
-
-		func controlTextDidEndEditing(_ obj: Notification)
-		{
-			if let textField = obj.object as? FieldType {
-				self.finaliser?(textField.stringValue, textField)
-			}
-		}
-
-		@objc func enterAction(_ sender: AnyObject)
-		{
-			if let textField = sender as? FieldType {
-				self.enteriser?(textField.stringValue, textField)
-			}
-		}
-	}
 }
 
 public extension View
@@ -274,3 +113,15 @@ extension Optional where Wrapped: OptionalString
 		return ((self as? String) ?? "").isEmpty
 	}
 }
+
+
+class IntegerNumberFormatter : NumberFormatter
+{
+	override func isPartialStringValid(_ partial: String,
+									   newEditingString: AutoreleasingUnsafeMutablePointer<NSString?>?,
+									   errorDescription: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool
+	{
+		return partial.isEmpty || Int(partial) != nil
+	}
+}
+

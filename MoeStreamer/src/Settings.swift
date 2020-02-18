@@ -8,7 +8,6 @@ import KeychainSwift
 
 enum SettingKey
 {
-	case shouldAutoLogin(key: String = "automaticallyLogin", default: Bool = true)
 	case shouldAutoRefresh(key: String = "refreshMetadataOnOpen", default: Bool = true)
 	case shouldNotifySongChange(key: String = "notifyOnSongChange", default: Bool = false)
 	case shouldUseKeyboardShortcuts(key: String = "useKeyboardShortcuts", default: Bool = false)
@@ -18,15 +17,20 @@ enum SettingKey
 
 	case listenMoeUsername(key: String = "listenMoe_username", default: String = "")
 	case listenMoePassword(key: String = "listenMoe_password", default: String = "")
+	case listenMoeAutoLogin(key: String = "listenMoe_automaticallyLogin", default: Bool = true)
+
+	case localMusicPlaylist(key: String = "localMusic_playlist", default: String = "")
 
 	case statSongsPlayed(key: String = "stat_songsPlayed", default: Int = 0)
 
 	case streamBufferMs(key: String = "streamBufferMilliseconds", default: Int = 2000)
+	case logLinesRetain(key: String = "logLinesRetain", default: Int = 200)
+
+	case musicBackend(key: String = "musicBackend", default: MusicBackend = .ListenMoe())
 
 	var key: String {
 		switch self
 		{
-			case .shouldAutoLogin(let key, _):            return key
 			case .shouldAutoRefresh(let key, _):          return key
 			case .shouldNotifySongChange(let key, _):     return key
 			case .shouldUseKeyboardShortcuts(let key, _): return key
@@ -34,15 +38,18 @@ enum SettingKey
 			case .audioVolume(let key, _):                return key
 			case .listenMoeUsername(let key, _):          return key
 			case .listenMoePassword(let key, _):          return key
+			case .listenMoeAutoLogin(let key, _):         return key
+			case .localMusicPlaylist(let key, _):         return key
 			case .statSongsPlayed(let key, _):            return key
 			case .streamBufferMs(let key, _):             return key
+			case .logLinesRetain(let key, _):             return key
+			case .musicBackend(let key, _):               return key
 		}
 	}
 
 	var defaultValue: Any {
 		switch self
 		{
-			case .shouldAutoLogin(_, let def):            return def
 			case .shouldAutoRefresh(_, let def):          return def
 			case .shouldNotifySongChange(_, let def):     return def
 			case .shouldUseKeyboardShortcuts(_, let def): return def
@@ -50,8 +57,12 @@ enum SettingKey
 			case .audioVolume(_, let def):                return def
 			case .listenMoeUsername(_, let def):          return def
 			case .listenMoePassword(_, let def):          return def
+			case .listenMoeAutoLogin(_, let def):         return def
+			case .localMusicPlaylist(_, let def):         return def
 			case .statSongsPlayed(_, let def):            return def
 			case .streamBufferMs(_, let def):             return def
+			case .logLinesRetain(_, let def):             return def
+			case .musicBackend(_, let def):               return def
 		}
 	}
 
@@ -72,7 +83,6 @@ enum Settings
 		return UserDefaults.standard.set(value, forKey: key.key)
 	}
 
-
 	static func getKeychain(_ key: SettingKey) -> String
 	{
 		let k = KeychainSwift()
@@ -84,4 +94,21 @@ enum Settings
 		let k = KeychainSwift()
 		k.set(value, forKey: key.key)
 	}
+
+
+
+	static func getKE<T: KeyedEnum>(_ key: SettingKey) -> T
+	{
+		if let str = UserDefaults.standard.object(forKey: key.key) as? String {
+			return T.init(with: str) ?? (key.defaultValue as! T)
+		}
+
+		return key.defaultValue as! T
+	}
+
+	static func setKE<T: KeyedEnum>(_ key: SettingKey, value: T)
+	{
+		UserDefaults.standard.set(value.keyedValue, forKey: key.key)
+	}
+
 }

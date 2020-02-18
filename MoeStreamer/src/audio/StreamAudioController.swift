@@ -6,7 +6,7 @@ import Cocoa
 import VLCKit
 import Foundation
 
-class AudioController : NSObject, VLCMediaPlayerDelegate
+class StreamAudioController : NSObject, AudioController, VLCMediaPlayerDelegate
 {
 	private var muted: Bool = Settings.get(.audioMuted())
 	private var volume: Int = Settings.get(.audioVolume())
@@ -65,13 +65,7 @@ class AudioController : NSObject, VLCMediaPlayerDelegate
 	{
 		return self.muted
 	}
-
-	func toggleMute()
-	{
-		if self.muted { self.unmute() }
-		else          { self.mute() }
-	}
-
+	
 	func mute()
 	{
 		self.vlcMP.audio.volume = 0
@@ -91,15 +85,6 @@ class AudioController : NSObject, VLCMediaPlayerDelegate
 	func isPlaying() -> Bool
 	{
 		return self.vlcMP.isPlaying
-	}
-
-	func togglePlay()
-	{
-		if self.isPlaying() {
-			self.pause()
-		} else {
-			self.play()
-		}
 	}
 
 	func play()

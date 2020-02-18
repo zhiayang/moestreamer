@@ -23,7 +23,10 @@ class Statistics : ObservableObject
 
 	func logSongPlayed()
 	{
-		self.songsPlayed += 1
+		DispatchQueue.main.async {
+			self.songsPlayed += 1
+		}
+		
 		self.sync()
 	}
 

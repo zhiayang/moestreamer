@@ -54,7 +54,7 @@ struct MainView : View
 							}
 							.frame(height: 70)
 							.padding(.top, 8)
-							.padding(.trailing, 8)
+							.padding(.trailing, 16)
 							.opacity(self.model.textOpacity)
 							// .border(Color.yellow)
 
@@ -73,8 +73,24 @@ struct MainView : View
 								.buttonStyle(PlainButtonStyle())
 								.padding(.leading, -4)
 
+
+								// skip button
+								if self.model.controller().getCapabilities().contains(.nextTrack)
+								{
+									Button(action: {
+										self.model.controller().nextSong()
+									}) {
+										Image(nsImage: #imageLiteral(resourceName: "NextSong"))
+											.resizable()
+											.scaleEffect(1.35) // the icons for these are slightly different.
+											.frame(width: 24, height: 24)
+											.foregroundColor(self.iconColour)
+									}
+									.buttonStyle(PlainButtonStyle())
+								}
+
 								// favourite/unfavourite button
-								if self.model.controller().getCapabilities().contains(.favourite) || true
+								if self.model.controller().getCapabilities().contains(.favourite)
 								{
 									Button(action: {
 										self.model.controller().toggleFavourite()
@@ -135,7 +151,9 @@ struct MainView : View
 
 								VolumeSlider(value: Binding(get: { self.model.volume },
 															set: { self.model.volume = $0 })
-								).padding(.leading, 4)
+								)
+								.padding(.leading, 4)
+								.padding(.trailing, 8)
 
 							}
 							.padding(.bottom, 16) //.border(Color.green)
@@ -239,7 +257,9 @@ struct MainView : View
 					}
 					else if self.showingSettings
 					{
-						SettingsView(musicCon: Binding.constant(self.model.controller()))
+						SettingsView(musicCon: Binding(get: { self.model.controller() },
+													   set: { self.model.set(controller: $0) }
+						))
 					}
 				}
 				.padding(.top, -8)

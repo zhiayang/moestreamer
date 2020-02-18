@@ -6,12 +6,44 @@ import Cocoa
 import SwiftUI
 import Foundation
 
+private let settingsFrameWidth: CGFloat = 280
+
+private func changeControllerFor(_ oldController: Binding<ServiceController>, backend: MusicBackend)
+{
+	let con: ServiceController
+	switch(backend)
+	{
+		case .ListenMoe:
+			con = ListenMoeController()
+
+		case .LocalMusic:
+			con = LocalMusicController()
+	}
+
+	if let vm = oldController.wrappedValue.getViewModel() {
+		con.setViewModel(viewModel: vm)
+		if let mm = vm as? MainModel {
+			mm.onSongChange(song: nil)
+			mm.isPlaying = false
+		}
+	}
+
+	oldController.wrappedValue.stop()
+	oldController.wrappedValue = con
+}
+
 struct SettingsView : View
 {
 	@Environment(\.colorScheme)
 	var colourScheme: ColorScheme
 
 	@Binding var musicCon: ServiceController
+
+	// swiftui is fucking dumb. nothing works properly.
+	@State var backend: MusicBackend = Settings.getKE(.musicBackend())
+	@ObservedObject var backendSetting = SavedSettingModel<MusicBackend>(.musicBackend(),
+																		 getter: Settings.getKE,
+																		 setter: Settings.setKE)
 
 	init(musicCon: Binding<ServiceController>)
 	{
@@ -23,10 +55,32 @@ struct SettingsView : View
 			VStack(spacing: 16) {
 				PrimarySettingsView()
 
-				ListenMoeSettingsView(con: self.$musicCon)
+				HStack() {
+					Text("music source")
+						.padding(.leading, 2)
+						.tooltip("which music backend to use")
+
+					PopupButton(selectedValue: self.$backend, items: MusicBackend.values, onChange: {
+						self.backendSetting.value = $0
+
+						// time to change the controller.
+						changeControllerFor(self.$musicCon, backend: self.backend)
+
+					}).frame(width: 140)
+
+				}.padding(.top, 4)
+
+				if self.backend == .ListenMoe()
+				{
+					ListenMoeSettingsView(con: self.$musicCon)
+				}
+				else
+				{
+					LocalMusicSettingsView(con: self.$musicCon)
+				}
 			}
 		}
-		.frame(width: 280)
+		.frame(width: settingsFrameWidth)
 		.padding(.all, 12)
 	}
 }
@@ -35,7 +89,6 @@ struct SettingsView : View
 private struct PrimarySettingsView : View
 {
 	@ObservedObject var shouldAutoRefresh = SavedSettingModel<Bool>(.shouldAutoRefresh())
-	@ObservedObject var shouldAutoLogin   = SavedSettingModel<Bool>(.shouldAutoLogin())
 	@ObservedObject var shouldUseKeyboard = SavedSettingModel<Bool>(.shouldUseKeyboardShortcuts())
 	@ObservedObject var shouldNotifySong  = SavedSettingModel<Bool>(.shouldNotifySongChange(), didset: {
 		if $0 { Notifier.create() }
@@ -53,14 +106,6 @@ private struct PrimarySettingsView : View
 					Text("keyboard shortcuts")
 						.padding(.leading, 2)
 						.tooltip("spacebar to play/pause, m to mute/unmute")
-				}
-			}
-
-			HStack() {
-				Toggle(isOn: self.$shouldAutoLogin.value) {
-					Text("automatically login")
-						.padding(.leading, 2)
-						.tooltip("login to services automatically")
 				}
 			}
 
@@ -92,9 +137,54 @@ private struct PrimarySettingsView : View
 
 			}.padding(.top, 4)
 
-		}.frame(width: 280)
+		}.frame(width: settingsFrameWidth)
 	}
 }
+
+
+
+private struct LocalMusicSettingsView : View
+{
+	@ObservedObject
+	var playlist = SavedSettingModel<String>(.localMusicPlaylist())
+
+	@Binding var controller: ServiceController
+
+	init(con: Binding<ServiceController>)
+	{
+		self._controller = con
+	}
+
+	private func getPlaylists() -> [String]
+	{
+		if let con = self.controller as? LocalMusicController {
+			return con.getAllPlaylists()
+		}
+
+		return [ ]
+	}
+
+	var body: some View {
+		VStack(spacing: 0) {
+			Text("iTunes settings")
+			Divider().frame(width: 200).padding(.bottom, 8).padding(.top, 1)
+
+			HStack() {
+				Text("playlist")
+					.padding(.leading, 2)
+					.tooltip("which iTunes playlist to use")
+
+				PopupButton(selectedValue: self.$playlist.value, items: self.getPlaylists(), onChange: {
+					if let con = self.controller as? LocalMusicController {
+						con.setCurrentPlaylist(playlist: $0)
+					}
+				}).frame(width: 140)
+
+			}.padding(.top, 4)
+		}
+	}
+}
+
 
 
 
@@ -107,6 +197,8 @@ private struct ListenMoeSettingsView : View
 	var moePassword = SavedSettingModel<String>(.listenMoePassword(), disableLogging: true,
 												getter: Settings.getKeychain,
 												setter: Settings.setKeychain)
+
+	@ObservedObject var shouldAutoLogin = SavedSettingModel<Bool>(.listenMoeAutoLogin())
 
 	@State var userField: NSTextField! = nil
 	@State var passField: NSSecureTextField! = nil
@@ -139,30 +231,28 @@ private struct ListenMoeSettingsView : View
 								field.window?.makeFirstResponder(field.window)
 							}
 
-							self.model.controller().sessionLogin(activityView: self.model as ViewModel, force: true)
+							if let con = self.model.controller() as? ListenMoeController {
+								con.sessionLogin(activityView: self.model as ViewModel, force: true)
+							}
 					})
 				}
 
 				HStack(spacing: 2) {
 
-					Spacer()
-
-					if !self.model.status.isEmpty
-					{
-						Text(self.model.status)
-							.multilineTextAlignment(.leading)
-							.font(.system(size: 10))
-							.lineLimit(2)
-							.transition(.opacity)
-							.fixedSize(horizontal: false, vertical: true)
-							.padding(.trailing, 4)
+					Toggle(isOn: self.$shouldAutoLogin.value) {
+						Text("automatically login")
+							.padding(.leading, 2)
+							.tooltip("login to services automatically")
 					}
+					.padding(.leading, 4)
+//					.border(Color.green)
 
+					Spacer()
 
 					if self.model.spinning > 0
 					{
 						ActivityIndicator(size: .small)
-							.frame(width: 24, height: 24)
+							.frame(width: 20, height: 20)
 					}
 
 					Button(action: {
@@ -171,27 +261,33 @@ private struct ListenMoeSettingsView : View
 							self.userField?.window?.makeFirstResponder(self.userField?.window)
 						}
 
-						self.model.controller().sessionLogin(activityView: self.model as ViewModel, force: true)
-
-
+						if let con = self.model.controller() as? ListenMoeController {
+							con.sessionLogin(activityView: self.model as ViewModel, force: true)
+						}
 					}) {
 						Text("login")
 					}
-					.padding(.vertical, 12)
+					.padding(.bottom, 2)
+//					.border(Color.yellow)
 				}
+
+				HStack() {
+					Spacer()
+					if !self.model.status.isEmpty
+					{
+						Text(self.model.status)
+							.multilineTextAlignment(.leading)
+							.font(.system(size: 10))
+							.lineLimit(1)
+							.transition(.opacity)
+//							.fixedSize(horizontal: false, vertical: true)
+							.padding(.trailing, 4)
+					}
+				}
+				.frame(height: 12)
+				.padding(.vertical, 2)
 			}
 		}
 	}
 }
 
-
-
-class IntegerNumberFormatter : NumberFormatter
-{
-	override func isPartialStringValid(_ partial: String,
-									   newEditingString: AutoreleasingUnsafeMutablePointer<NSString?>?,
-									   errorDescription: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool
-	{
-		return partial.isEmpty || Int(partial) != nil
-	}
-}

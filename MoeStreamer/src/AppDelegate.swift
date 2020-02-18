@@ -14,6 +14,10 @@ class AppDelegate : NSObject, NSApplicationDelegate
 	{
 		self.controller = ViewController()
 
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+			self.controller.showPopover()
+		}
+
 		if Settings.get(.shouldNotifySongChange()) {
 			Notifier.create()
 		}

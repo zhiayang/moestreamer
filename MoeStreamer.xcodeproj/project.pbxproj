@@ -41,13 +41,23 @@
 		2BD486F523EFF41F0066F1C4 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486EB23EFF3F40066F1C4 /* libiconv.tbd */; };
 		2BD486F723EFF4350066F1C4 /* VLCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486F623EFF4350066F1C4 /* VLCKit.framework */; };
 		2BD486FA23EFF7520066F1C4 /* VLCKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BD486F623EFF4350066F1C4 /* VLCKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2BD486FC23EFFE0B0066F1C4 /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD486FB23EFFE0B0066F1C4 /* AudioController.swift */; };
+		2BD486FC23EFFE0B0066F1C4 /* StreamAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD486FB23EFFE0B0066F1C4 /* StreamAudioController.swift */; };
 		2BD486FE23F0046D0066F1C4 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; };
 		2BD486FF23F0047E0066F1C4 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; };
 		2BD4870023F0047E0066F1C4 /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2BD4870123F004830066F1C4 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; };
 		2BD83F8A23F2A01A00422034 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2BD83F8923F2A01A00422034 /* README.md */; };
 		2BD83F8C23F331E100422034 /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD83F8B23F331E100422034 /* Statistics.swift */; };
+		2BE995E223FB9B7A0092023C /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995E123FB9B7A0092023C /* ActivityIndicator.swift */; };
+		2BE995E423FB9B990092023C /* BetterTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995E323FB9B990092023C /* BetterTextField.swift */; };
+		2BE995E623FB9BB10092023C /* VolumeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995E523FB9BB10092023C /* VolumeSlider.swift */; };
+		2BE995E823FB9BD40092023C /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995E723FB9BD40092023C /* ScrollView.swift */; };
+		2BE995EA23FB9F210092023C /* iTunesLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BE995E923FB9F210092023C /* iTunesLibrary.framework */; };
+		2BE995ED23FBA0190092023C /* LocalMusic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995EC23FBA0190092023C /* LocalMusic.swift */; };
+		2BE995F023FBA0CE0092023C /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995EF23FBA0CE0092023C /* AudioController.swift */; };
+		2BE995F223FBAB340092023C /* PopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995F123FBAB340092023C /* PopupButton.swift */; };
+		2BE995F623FBB76B0092023C /* MusicBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995F523FBB76B0092023C /* MusicBackend.swift */; };
+		2BE995F823FBEA4F0092023C /* LocalAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995F723FBEA4E0092023C /* LocalAudioController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -103,10 +113,20 @@
 		2BD486F023EFF40A0066F1C4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		2BD486F223EFF40F0066F1C4 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		2BD486F623EFF4350066F1C4 /* VLCKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VLCKit.framework; path = Carthage/Build/Mac/VLCKit.framework; sourceTree = "<group>"; };
-		2BD486FB23EFFE0B0066F1C4 /* AudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioController.swift; sourceTree = "<group>"; };
+		2BD486FB23EFFE0B0066F1C4 /* StreamAudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamAudioController.swift; sourceTree = "<group>"; };
 		2BD486FD23F0046D0066F1C4 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/Mac/Starscream.framework; sourceTree = "<group>"; };
 		2BD83F8923F2A01A00422034 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2BD83F8B23F331E100422034 /* Statistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Statistics.swift; sourceTree = "<group>"; };
+		2BE995E123FB9B7A0092023C /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
+		2BE995E323FB9B990092023C /* BetterTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetterTextField.swift; sourceTree = "<group>"; };
+		2BE995E523FB9BB10092023C /* VolumeSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeSlider.swift; sourceTree = "<group>"; };
+		2BE995E723FB9BD40092023C /* ScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollView.swift; sourceTree = "<group>"; };
+		2BE995E923FB9F210092023C /* iTunesLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iTunesLibrary.framework; path = System/Library/Frameworks/iTunesLibrary.framework; sourceTree = SDKROOT; };
+		2BE995EC23FBA0190092023C /* LocalMusic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMusic.swift; sourceTree = "<group>"; };
+		2BE995EF23FBA0CE0092023C /* AudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioController.swift; sourceTree = "<group>"; };
+		2BE995F123FBAB340092023C /* PopupButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupButton.swift; sourceTree = "<group>"; };
+		2BE995F523FBB76B0092023C /* MusicBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicBackend.swift; sourceTree = "<group>"; };
+		2BE995F723FBEA4E0092023C /* LocalAudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAudioController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +152,7 @@
 				2BD486E023EFF3BD0066F1C4 /* CoreGraphics.framework in Frameworks */,
 				2BD4870123F004830066F1C4 /* Starscream.framework in Frameworks */,
 				2BD486D823EFF3A40066F1C4 /* AudioToolbox.framework in Frameworks */,
+				2BE995EA23FB9F210092023C /* iTunesLibrary.framework in Frameworks */,
 				2BD486F723EFF4350066F1C4 /* VLCKit.framework in Frameworks */,
 				2BD486F123EFF40A0066F1C4 /* Security.framework in Frameworks */,
 				2BD486E623EFF3DA0066F1C4 /* CoreVideo.framework in Frameworks */,
@@ -149,6 +170,7 @@
 				2BCFF5FF23F1CEEE00A58EFE /* LogView.swift */,
 				2BA283FB23F14607008E0DEB /* ViewWrappers.swift */,
 				2BD486D423EFE6C20066F1C4 /* ViewController.swift */,
+				2BE995E023FB9B6B0092023C /* wrappers */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -157,12 +179,12 @@
 			isa = PBXGroup;
 			children = (
 				2B79C81423F1FD19001C87CD /* ui */,
-				2B9DB59D23F0074500950421 /* ListenMoe.swift */,
+				2BE995EE23FBA0A50092023C /* audio */,
+				2BE995EB23FB9FC10092023C /* backend */,
 				2BA9071823F0731300782C94 /* Settings.swift */,
 				2BCFF60123F1DF9700A58EFE /* Logger.swift */,
 				2BD83F8B23F331E100422034 /* Statistics.swift */,
 				2B9DB59F23F0085E00950421 /* ServiceController.swift */,
-				2BD486FB23EFFE0B0066F1C4 /* AudioController.swift */,
 				2BD486C123EFE3030066F1C4 /* AppDelegate.swift */,
 			);
 			path = src;
@@ -201,6 +223,7 @@
 		2BD486D623EFF3A40066F1C4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2BE995E923FB9F210092023C /* iTunesLibrary.framework */,
 				2BA283F823F140EA008E0DEB /* Just.framework */,
 				2BA283F523F08201008E0DEB /* KeychainSwift.framework */,
 				2B84385923F0208D00291BDA /* SwiftyJSON.framework */,
@@ -224,6 +247,38 @@
 				2BD486D723EFF3A40066F1C4 /* AudioToolbox.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2BE995E023FB9B6B0092023C /* wrappers */ = {
+			isa = PBXGroup;
+			children = (
+				2BE995E123FB9B7A0092023C /* ActivityIndicator.swift */,
+				2BE995E323FB9B990092023C /* BetterTextField.swift */,
+				2BE995E523FB9BB10092023C /* VolumeSlider.swift */,
+				2BE995E723FB9BD40092023C /* ScrollView.swift */,
+				2BE995F123FBAB340092023C /* PopupButton.swift */,
+			);
+			path = wrappers;
+			sourceTree = "<group>";
+		};
+		2BE995EB23FB9FC10092023C /* backend */ = {
+			isa = PBXGroup;
+			children = (
+				2B9DB59D23F0074500950421 /* ListenMoe.swift */,
+				2BE995EC23FBA0190092023C /* LocalMusic.swift */,
+				2BE995F523FBB76B0092023C /* MusicBackend.swift */,
+			);
+			path = backend;
+			sourceTree = "<group>";
+		};
+		2BE995EE23FBA0A50092023C /* audio */ = {
+			isa = PBXGroup;
+			children = (
+				2BD486FB23EFFE0B0066F1C4 /* StreamAudioController.swift */,
+				2BE995F723FBEA4E0092023C /* LocalAudioController.swift */,
+				2BE995EF23FBA0CE0092023C /* AudioController.swift */,
+			);
+			path = audio;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -301,14 +356,23 @@
 				2BD486C423EFE3030066F1C4 /* MainView.swift in Sources */,
 				2BCFF60223F1DF9700A58EFE /* Logger.swift in Sources */,
 				2BA9071B23F07DF200782C94 /* SettingsView.swift in Sources */,
-				2BD486FC23EFFE0B0066F1C4 /* AudioController.swift in Sources */,
+				2BD486FC23EFFE0B0066F1C4 /* StreamAudioController.swift in Sources */,
+				2BE995ED23FBA0190092023C /* LocalMusic.swift in Sources */,
+				2BE995E223FB9B7A0092023C /* ActivityIndicator.swift in Sources */,
+				2BE995E823FB9BD40092023C /* ScrollView.swift in Sources */,
+				2BE995E623FB9BB10092023C /* VolumeSlider.swift in Sources */,
+				2BE995E423FB9B990092023C /* BetterTextField.swift in Sources */,
 				2BCFF60023F1CEEE00A58EFE /* LogView.swift in Sources */,
+				2BE995F223FBAB340092023C /* PopupButton.swift in Sources */,
+				2BE995F823FBEA4F0092023C /* LocalAudioController.swift in Sources */,
+				2BE995F023FBA0CE0092023C /* AudioController.swift in Sources */,
 				2BD486D523EFE6C20066F1C4 /* ViewController.swift in Sources */,
 				2B9DB5A023F0085E00950421 /* ServiceController.swift in Sources */,
 				2BA9071923F0731300782C94 /* Settings.swift in Sources */,
 				2B9DB59E23F0074500950421 /* ListenMoe.swift in Sources */,
 				2BA283FC23F14607008E0DEB /* ViewWrappers.swift in Sources */,
 				2BD83F8C23F331E100422034 /* Statistics.swift in Sources */,
+				2BE995F623FBB76B0092023C /* MusicBackend.swift in Sources */,
 				2BD486C223EFE3030066F1C4 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

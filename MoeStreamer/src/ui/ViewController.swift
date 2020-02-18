@@ -30,7 +30,17 @@ class ViewController : NSObject, NSPopoverDelegate
 
 		super.init()
 
-		self.viewModel = MainModel(controller: ListenMoeController())
+		let con: ServiceController
+		switch(Settings.getKE(.musicBackend()) as MusicBackend)
+		{
+			case .ListenMoe:
+				con = ListenMoeController()
+
+			case .LocalMusic:
+				con = LocalMusicController()
+		}
+
+		self.viewModel = MainModel(controller: con)
 		self.viewModel.musicCon.setViewModel(viewModel: self.viewModel)
 		
 		self.rootView = MainView(model: self.viewModel)
@@ -54,9 +64,14 @@ class ViewController : NSObject, NSPopoverDelegate
 				{
 					case UInt8(ascii: "m"):
 						self.viewModel.isMuted.toggle()
+						self.viewModel.poke()
 
 					case UInt8(ascii: " "):
 						self.viewModel.isPlaying.toggle()
+						self.viewModel.poke()
+
+					case UInt8(ascii: "f"):
+						self.viewModel.controller().toggleFavourite()
 
 					case UInt8(ascii: "\u{1b}"):
 						self.popover.performClose(nil)
@@ -68,19 +83,27 @@ class ViewController : NSObject, NSPopoverDelegate
 		}
 	}
 
+	func showPopover()
+	{
+		self.popover.show(relativeTo: statusBarButton.bounds, of: statusBarButton,
+						  preferredEdge: NSRectEdge.maxY)
+		self.popover.contentViewController?.view.window?.makeKey()
+	}
+
+	func closePopover(sender: AnyObject?)
+	{
+		self.popover.performClose(sender)
+	}
+
 	@objc func togglePopover(sender: AnyObject)
 	{
-		if(popover.isShown)
-		{
-			popover.performClose(sender)
-		}
-		else
-		{
-			popover.show(relativeTo: statusBarButton.bounds, of: statusBarButton,
-						 preferredEdge: NSRectEdge.maxY)
-			popover.contentViewController?.view.window?.makeKey()
+		if(popover.isShown) {
+			self.closePopover(sender: sender)
+		} else {
+			self.showPopover()
 		}
 	}
+	
 
 	func popoverDidClose(_ notification: Notification)
 	{
@@ -211,7 +234,7 @@ class MainModel : ViewModel, ObservableObject
 	func onSongChange(song: Song?)
 	{
 		// welcome to the land of toxicity.
-		let animDuration = 0.25
+		let animDuration = 0.3
 
 		// the album art can be animated normally:
 		DispatchQueue.main.async {
@@ -284,6 +307,11 @@ class MainModel : ViewModel, ObservableObject
 	func controller() -> ServiceController
 	{
 		return self.musicCon
+	}
+
+	func set(controller: ServiceController)
+	{
+		self.musicCon = controller
 	}
 
 	init(controller: ServiceController)
