@@ -224,9 +224,11 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 
 	private var audioCon: StreamAudioController
 
-	required init()
+	required init(viewModel: ViewModel?)
 	{
 		self.socket = WebSocket(url: self.websocketURL)
+
+		self.activityView = viewModel
 
 		// uwu 
 		self.socket.disableSSLCertValidation = true
@@ -300,7 +302,6 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 		self.sessionLogin(activityView: self.activityView, force: false)
 
 		// restart the socket connection.
-		self.stop()
 		self.start()
 	}
 
@@ -422,6 +423,7 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 						_s.album.1 = NSImage(contentsOf: cov)
 
 						self.setCurrentSong(song: _s)
+						self.activityView?.unspin()
 					}
 				}
 				else
@@ -438,6 +440,11 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 		{
 			print("got unknown response with opcode \(json["op"].int!)")
 		}
+	}
+
+	func isReady() -> Bool
+	{
+		return self.currentSong != nil
 	}
 
 	// unused.

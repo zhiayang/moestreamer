@@ -14,12 +14,14 @@ enum SettingKey
 
 	case audioMuted(key: String = "muted", default: Bool = false)
 	case audioVolume(key: String = "volume", default: Int = 50)
+	case audioNormaliseVolume(key: String = "normaliseVolume", default: Bool = false)
 
 	case listenMoeUsername(key: String = "listenMoe_username", default: String = "")
 	case listenMoePassword(key: String = "listenMoe_password", default: String = "")
 	case listenMoeAutoLogin(key: String = "listenMoe_automaticallyLogin", default: Bool = true)
 
 	case localMusicPlaylist(key: String = "localMusic_playlist", default: String = "")
+	case localMusicShuffle(key: String = "localMusic_shuffle", default: ShuffleBehaviour = .Random())
 
 	case statSongsPlayed(key: String = "stat_songsPlayed", default: Int = 0)
 
@@ -36,10 +38,12 @@ enum SettingKey
 			case .shouldUseKeyboardShortcuts(let key, _): return key
 			case .audioMuted(let key, _):                 return key
 			case .audioVolume(let key, _):                return key
+			case .audioNormaliseVolume(let key, _):       return key
 			case .listenMoeUsername(let key, _):          return key
 			case .listenMoePassword(let key, _):          return key
 			case .listenMoeAutoLogin(let key, _):         return key
 			case .localMusicPlaylist(let key, _):         return key
+			case .localMusicShuffle(let key, _):          return key
 			case .statSongsPlayed(let key, _):            return key
 			case .streamBufferMs(let key, _):             return key
 			case .logLinesRetain(let key, _):             return key
@@ -55,10 +59,12 @@ enum SettingKey
 			case .shouldUseKeyboardShortcuts(_, let def): return def
 			case .audioMuted(_, let def):                 return def
 			case .audioVolume(_, let def):                return def
+			case .audioNormaliseVolume(_, let def):       return def
 			case .listenMoeUsername(_, let def):          return def
 			case .listenMoePassword(_, let def):          return def
 			case .listenMoeAutoLogin(_, let def):         return def
 			case .localMusicPlaylist(_, let def):         return def
+			case .localMusicShuffle(_, let def):          return def
 			case .statSongsPlayed(_, let def):            return def
 			case .streamBufferMs(_, let def):             return def
 			case .logLinesRetain(_, let def):             return def

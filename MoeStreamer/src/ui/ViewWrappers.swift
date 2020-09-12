@@ -53,7 +53,7 @@ class SavedSettingModel<T: Equatable> : ObservableObject
 	}
 }
 
-protocol ViewModel
+protocol ViewModel : AnyObject
 {
 	func poke()
 	func spin()
@@ -124,4 +124,6 @@ class IntegerNumberFormatter : NumberFormatter
 		return partial.isEmpty || Int(partial) != nil
 	}
 }
+
+
 

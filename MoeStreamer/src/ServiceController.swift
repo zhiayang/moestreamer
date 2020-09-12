@@ -87,6 +87,8 @@ protocol ServiceController : AnyObject
 	func pause()
 	func stop()
 
+	func isReady() -> Bool
+
 	func nextSong()
 
 	func toggleFavourite()
@@ -94,7 +96,8 @@ protocol ServiceController : AnyObject
 	func audioController() -> AudioController
 	func getCapabilities() -> ServiceCapabilities
 
-	init()
+	init(viewModel: ViewModel?)
+
 	func setViewModel(viewModel: ViewModel)
 	func getViewModel()-> ViewModel?
 }

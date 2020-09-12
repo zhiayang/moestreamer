@@ -2,6 +2,7 @@
 // Copyright (c) 2020, zhiayang
 // Licensed under the Apache License Version 2.0.
 
+import Deque
 import SwiftUI
 import Foundation
 
@@ -43,11 +44,13 @@ class Logger : ObservableObject
 {
 	public static var instance = Logger()
 
-	var lines: [LogItem] = [ ]
+	var lines: Deque<LogItem> = [ ]
 	var msgRepeatCount: Int = 1
+	var dispatcher = DispatchQueue(label: "logger")
 
 	init()
 	{
+
 	}
 
 	func clear()
@@ -55,7 +58,7 @@ class Logger : ObservableObject
 		self.lines = [ ]
 	}
 
-	func getLines() -> [LogItem]
+	func getLines() -> Deque<LogItem>
 	{
 		return self.lines
 	}
@@ -68,7 +71,7 @@ class Logger : ObservableObject
 
 	func add(_ item: LogItem)
 	{
-		DispatchQueue.global().async {
+		dispatcher.async {
 			if let last = self.lines.last, last == item
 			{
 				self.msgRepeatCount += 1

@@ -9,8 +9,16 @@ private extension MusicItem
 {
 	func toAVItem() -> AVPlayerItem
 	{
-		let ret = AVPlayerItem(url: self.url)
+		let ret = AVPlayerItem(url: self.location!)
 		return ret
+	}
+}
+
+private extension Comparable
+{
+	func clamped(from min: Self, to max: Self) -> Self
+	{
+		return (self < min ? min : (self > max ? max : self))
 	}
 }
 
@@ -20,11 +28,11 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 	private var muted: Bool = Settings.get(.audioMuted())
 	private var volume: Int = Settings.get(.audioVolume())
 
-	private var currentAVItem: AVPlayerItem? = nil
-	private var getNextSong: () -> MusicItem
+	private var currentItem: MusicItem? = nil
+	private var getNextSong: () -> MusicItem?
 	private var player: AVPlayer
 
-	init(nextSongCallback: @escaping () -> MusicItem)
+	init(nextSongCallback: @escaping () -> MusicItem?)
 	{
 		self.player = AVPlayer(playerItem: nil)
 		self.getNextSong = nextSongCallback
@@ -35,34 +43,52 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 	}
 
 
-	func play(item: MusicItem)
+	func enqueue(item: MusicItem)
 	{
 		let av = item.toAVItem()
 		self.player.replaceCurrentItem(with: av)
-		self.currentAVItem = av
+		self.currentItem = item
 
-		self.player.play()
+		self.setVolume(volume: self.volume)
+
+		// if we were paused before, don't play it.
+		if self.playing {
+			self.player.play()
+		}
 	}
 
 	@objc func itemFinishedPlaying(_ notif: NSNotification)
 	{
-		self.play(item: self.getNextSong())
+		if let n = self.getNextSong() {
+			self.enqueue(item: n)
+		}
 	}
 
 
 	func setVolume(volume: Int)
 	{
-		let vol = volume < 0 ? 0 : volume > 100 ? 100 : volume
+		self.volume = volume.clamped(from: 0, to: 100)
+		Settings.set(.audioVolume(), value: self.volume)
 
-		if !self.muted {
-			// only actually change the volume if we aren't muted.
-			self.player.volume = Float(vol) / 100.0
+		let multiplier: Double
+		if Settings.get(.audioNormaliseVolume()) {
+			multiplier = self.currentItem?.volumeMultiplier ?? 1.0
+		} else {
+			multiplier = 1
 		}
 
-		self.volume = vol
+		if !self.muted
+		{
+			// only actually change the volume if we aren't muted.
+			var real: Double = (Double(self.volume) / 100.0) * multiplier
+			real = real.clamped(from: 0, to: 1)
 
-		// also change the saved volume
-		Settings.set(.audioVolume(), value: vol)
+			self.player.volume = Float(real)
+		}
+		else
+		{
+			self.player.volume = 0
+		}
 	}
 
 	func getVolume() -> Int
@@ -85,8 +111,8 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 
 	func unmute()
 	{
-		self.player.volume = Float(self.volume) / 100.0
 		self.muted = false
+		self.setVolume(volume: self.volume)
 
 		Settings.set(.audioMuted(), value: false)
 	}

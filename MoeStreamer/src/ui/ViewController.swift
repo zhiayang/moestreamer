@@ -30,18 +30,14 @@ class ViewController : NSObject, NSPopoverDelegate
 
 		super.init()
 
-		let con: ServiceController
 		switch(Settings.getKE(.musicBackend()) as MusicBackend)
 		{
 			case .ListenMoe:
-				con = ListenMoeController()
+				self.viewModel = MainModel(backend: ListenMoeController.self)
 
 			case .LocalMusic:
-				con = LocalMusicController()
+				self.viewModel = MainModel(backend: LocalMusicController.self)
 		}
-
-		self.viewModel = MainModel(controller: con)
-		self.viewModel.musicCon.setViewModel(viewModel: self.viewModel)
 		
 		self.rootView = MainView(model: self.viewModel)
 		
@@ -66,9 +62,13 @@ class ViewController : NSObject, NSPopoverDelegate
 						self.viewModel.isMuted.toggle()
 						self.viewModel.poke()
 
-					case UInt8(ascii: " "):
+					case UInt8(ascii: " "): fallthrough
+					case UInt8(ascii: "k"):
 						self.viewModel.isPlaying.toggle()
 						self.viewModel.poke()
+
+					case UInt8(ascii: "l"):
+						self.viewModel.controller().nextSong()
 
 					case UInt8(ascii: "f"):
 						self.viewModel.controller().toggleFavourite()
@@ -127,8 +127,8 @@ class CustomPopover : NSPopover
 
 class MainModel : ViewModel, ObservableObject
 {
-	@Published fileprivate var musicCon: ServiceController
-	@Published private var dummy: Bool = false
+	@Published fileprivate var musicCon: ServiceController!
+	@Published var dummy: Bool = false
 
 	@Published var status: String = ""
 	@Published var spinning: Int = 0
@@ -149,8 +149,15 @@ class MainModel : ViewModel, ObservableObject
 		didSet {
 			if isPlaying
 			{
-				self.musicCon.start()
-				self.musicCon.audioController().play()
+				if self.musicCon.isReady()
+				{
+					self.musicCon.start()
+					self.musicCon.audioController().play()
+				}
+				else
+				{
+					self.isPlaying = false
+				}
 			}
 			else
 			{
@@ -181,6 +188,12 @@ class MainModel : ViewModel, ObservableObject
 		}
 	}
 
+	func poke()
+	{
+		DispatchQueue.main.async {
+			self.dummy.toggle()
+		}
+	}
 
 	func spin()
 	{
@@ -297,13 +310,6 @@ class MainModel : ViewModel, ObservableObject
 		}
 	}
 
-	func poke()
-	{
-		DispatchQueue.main.async {
-			self.dummy.toggle()
-		}
-	}
-
 	func controller() -> ServiceController
 	{
 		return self.musicCon
@@ -314,9 +320,14 @@ class MainModel : ViewModel, ObservableObject
 		self.musicCon = controller
 	}
 
-	init(controller: ServiceController)
+	init(backend: ServiceController.Type)
 	{
-		self.musicCon = controller
+		self.musicCon = backend.init(viewModel: self)
 		self.onSongChange(song: nil)
 	}
 }
+
+
+
+
+

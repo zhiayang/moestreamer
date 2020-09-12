@@ -20,6 +20,9 @@
 		2BA9071B23F07DF200782C94 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA9071A23F07DF200782C94 /* SettingsView.swift */; };
 		2BCFF60023F1CEEE00A58EFE /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCFF5FF23F1CEEE00A58EFE /* LogView.swift */; };
 		2BCFF60223F1DF9700A58EFE /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCFF60123F1DF9700A58EFE /* Logger.swift */; };
+		2BD367EC23FDBA9900926068 /* CircularBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD367EB23FDBA9900926068 /* CircularBuffer.swift */; };
+		2BD367EE23FDBCA900926068 /* Deque.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD367ED23FDBCA900926068 /* Deque.framework */; };
+		2BD367EF23FDBD9D00926068 /* Deque.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BD367ED23FDBCA900926068 /* Deque.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2BD486C223EFE3030066F1C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD486C123EFE3030066F1C4 /* AppDelegate.swift */; };
 		2BD486C423EFE3030066F1C4 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD486C323EFE3030066F1C4 /* MainView.swift */; };
 		2BD486C623EFE3070066F1C4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2BD486C523EFE3070066F1C4 /* Assets.xcassets */; };
@@ -43,9 +46,7 @@
 		2BD486FA23EFF7520066F1C4 /* VLCKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BD486F623EFF4350066F1C4 /* VLCKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2BD486FC23EFFE0B0066F1C4 /* StreamAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD486FB23EFFE0B0066F1C4 /* StreamAudioController.swift */; };
 		2BD486FE23F0046D0066F1C4 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; };
-		2BD486FF23F0047E0066F1C4 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; };
 		2BD4870023F0047E0066F1C4 /* Starscream.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2BD4870123F004830066F1C4 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486FD23F0046D0066F1C4 /* Starscream.framework */; };
 		2BD83F8A23F2A01A00422034 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2BD83F8923F2A01A00422034 /* README.md */; };
 		2BD83F8C23F331E100422034 /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD83F8B23F331E100422034 /* Statistics.swift */; };
 		2BE995E223FB9B7A0092023C /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995E123FB9B7A0092023C /* ActivityIndicator.swift */; };
@@ -67,6 +68,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				2BD367EF23FDBD9D00926068 /* Deque.framework in CopyFiles */,
 				2BA283F723F0820F008E0DEB /* KeychainSwift.framework in CopyFiles */,
 				2BD486FA23EFF7520066F1C4 /* VLCKit.framework in CopyFiles */,
 				2BD4870023F0047E0066F1C4 /* Starscream.framework in CopyFiles */,
@@ -88,6 +90,8 @@
 		2BA9071A23F07DF200782C94 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		2BCFF5FF23F1CEEE00A58EFE /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		2BCFF60123F1DF9700A58EFE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		2BD367EB23FDBA9900926068 /* CircularBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularBuffer.swift; sourceTree = "<group>"; };
+		2BD367ED23FDBCA900926068 /* Deque.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Deque.framework; path = Carthage/Build/Mac/Deque.framework; sourceTree = "<group>"; };
 		2BD486BE23EFE3030066F1C4 /* MoeStreamer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoeStreamer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BD486C123EFE3030066F1C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2BD486C323EFE3030066F1C4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -134,6 +138,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BD367EE23FDBCA900926068 /* Deque.framework in Frameworks */,
 				2BA283F923F140EA008E0DEB /* Just.framework in Frameworks */,
 				2BD486F523EFF41F0066F1C4 /* libiconv.tbd in Frameworks */,
 				2BD486F423EFF41B0066F1C4 /* libbz2.tbd in Frameworks */,
@@ -144,13 +149,11 @@
 				2BA283F623F08201008E0DEB /* KeychainSwift.framework in Frameworks */,
 				2BD486FE23F0046D0066F1C4 /* Starscream.framework in Frameworks */,
 				2BD486DE23EFF3B70066F1C4 /* CoreFoundation.framework in Frameworks */,
-				2BD486FF23F0047E0066F1C4 /* Starscream.framework in Frameworks */,
 				2BD486EF23EFF4040066F1C4 /* QuartzCore.framework in Frameworks */,
 				2BD486DC23EFF3B10066F1C4 /* CFNetwork.framework in Frameworks */,
 				2BD486DA23EFF3AB0066F1C4 /* AVFoundation.framework in Frameworks */,
 				2BD486E423EFF3D60066F1C4 /* CoreText.framework in Frameworks */,
 				2BD486E023EFF3BD0066F1C4 /* CoreGraphics.framework in Frameworks */,
-				2BD4870123F004830066F1C4 /* Starscream.framework in Frameworks */,
 				2BD486D823EFF3A40066F1C4 /* AudioToolbox.framework in Frameworks */,
 				2BE995EA23FB9F210092023C /* iTunesLibrary.framework in Frameworks */,
 				2BD486F723EFF4350066F1C4 /* VLCKit.framework in Frameworks */,
@@ -190,6 +193,14 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		2BD367EA23FDBA8E00926068 /* external */ = {
+			isa = PBXGroup;
+			children = (
+				2BD367EB23FDBA9900926068 /* CircularBuffer.swift */,
+			);
+			path = external;
+			sourceTree = "<group>";
+		};
 		2BD486B523EFE3030066F1C4 = {
 			isa = PBXGroup;
 			children = (
@@ -211,6 +222,7 @@
 		2BD486C023EFE3030066F1C4 /* MoeStreamer */ = {
 			isa = PBXGroup;
 			children = (
+				2BD367EA23FDBA8E00926068 /* external */,
 				2B79C81623F1FD72001C87CD /* src */,
 				2BD486C523EFE3070066F1C4 /* Assets.xcassets */,
 				2BD486CA23EFE3070066F1C4 /* Main.storyboard */,
@@ -223,6 +235,7 @@
 		2BD486D623EFF3A40066F1C4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2BD367ED23FDBCA900926068 /* Deque.framework */,
 				2BE995E923FB9F210092023C /* iTunesLibrary.framework */,
 				2BA283F823F140EA008E0DEB /* Just.framework */,
 				2BA283F523F08201008E0DEB /* KeychainSwift.framework */,
@@ -309,7 +322,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1160;
 				ORGANIZATIONNAME = zhiayang;
 				TargetAttributes = {
 					2BD486BD23EFE3030066F1C4 = {
@@ -367,6 +380,7 @@
 				2BE995F823FBEA4F0092023C /* LocalAudioController.swift in Sources */,
 				2BE995F023FBA0CE0092023C /* AudioController.swift in Sources */,
 				2BD486D523EFE6C20066F1C4 /* ViewController.swift in Sources */,
+				2BD367EC23FDBA9900926068 /* CircularBuffer.swift in Sources */,
 				2B9DB5A023F0085E00950421 /* ServiceController.swift in Sources */,
 				2BA9071923F0731300782C94 /* Settings.swift in Sources */,
 				2B9DB59E23F0074500950421 /* ListenMoe.swift in Sources */,

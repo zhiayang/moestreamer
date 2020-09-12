@@ -10,17 +10,19 @@ private let settingsFrameWidth: CGFloat = 280
 
 private func changeControllerFor(_ oldController: Binding<ServiceController>, backend: MusicBackend)
 {
+	let vm = oldController.wrappedValue.getViewModel()
+
 	let con: ServiceController
 	switch(backend)
 	{
 		case .ListenMoe:
-			con = ListenMoeController()
+			con = ListenMoeController(viewModel: vm)
 
 		case .LocalMusic:
-			con = LocalMusicController()
+			con = LocalMusicController(viewModel: vm)
 	}
 
-	if let vm = oldController.wrappedValue.getViewModel() {
+	if let vm = vm {
 		con.setViewModel(viewModel: vm)
 		if let mm = vm as? MainModel {
 			mm.onSongChange(song: nil)
@@ -53,7 +55,7 @@ struct SettingsView : View
 	var body: some View {
 		ZStack() {
 			VStack(spacing: 16) {
-				PrimarySettingsView()
+				PrimarySettingsView(con: self.$musicCon)
 
 				HStack() {
 					Text("music source")
@@ -89,6 +91,7 @@ struct SettingsView : View
 private struct PrimarySettingsView : View
 {
 	@ObservedObject var shouldAutoRefresh = SavedSettingModel<Bool>(.shouldAutoRefresh())
+	@ObservedObject var shouldNormalise = SavedSettingModel<Bool>(.audioNormaliseVolume())
 	@ObservedObject var shouldUseKeyboard = SavedSettingModel<Bool>(.shouldUseKeyboardShortcuts())
 	@ObservedObject var shouldNotifySong  = SavedSettingModel<Bool>(.shouldNotifySongChange(), didset: {
 		if $0 { Notifier.create() }
@@ -98,6 +101,13 @@ private struct PrimarySettingsView : View
 		return (100 ... 10000).contains($0)
 	})
 
+	@Binding var controller: ServiceController
+
+	init(con: Binding<ServiceController>)
+	{
+		self._controller = con
+	}
+
 	var body: some View {
 		VStack(alignment: .leading, spacing: 3) {
 
@@ -106,6 +116,21 @@ private struct PrimarySettingsView : View
 					Text("keyboard shortcuts")
 						.padding(.leading, 2)
 						.tooltip("spacebar to play/pause, m to mute/unmute")
+				}
+			}
+
+			HStack() {
+				Toggle(isOn: Binding(get: { self.shouldNormalise.value },
+									 set: {
+										self.shouldNormalise.value = $0
+
+										// just mute/unmute to force a volume change.
+										self.controller.audioController().mute()
+										self.controller.audioController().unmute()
+				})) {
+					Text("normalise volume")
+						.padding(.leading, 2)
+						.tooltip("normalise the playback volume (not supported on all backends)")
 				}
 			}
 
@@ -148,6 +173,11 @@ private struct LocalMusicSettingsView : View
 	@ObservedObject
 	var playlist = SavedSettingModel<String>(.localMusicPlaylist())
 
+	@ObservedObject
+	var shuffle = SavedSettingModel<ShuffleBehaviour>(.localMusicShuffle(),
+													  getter: Settings.getKE,
+													  setter: Settings.setKE)
+
 	@Binding var controller: ServiceController
 
 	init(con: Binding<ServiceController>)
@@ -179,14 +209,93 @@ private struct LocalMusicSettingsView : View
 						con.setCurrentPlaylist(playlist: $0)
 					}
 				}).frame(width: 140)
+			}.padding(.bottom, 4)
 
-			}.padding(.top, 4)
+			HStack() {
+				Text("shuffle")
+					.padding(.leading, 2)
+					.tooltip("how to shuffle the playlist")
+
+				PopupButton(selectedValue: self.$shuffle.value, items: ShuffleBehaviour.values, onChange: {
+					if let con = self.controller as? LocalMusicController {
+						con.setShuffleBehaviour(as: $0)
+					}
+				}).frame(width: 140)
+			}.padding(.bottom, 4)
 		}
 	}
 }
 
 
+private class SpinnerModel : ObservableObject, ViewModel
+{
+	@Published var dummy: Bool = false
 
+	@Published var status: String = ""
+	@Published var spinning: Int = 0
+
+	private var musicCon: ServiceController
+
+	init(controller: ServiceController)
+	{
+		self.musicCon = controller
+	}
+
+	func controller() -> ServiceController
+	{
+		return self.musicCon
+	}
+
+	func onSongChange(song: Song?)
+	{
+		// do nothing.
+	}
+
+	func poke()
+	{
+		DispatchQueue.main.async {
+			self.dummy.toggle()
+		}
+	}
+
+	func spin()
+	{
+		DispatchQueue.main.async {
+			withAnimation(.easeIn(duration: 0.35)) {
+				self.spinning += 1
+			}
+		}
+	}
+
+	func unspin()
+	{
+		DispatchQueue.main.async {
+			withAnimation(.easeOut(duration: 0.35)) {
+				if self.spinning > 0 {
+					self.spinning -= 1
+				}
+			}
+		}
+	}
+
+	func setStatus(s: String, timeout: TimeInterval? = nil)
+	{
+		DispatchQueue.main.async {
+			withAnimation(.easeIn(duration: 0.25)) {
+				self.status = s
+			}
+		}
+
+		if let t = timeout {
+			// can't update the UI in background threads.
+			DispatchQueue.main.asyncAfter(deadline: .now() + t) {
+				withAnimation(.easeOut(duration: 0.45)) {
+					self.status = ""
+				}
+			}
+		}
+	}
+}
 
 private struct ListenMoeSettingsView : View
 {
@@ -204,11 +313,11 @@ private struct ListenMoeSettingsView : View
 	@State var passField: NSSecureTextField! = nil
 
 	// this is separate from the one on the main window.
-	@ObservedObject var model: MainModel
+	@ObservedObject var model: SpinnerModel
 
 	init(con: Binding<ServiceController>)
 	{
-		self.model = MainModel(controller: con.wrappedValue)
+		self.model = SpinnerModel(controller: con.wrappedValue)
 	}
 
 	var body: some View {
