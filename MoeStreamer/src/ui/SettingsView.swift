@@ -32,6 +32,8 @@ private func changeControllerFor(_ oldController: Binding<ServiceController>, ba
 
 	oldController.wrappedValue.stop()
 	oldController.wrappedValue = con
+
+	globalMediaKeyHandler.setController(con)
 }
 
 struct SettingsView : View
@@ -93,6 +95,7 @@ private struct PrimarySettingsView : View
 	@ObservedObject var shouldAutoRefresh = SavedSettingModel<Bool>(.shouldAutoRefresh())
 	@ObservedObject var shouldNormalise = SavedSettingModel<Bool>(.audioNormaliseVolume())
 	@ObservedObject var shouldUseKeyboard = SavedSettingModel<Bool>(.shouldUseKeyboardShortcuts())
+	@ObservedObject var shouldUseMediaKeys = SavedSettingModel<Bool>(.shouldUseMediaKeys())
 	@ObservedObject var shouldNotifySong  = SavedSettingModel<Bool>(.shouldNotifySongChange(), didset: {
 		if $0 { Notifier.create() }
 	})
@@ -131,6 +134,18 @@ private struct PrimarySettingsView : View
 					Text("normalise volume")
 						.padding(.leading, 2)
 						.tooltip("normalise the playback volume (not supported on all backends)")
+				}
+			}
+
+			HStack() {
+				Toggle(isOn: Binding(get: { self.shouldUseMediaKeys.value },
+									 set: {
+										self.shouldUseMediaKeys.value = $0
+										globalMediaKeyHandler.enable(self.shouldUseMediaKeys.value, musicCon: controller)
+				})) {
+					Text("use media keys")
+						.padding(.leading, 2)
+					 	.tooltip("use the media keys (f7-f9, or touchbar equivalent) to control playback")
 				}
 			}
 

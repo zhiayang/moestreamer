@@ -50,7 +50,6 @@ class LocalMusicController : ServiceController
 
 		self.audioCon = LocalAudioController(nextSongCallback: self.getNextSong)
 
-		print("init itunes")
 		// load the selected playlist from preferences.
 		self.setCurrentPlaylist(playlist: Settings.get(.localMusicPlaylist()))
 	}

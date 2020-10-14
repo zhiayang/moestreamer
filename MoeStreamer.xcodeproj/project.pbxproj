@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B125D7D253753D1000C45C5 /* MediaKeyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */; };
 		2B84385A23F0208D00291BDA /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B84385923F0208D00291BDA /* SwiftyJSON.framework */; };
 		2B84385B23F0209100291BDA /* SwiftyJSON.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2B84385923F0208D00291BDA /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2B9DB59E23F0074500950421 /* ListenMoe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DB59D23F0074500950421 /* ListenMoe.swift */; };
@@ -80,6 +81,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKeyHandler.swift; sourceTree = "<group>"; };
 		2B84385923F0208D00291BDA /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
 		2B9DB59D23F0074500950421 /* ListenMoe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenMoe.swift; sourceTree = "<group>"; };
 		2B9DB59F23F0085E00950421 /* ServiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceController.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 				2BD83F8B23F331E100422034 /* Statistics.swift */,
 				2B9DB59F23F0085E00950421 /* ServiceController.swift */,
 				2BD486C123EFE3030066F1C4 /* AppDelegate.swift */,
+				2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -381,6 +384,7 @@
 				2BE995F023FBA0CE0092023C /* AudioController.swift in Sources */,
 				2BD486D523EFE6C20066F1C4 /* ViewController.swift in Sources */,
 				2BD367EC23FDBA9900926068 /* CircularBuffer.swift in Sources */,
+				2B125D7D253753D1000C45C5 /* MediaKeyHandler.swift in Sources */,
 				2B9DB5A023F0085E00950421 /* ServiceController.swift in Sources */,
 				2BA9071923F0731300782C94 /* Settings.swift in Sources */,
 				2B9DB59E23F0074500950421 /* ListenMoe.swift in Sources */,
@@ -542,7 +546,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.9.0;
+				MARKETING_VERSION = 0.10.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -571,7 +575,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.9.0;
+				MARKETING_VERSION = 0.10.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

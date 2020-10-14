@@ -11,6 +11,7 @@ enum SettingKey
 	case shouldAutoRefresh(key: String = "refreshMetadataOnOpen", default: Bool = true)
 	case shouldNotifySongChange(key: String = "notifyOnSongChange", default: Bool = false)
 	case shouldUseKeyboardShortcuts(key: String = "useKeyboardShortcuts", default: Bool = false)
+	case shouldUseMediaKeys(key: String = "useMediaKeys", default: Bool = false)
 
 	case audioMuted(key: String = "muted", default: Bool = false)
 	case audioVolume(key: String = "volume", default: Int = 50)
@@ -36,6 +37,7 @@ enum SettingKey
 			case .shouldAutoRefresh(let key, _):          return key
 			case .shouldNotifySongChange(let key, _):     return key
 			case .shouldUseKeyboardShortcuts(let key, _): return key
+			case .shouldUseMediaKeys(let key, _):         return key
 			case .audioMuted(let key, _):                 return key
 			case .audioVolume(let key, _):                return key
 			case .audioNormaliseVolume(let key, _):       return key
@@ -57,6 +59,7 @@ enum SettingKey
 			case .shouldAutoRefresh(_, let def):          return def
 			case .shouldNotifySongChange(_, let def):     return def
 			case .shouldUseKeyboardShortcuts(_, let def): return def
+			case .shouldUseMediaKeys(_, let def):         return def
 			case .audioMuted(_, let def):                 return def
 			case .audioVolume(_, let def):                return def
 			case .audioNormaliseVolume(_, let def):       return def

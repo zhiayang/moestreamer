@@ -52,7 +52,7 @@ class ListenMoeSession
 		// already logged in.
 		if self.isLoggedIn() && !force
 		{
-			onSuccess?()
+//			onSuccess?()
 			return
 		}
 
@@ -275,6 +275,7 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 	private var currentSong: Song? = nil
 	private var activityView: ViewModel? = nil
 	private var pingTimer: Timer? = nil
+	private var isPlaying: Bool = false
 
 	private var audioCon: StreamAudioController
 

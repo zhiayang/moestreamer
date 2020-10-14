@@ -83,6 +83,11 @@ class ViewController : NSObject, NSPopoverDelegate
 		}
 	}
 
+	func getModel() -> MainModel
+	{
+		return self.viewModel
+	}
+
 	func showPopover()
 	{
 		self.popover.show(relativeTo: statusBarButton.bounds, of: statusBarButton,

@@ -14,6 +14,9 @@ class AppDelegate : NSObject, NSApplicationDelegate
 	{
 		self.controller = ViewController()
 
+		globalMediaKeyHandler.enable(Settings.get(.shouldUseMediaKeys()),
+									 musicCon: self.controller.getModel().controller())
+
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
 			self.controller.showPopover()
 		}
@@ -26,6 +29,6 @@ class AppDelegate : NSObject, NSApplicationDelegate
 	func applicationWillTerminate(_ aNotification: Notification)
 	{
 		// Insert code here to tear down your application
+		globalMediaKeyHandler.enable(false, musicCon: self.controller.getModel().controller())
 	}
 }
-

@@ -23,6 +23,10 @@ struct LogView : View
 			Spacer()
 
 			HStack() {
+				Text("moestreamer version \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "<error>")")
+			}
+
+			HStack() {
 				Text("songs played: \(self.stats.songsPlayed)")
 
 				Spacer()
