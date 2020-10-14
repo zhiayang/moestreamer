@@ -12,7 +12,7 @@ import SwiftyJSON
 
 class ListenMoeSession
 {
-	private let apiURL = URL(string: "https://listen.moe/api")!
+	private let apiURL = URL(string: "https://listen.moe/graphql")!
 	private var token: String? = nil
 
 	private var username: String = ""
@@ -50,8 +50,9 @@ class ListenMoeSession
 		let actView = activityView ?? self.activityView
 
 		// already logged in.
-		if self.isLoggedIn() && !force {
-			Logger.log("listen.moe", msg: "already logged in", withView: actView)
+		if self.isLoggedIn() && !force
+		{
+			onSuccess?()
 			return
 		}
 
@@ -63,27 +64,63 @@ class ListenMoeSession
 		self.token = nil
 		actView?.spin()
 
-		let route = self.apiURL.appendingPathComponent("login")
-		just.post(route, json: [ "username": self.username, "password": self.password ]) { (resp) in
+		// apparently listen.moe moved from a simple, perfectly fine REST api to some heckin "graphql"
+		// monstrosity that's a shitty implementation of RPC on top of JSON on top of HTTP on top of TCP
+		// i don't want to deal with whatever nonsensical libraries, so i'm just going to construct and
+		// send the json manually.
+		let graphql_query = """
+		mutation login($username: String!, $password: String!) {
+			login(username: $username, password: $password) {
+				user {
+					uuid
+					username
+				}
+				token
+			}
+		}
+		"""
+
+		let query: [String: Any] = [
+			"operationName": "login",
+			"variables": [ "username": self.username, "password": self.password ],
+			"query": graphql_query
+		]
+
+		just.post(self.apiURL, json: query, asyncCompletionHandler: { (resp) in
 
 			// we can't do this in this thread, because we're not supposed to poke the UI
 			// from another thread -- and the http response handler presumably does not run
 			// in the UI thread (for obvious reasons).
 
-			if (200...299).contains(resp.statusCode!)
+			actView?.unspin()
+			if let error = resp.error
 			{
-				self.token = JSON(parseJSON: resp.text!)["token"].string!
-				Logger.log("listen.moe", msg: "logged in!", withView: actView)
+				Logger.error("listen.moe", msg: "error while logging in: \(error)")
+				return;
+			}
 
-				if !self.token!.isEmpty
+			guard let statusCode = resp.statusCode else {
+				return;
+			}
+
+			if (200...299).contains(statusCode) && resp.text != nil
+			{
+				if let token = JSON(parseJSON: resp.text!)["data"]["login"]["token"].string, !token.isEmpty
 				{
+					self.token = token
+					Logger.log("listen.moe", msg: "logged in!", withView: actView)
+
 					// update the default headers.
 					self.defaultHeaders["Authorization"] = "Bearer \(self.token!)"
 					self.just = JustOf<HTTP>(defaults: JustSessionDefaults(headers: self.defaultHeaders))
-				}
 
-				// call the handler, if any
-				onSuccess?()
+					// call the handler, if any
+					 onSuccess?()
+				}
+				else
+				{
+					Logger.error("listen.moe", msg: "login failed!")
+				}
 
 				// this is a nasty (visual) hack -- we need the parent to be poked so it
 				// can update buttons (eg. logging in lets us favourite songs). BUT, if we
@@ -94,18 +131,16 @@ class ListenMoeSession
 					self.activityView?.poke()
 				}
 			}
-			else if resp.statusCode! == 401
+			else if statusCode == 401
 			{
 				Logger.error("listen.moe", msg: "invalid login credentials", withView: actView)
 			}
 			else
 			{
-				let msg = "\(resp.statusCode!) - \(JSON(parseJSON: resp.text!)["message"].string!)"
+				let msg = "\(statusCode) - \(JSON(parseJSON: resp.text ?? "")["message"].string ?? "response: \(resp.text ?? "none")")"
 				Logger.log("listen.moe", msg: msg, withView: actView)
 			}
-
-			actView?.unspin()
-		}
+		})
 	}
 
 	func isLoggedIn() -> Bool
@@ -115,7 +150,8 @@ class ListenMoeSession
 
 	func checkResponse<T>(resp: HTTPResult, onSuccess: @escaping (HTTPResult) -> T, onFailure: ((HTTPResult) -> Void)? = nil) -> T?
 	{
-		if (200...299).contains(resp.statusCode!) {
+		if (200...299).contains(resp.statusCode!)
+		{
 			return onSuccess(resp)
 		}
 		else if resp.statusCode! == 401
@@ -126,7 +162,7 @@ class ListenMoeSession
 		}
 		else
 		{
-			let err = "\(resp.statusCode!) - \(JSON(parseJSON: resp.text!)["message"].string!)"
+			let err = "\(resp.statusCode!) - \(JSON(parseJSON: resp.text!)["message"].string ?? "response: \(resp.text!)")"
 			Logger.error("listen.moe", msg: err, withView: self.activityView)
 
 			onFailure?(resp)
@@ -140,25 +176,56 @@ class ListenMoeSession
 			return false
 		}
 
-		let route = self.apiURL.appendingPathComponent("favorites").appendingPathComponent(self.username)
-		return checkResponse(resp: just.get(route), onSuccess: { resp in
-			if let favs = JSON(parseJSON: resp.text!)["favorites"].array {
-				if let _ = favs.first(where: { (fav) in
-					return song.id == fav["id"].int
-				}) {
-					return true
-				}
+		let graphql_query = """
+		query checkFavorite($songs: [Int!]!) {
+			checkFavorite(songs: $songs)
+		}
+		"""
+
+		let query: [String: Any] = [
+			"operationName": "checkFavorite",
+			"variables": [
+				"songs": [ song.id ]
+			],
+			"query": graphql_query
+		]
+		return checkResponse(resp: just.post(self.apiURL, json: query), onSuccess: { resp in
+			if let favs = JSON(parseJSON: resp.text!)["data"]["checkFavorite"].array {
+				return favs.first(where: { (fav) in
+					fav.int == song.id
+				}) != nil
 			}
 			return false
 
 		}) ?? false
 	}
 
-
-	func favouriteSong(song: Song, con: ListenMoeController)
+	// note: because the API operates on a toggling basis (which is really heckin dumb),
+	// there is a possibility of a desync between the ui and the actual state. you can
+	// fix that by refreshing though, so it isn't that bad.
+	func setFavouriteState(fav: Bool, song: Song, con: ListenMoeController)
 	{
-		let route = self.apiURL.appendingPathComponent("favorites").appendingPathComponent("\(song.id)")
-		just.post(route) { (resp) in
+		if self.username.isEmpty || self.token == nil {
+			return
+		}
+
+		let graphql_query = """
+		mutation favoriteSong($id: Int!) {
+			favoriteSong(id: $id) {
+				id
+			}
+		}
+		"""
+
+		let query: [String: Any] = [
+			"operationName": "favoriteSong",
+			"variables": [
+				"id": song.id
+			],
+			"query": graphql_query
+		]
+
+		just.post(self.apiURL, json: query, asyncCompletionHandler: { (resp) in
 
 			self.checkResponse(resp: resp, onSuccess: { resp in
 				var s = song
@@ -166,10 +233,11 @@ class ListenMoeSession
 				{
 					s.isFavourite.finalise()
 					con.setCurrentSong(song: s, quiet: true)
-
-					Logger.log("listen.moe", msg: "favourited \(s.title)", withView: self.activityView)
-					self.activityView?.poke()
 				}
+
+				Logger.log("listen.moe", msg: "\(fav ? "" : "un")favourited \(s.title)", withView: self.activityView)
+				self.activityView?.poke()
+
 			}, onFailure: { _ in
 				var s = song
 				s.isFavourite.cancel()
@@ -177,32 +245,18 @@ class ListenMoeSession
 				con.setCurrentSong(song: s, quiet: true)
 				self.activityView?.poke()
 			})
-		}
+		})
+	}
+
+
+	func favouriteSong(song: Song, con: ListenMoeController)
+	{
+		setFavouriteState(fav: true, song: song, con: con)
 	}
 
 	func unfavouriteSong(song: Song, con: ListenMoeController)
 	{
-		let route = self.apiURL.appendingPathComponent("favorites").appendingPathComponent("\(song.id)")
-		just.delete(route) { (resp) in
-
-			self.checkResponse(resp: resp, onSuccess: { resp in
-				var s = song
-				if con.getCurrentSong()?.id == s.id
-				{
-					s.isFavourite.finalise()
-					con.setCurrentSong(song: s, quiet: true)
-
-					Logger.log("listen.moe", msg: "unfavourited \(s.title)", withView: self.activityView)
-					self.activityView?.poke()
-				}
-			}, onFailure: { _ in
-				var s = song
-				s.isFavourite.cancel()
-
-				con.setCurrentSong(song: s, quiet: true)
-				self.activityView?.poke()
-			})
-		}
+		setFavouriteState(fav: false, song: song, con: con)
 	}
 }
 

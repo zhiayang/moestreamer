@@ -46,21 +46,25 @@ struct ScrollView<Content: View> : NSViewControllerRepresentable
 	var scrollPosition: Binding<CGPoint?>
 
 	var hasScrollbars: Bool
+	var axes: Axis.Set
 	var content: () -> Content
 
-	init(hasScrollbars: Bool = true, scrollTo: Binding<CGPoint?>, @ViewBuilder content: @escaping () -> Content)
+	init(_ axes: Axis.Set = .vertical, hasScrollbars: Bool = true, scrollTo: Binding<CGPoint?>,
+		 @ViewBuilder content: @escaping () -> Content)
 	{
 		self.scrollPosition = scrollTo
 		self.hasScrollbars = hasScrollbars
 		self.content = content
+		self.axes = axes
 	}
 
 	func makeNSViewController(context: NSViewControllerRepresentableContext<Self>) -> NSViewControllerType
 	{
 		let scrollViewController = NSScrollViewController(rootView: self.content())
 
-		scrollViewController.scrollView.hasVerticalScroller = hasScrollbars
-		scrollViewController.scrollView.hasHorizontalScroller = false
+		scrollViewController.scrollView.hasVerticalScroller = self.axes.contains(.vertical)
+		scrollViewController.scrollView.hasHorizontalScroller = self.axes.contains(.horizontal)
+		scrollViewController.scrollView.autohidesScrollers = true
 
 		return scrollViewController
 	}

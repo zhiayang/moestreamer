@@ -1,4 +1,4 @@
-binary "https://code.videolan.org/videolan/VLCKit/raw/master/Packaging/VLCKit.json" "3.3.13"
+binary "https://code.videolan.org/videolan/VLCKit/raw/master/Packaging/VLCKit.json" "3.3.14"
 github "SwiftyJSON/SwiftyJSON" "4.3.0"
 github "attaswift/Deque" "v3.1.1"
 github "daltoniam/Starscream" "3.1.1"

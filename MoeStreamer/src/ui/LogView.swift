@@ -63,47 +63,49 @@ struct LogView : View
 			}
 
 			VStack() {
-				ScrollView(scrollTo: self.$scrollPos) {
-					if self.logger.getLines().isEmpty
-					{
-						EmptyView().frame(height: 40)
-					}
-					else
-					{
-						ForEach(self.logger.getLines(), id: \.self) { line in
-							HStack() {
-								Text(line.string())
-									.font(.custom("Menlo", size: 10))
-									.multilineTextAlignment(.leading)
-									.foregroundColor(line.isError() ? .red : nil)
-									.frame(alignment: .leading)
-									.opacity(self.textOpacity)
-
-								Spacer()
-							}
-							.padding(.leading, 4)
-							.padding(.vertical, 2)
-							.onAppear() {
-								self.scrollPos = CGPoint(x: 0, y: 100000)
-							}
-						}
-
-						if self.logger.getMsgRepeatCount() > 1
+				GeometryReader { (geometry) in
+					ScrollView(.vertical, scrollTo: self.$scrollPos) {
+						if self.logger.getLines().isEmpty
 						{
-							HStack() {
-								Text("last message repeated \(self.logger.getMsgRepeatCount()) times")
-									.font(.custom("Menlo", size: 10))
-									.multilineTextAlignment(.leading)
-									.foregroundColor(nil)
-									.frame(alignment: .leading)
-									.opacity(self.textOpacity)
+							EmptyView().frame(height: 40)
+						}
+						else
+						{
+							ForEach(self.logger.getLines(), id: \.self) { line in
+								HStack() {
+									Text(line.string())
+										.font(.custom("Menlo", size: 10))
+										.multilineTextAlignment(.leading)
+										.frame(width: geometry.size.width, alignment: .leading)
+										.foregroundColor(line.isError() ? .red : nil)
+										.opacity(self.textOpacity)
 
-								Spacer()
+									Spacer()
+								}
+								.padding(.leading, 4)
+								.padding(.vertical, 2)
+								.onAppear() {
+									self.scrollPos = CGPoint(x: 0, y: 100000)
+								}
 							}
-							.padding(.leading, 4)
-							.padding(.vertical, 2)
-							.onAppear() {
-								self.scrollPos = CGPoint(x: 0, y: 100000)
+
+							if self.logger.getMsgRepeatCount() > 1
+							{
+								HStack() {
+									Text("last message repeated \(self.logger.getMsgRepeatCount()) times")
+										.font(.custom("Menlo", size: 10))
+										.multilineTextAlignment(.leading)
+										.foregroundColor(nil)
+										.frame(alignment: .leading)
+										.opacity(self.textOpacity)
+
+									Spacer()
+								}
+								.padding(.leading, 4)
+								.padding(.vertical, 2)
+								.onAppear() {
+									self.scrollPos = CGPoint(x: 0, y: 100000)
+								}
 							}
 						}
 					}
