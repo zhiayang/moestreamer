@@ -31,6 +31,8 @@ class MediaKeyHandler
 
 		CGEvent.tapEnable(tap: self.eventTap, enable: true)
 		enabled = true
+
+		Logger.log(msg: "media keys enabled")
 	}
 
 	private func destroy()
@@ -40,6 +42,9 @@ class MediaKeyHandler
 			CGEvent.tapEnable(tap: self.eventTap, enable: false)
 			CFRunLoopRemoveSource(CFRunLoopGetMain(), self.runLoopSource, .commonModes)
 			CFMachPortInvalidate(self.eventTap)
+
+			Logger.log(msg: "media keys ignored")
+			self.enabled = false
 		}
 	}
 

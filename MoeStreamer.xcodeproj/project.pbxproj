@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2B125D7D253753D1000C45C5 /* MediaKeyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */; };
+		2B520CA12537F2A400FECA0E /* DFRFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B520CA02537F2A400FECA0E /* DFRFoundation.framework */; };
 		2B84385A23F0208D00291BDA /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B84385923F0208D00291BDA /* SwiftyJSON.framework */; };
 		2B84385B23F0209100291BDA /* SwiftyJSON.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2B84385923F0208D00291BDA /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2B9DB59E23F0074500950421 /* ListenMoe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DB59D23F0074500950421 /* ListenMoe.swift */; };
@@ -82,6 +83,8 @@
 
 /* Begin PBXFileReference section */
 		2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKeyHandler.swift; sourceTree = "<group>"; };
+		2B520C9F2537ECC300FECA0E /* MoeStreamer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MoeStreamer-Bridging-Header.h"; sourceTree = "<group>"; };
+		2B520CA02537F2A400FECA0E /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = ../../../../System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<group>"; };
 		2B84385923F0208D00291BDA /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
 		2B9DB59D23F0074500950421 /* ListenMoe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenMoe.swift; sourceTree = "<group>"; };
 		2B9DB59F23F0085E00950421 /* ServiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceController.swift; sourceTree = "<group>"; };
@@ -140,6 +143,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B520CA12537F2A400FECA0E /* DFRFoundation.framework in Frameworks */,
 				2BD367EE23FDBCA900926068 /* Deque.framework in Frameworks */,
 				2BA283F923F140EA008E0DEB /* Just.framework in Frameworks */,
 				2BD486F523EFF41F0066F1C4 /* libiconv.tbd in Frameworks */,
@@ -167,6 +171,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2B520C9D2537E9C200FECA0E /* touchbar */ = {
+			isa = PBXGroup;
+			children = (
+				2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */,
+			);
+			path = touchbar;
+			sourceTree = "<group>";
+		};
 		2B79C81423F1FD19001C87CD /* ui */ = {
 			isa = PBXGroup;
 			children = (
@@ -186,12 +198,13 @@
 				2B79C81423F1FD19001C87CD /* ui */,
 				2BE995EE23FBA0A50092023C /* audio */,
 				2BE995EB23FB9FC10092023C /* backend */,
+				2B520C9D2537E9C200FECA0E /* touchbar */,
 				2BA9071823F0731300782C94 /* Settings.swift */,
 				2BCFF60123F1DF9700A58EFE /* Logger.swift */,
 				2BD83F8B23F331E100422034 /* Statistics.swift */,
 				2B9DB59F23F0085E00950421 /* ServiceController.swift */,
 				2BD486C123EFE3030066F1C4 /* AppDelegate.swift */,
-				2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */,
+				2B520C9F2537ECC300FECA0E /* MoeStreamer-Bridging-Header.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -238,6 +251,7 @@
 		2BD486D623EFF3A40066F1C4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2B520CA02537F2A400FECA0E /* DFRFoundation.framework */,
 				2BD367ED23FDBCA900926068 /* Deque.framework */,
 				2BE995E923FB9F210092023C /* iTunesLibrary.framework */,
 				2BA283F823F140EA008E0DEB /* Just.framework */,
@@ -466,6 +480,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "MoeStreamer/src/MoeStreamer-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -520,6 +535,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "MoeStreamer/src/MoeStreamer-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
@@ -546,10 +562,14 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.10.0;
+				MARKETING_VERSION = 0.10.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+				);
 			};
 			name = Debug;
 		};
@@ -575,10 +595,14 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.10.0;
+				MARKETING_VERSION = 0.10.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+				);
 			};
 			name = Release;
 		};

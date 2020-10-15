@@ -14,8 +14,14 @@ class AppDelegate : NSObject, NSApplicationDelegate
 	{
 		self.controller = ViewController()
 
+		// register the media key handler, if need to.
 		globalMediaKeyHandler.enable(Settings.get(.shouldUseMediaKeys()),
 									 musicCon: self.controller.getModel().controller())
+
+		// register the sleep handler, so we pause on sleep. no need to resume on wakeup,
+		// cos that'll be annoying.
+		NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(AppDelegate.onSleep),
+														  name: NSWorkspace.willSleepNotification, object: nil)
 
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
 			self.controller.showPopover()
@@ -24,6 +30,13 @@ class AppDelegate : NSObject, NSApplicationDelegate
 		if Settings.get(.shouldNotifySongChange()) {
 			Notifier.create()
 		}
+	}
+
+	@objc func onSleep()
+	{
+		Logger.log(msg: "pausing playback due to sleep")
+		self.controller.getModel().isPlaying = false
+		self.controller.getModel().poke()
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification)
