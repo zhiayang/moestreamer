@@ -6,7 +6,7 @@ import Cocoa
 import Foundation
 import UserNotifications
 
-struct Song : Equatable
+struct Song : Equatable, Identifiable
 {
 	let id: Int
 	var title: String = ""
@@ -77,6 +77,7 @@ struct ServiceCapabilities : OptionSet
 	static let serverSidePause = ServiceCapabilities(rawValue: 1 << 1)
 	static let previousTrack   = ServiceCapabilities(rawValue: 1 << 2)
 	static let nextTrack       = ServiceCapabilities(rawValue: 1 << 3)
+	static let searchTracks    = ServiceCapabilities(rawValue: 1 << 4)
 }
 
 protocol ServiceController : AnyObject
@@ -95,6 +96,10 @@ protocol ServiceController : AnyObject
 
 	func audioController() -> AudioController
 	func getCapabilities() -> ServiceCapabilities
+
+	func searchSongs(name: String) -> [Song];
+
+	func setNextSong(_ song: Song, immediately: Bool)
 
 	init(viewModel: ViewModel?)
 

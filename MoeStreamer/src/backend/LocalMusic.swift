@@ -5,21 +5,35 @@
 import Foundation
 import iTunesLibrary
 
+extension StringProtocol
+{
+	var words: [SubSequence] { components(separated: .byWords) }
+
+	func components(separated options: String.EnumerationOptions)-> [SubSequence] {
+		var components: [SubSequence] = []
+		enumerateSubstrings(in: startIndex..., options: options) { _, range, _, _ in
+			components.append(self[range])
+		}
+		return components
+	}
+}
+
 // the only reason this is a class is so we can have reference semantics.
 class MusicItem
 {
+	var songTitle: String
 	var song: Song
-	var location: URL?
 	var mediaItem: ITLibMediaItem
 
 	var volumeMultiplier: Double = 1.0
 
-	init(_ song: Song, at location: URL?, withMediaItem item: ITLibMediaItem, withVolumeScale mult: Double)
+	init(_ song: Song, withMediaItem item: ITLibMediaItem, withVolumeScale mult: Double)
 	{
 		self.song = song
-		self.location = location
 		self.mediaItem = item
 		self.volumeMultiplier = mult
+
+		self.songTitle = song.title
 	}
 }
 
@@ -36,7 +50,11 @@ class LocalMusicController : ServiceController
 	private var currentIdx: Int = 0
 	private var currentSong: MusicItem? = nil
 
-//	private var nextSongGenerator: (
+	// oof
+	private var songsById: [Int: MusicItem] = [:]
+
+	private var manuallyQueuedSongs: [MusicItem] = [ ]
+
 	private var shuffleBehaviour: ShuffleBehaviour
 
 	// a bit hacky, but whatever.
@@ -65,8 +83,28 @@ class LocalMusicController : ServiceController
 		return self.currentSong != nil && !self.isWaitingForFirstSong
 	}
 
+	private func changeSong(_ song: MusicItem) -> MusicItem
+	{
+		self.currentSong = song
+
+		let s = self.currentSong!
+		Logger.log(msg: "song: \(s.song.title)")
+		self.viewModel?.onSongChange(song: s.song)
+		Statistics.instance.logSongPlayed()
+
+		return s
+	}
+
 	func getNextSong() -> MusicItem?
 	{
+		if !self.manuallyQueuedSongs.isEmpty
+		{
+			defer { self.manuallyQueuedSongs.remove(at: 0) }
+			let song = self.manuallyQueuedSongs.first!
+
+			return self.changeSong(song)
+		}
+
 		self.currentIdx += 1
 		
 		if self.currentIdx == self.songs.count {
@@ -85,21 +123,53 @@ class LocalMusicController : ServiceController
 					continue
 				}
 
-				ret.location = ret.mediaItem.location
-				self.currentSong = ret
-				break
+				return self.changeSong(ret)
 			}
-
-			let s = self.currentSong!
-			Logger.log(msg: "song: \(s.song.title)")
-			self.viewModel?.onSongChange(song: s.song)
-			Statistics.instance.logSongPlayed()
-
-			return s
 		}
 		else
 		{
 			return nil
+		}
+	}
+
+	func searchSongs(name: String) -> [Song]
+	{
+		let searchWords = name.words.map({ $0.lowercased() })
+
+		return self.songs.filter { (item: MusicItem) -> Bool in
+
+			let titleWords = item.song.title.words.map({ $0.lowercased() })
+			return searchWords.allSatisfy { (word: String) -> Bool in
+				titleWords.contains(where: { $0.hasPrefix(word) })
+			}
+
+		}.map { $0.song }
+
+		// ideally this would work, but it doesn't
+		/*
+			NSArray* list = @[@"test this",@"hello world",@"bye hello",@"helloween"];
+			NSString* search = [NSString stringWithFormat:@".*\\b%@\\b.*", [NSRegularExpression escapedPatternForString:@"hello"]];
+			NSPredicate* predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",search];
+			NSArray* filtered = [list filteredArrayUsingPredicate:predicate];
+			NSLog(@"%lu",(unsigned long)[filtered count]);
+			for(NSString* filter in filtered){
+			NSLog(@"%@",filter);
+
+			let search = ".*\\b\(NSRegularExpression.escapedPattern(for: name))\\b.*"
+			let pred = NSPredicate(format: "SELF.songTitle MATCHES %@", search as NSString)
+
+			let list = (self.songs as NSArray).filtered(using: pred).map { ($0 as! MusicItem).song.title }
+		*/
+	}
+
+	func setNextSong(_ song: Song, immediately: Bool)
+	{
+		if let item = self.songsById[song.id] {
+
+			Logger.log(msg: "queued: \(song.title)")
+
+			self.manuallyQueuedSongs.append(item)
+			if immediately { self.nextSong() }
 		}
 	}
 
@@ -167,9 +237,7 @@ class LocalMusicController : ServiceController
 							artists: [ item.artist?.name ?? "" ],
 							isFavourite: .No)
 
-			// we also don't init the location, because otherwise it becomes super damn slow,
-			// probably due to checking that the files exist on disk ):
-			return MusicItem(song, at: nil, withMediaItem: item, withVolumeScale: volMult)
+			return MusicItem(song, withMediaItem: item, withVolumeScale: volMult)
 		}
 
 		if let pl = self.currentPlaylist {
@@ -227,6 +295,10 @@ class LocalMusicController : ServiceController
 
 					Logger.log("itunes", msg: "loaded \(self.songs.count) songs from playlist \(pl.name)")
 					self.viewModel?.unspin()
+				}
+
+				self.songs.forEach { (item: MusicItem) in
+					self.songsById[item.song.id] = item
 				}
 			}
 		}
@@ -294,7 +366,7 @@ class LocalMusicController : ServiceController
 
 	func getCapabilities() -> ServiceCapabilities
 	{
-		return [ .nextTrack ]
+		return [ .nextTrack, .searchTracks ]
 	}
 
 	func setViewModel(viewModel: ViewModel)

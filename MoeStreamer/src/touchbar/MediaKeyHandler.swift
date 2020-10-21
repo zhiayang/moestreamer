@@ -4,13 +4,72 @@
 
 import Cocoa
 import Foundation
+import MediaPlayer
 
-class MediaKeyHandler
+@available(macOS 10.12.2, *)
+fileprivate extension NSTouchBarItem.Identifier
+{
+	static let playPause = NSTouchBarItem.Identifier("\(Bundle.main.bundleIdentifier!).TouchBarItem.playPause")
+}
+
+class MediaKeyHandler : NSObject
 {
 	fileprivate var enabled: Bool = false
 	fileprivate var eventTap: CFMachPort! = nil
+	fileprivate var mediaKeyRefreshTimer: Timer? = nil
+	fileprivate var controller: ServiceController? = nil
 	fileprivate var runLoopSource: CFRunLoopSource! = nil
-	fileprivate var controller: ServiceController! = nil
+
+	override init()
+	{
+		super.init()
+		self.updateKeys()
+	}
+
+	@objc func doNothing(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus
+	{
+		return .success
+	}
+
+	private func activateMPRemote()
+	{
+		let remote = MPRemoteCommandCenter.shared()
+		remote.playCommand.isEnabled = true
+		remote.playCommand.addTarget(self, action: #selector(doNothing))
+
+		remote.pauseCommand.isEnabled = true
+		remote.pauseCommand.addTarget(self, action: #selector(doNothing))
+
+		remote.togglePlayPauseCommand.isEnabled = true
+		remote.togglePlayPauseCommand.addTarget(self, action: #selector(doNothing))
+
+		remote.previousTrackCommand.isEnabled = true
+		remote.previousTrackCommand.addTarget(self, action: #selector(doNothing))
+
+		remote.nextTrackCommand.isEnabled = true
+		remote.nextTrackCommand.addTarget(self, action: #selector(doNothing))
+
+		// since we already always hijacking the media keys, just hijack it even more.
+		// force-update the media keys every 2 seconds.
+		self.mediaKeyRefreshTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
+			self.updateKeys()
+		}
+	}
+
+	private func deactivateMPRemote()
+	{
+		let remote = MPRemoteCommandCenter.shared()
+
+		remote.playCommand.removeTarget(self)
+		remote.pauseCommand.removeTarget(self)
+		remote.nextTrackCommand.removeTarget(self)
+		remote.previousTrackCommand.removeTarget(self)
+		remote.togglePlayPauseCommand.removeTarget(self)
+
+		MPNowPlayingInfoCenter.default().playbackState = .stopped
+
+		self.mediaKeyRefreshTimer?.invalidate()
+	}
 
 	private func setup()
 	{
@@ -33,18 +92,21 @@ class MediaKeyHandler
 		enabled = true
 
 		Logger.log(msg: "media keys enabled")
+		self.activateMPRemote()
 	}
 
 	private func destroy()
 	{
 		if self.enabled
 		{
+			self.enabled = false
+
 			CGEvent.tapEnable(tap: self.eventTap, enable: false)
 			CFRunLoopRemoveSource(CFRunLoopGetMain(), self.runLoopSource, .commonModes)
 			CFMachPortInvalidate(self.eventTap)
 
 			Logger.log(msg: "media keys ignored")
-			self.enabled = false
+			self.deactivateMPRemote()
 		}
 	}
 
@@ -59,6 +121,14 @@ class MediaKeyHandler
 
 		enable ? self.setup()
 			   : self.destroy()
+	}
+
+	func updateKeys()
+	{
+		let vm = self.controller?.getViewModel() as? MainModel
+		MPNowPlayingInfoCenter.default().playbackState = (vm?.isPlaying ?? false)
+			? .playing
+			: .paused
 	}
 }
 
@@ -106,13 +176,15 @@ fileprivate func handlerCallback(proxy: CGEventTapProxy, type: CGEventType, even
 		{
 			print("media key: play/pause")
 
+			let vm = this.controller?.getViewModel() as? MainModel
+
 			// poke it, so the play/pause button updates properly.
-			(this.controller.getViewModel() as? MainModel)?.isPlaying.toggle()
-			this.controller.getViewModel()?.poke()
+			vm?.isPlaying.toggle()
+			vm?.poke()
 		}
 		else if keycode == NX_KEYTYPE_NEXT || keycode == NX_KEYTYPE_FAST
 		{
-			this.controller.nextSong()
+			this.controller?.nextSong()
 			print("media key: next")
 		}
 	}

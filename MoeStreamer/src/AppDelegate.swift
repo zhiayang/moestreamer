@@ -26,7 +26,7 @@ class AppDelegate : NSObject, NSApplicationDelegate
 		NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(AppDelegate.onWake),
 														  name: NSWorkspace.didWakeNotification, object: nil)
 
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
 			self.controller.showPopover()
 		}
 

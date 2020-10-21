@@ -7,13 +7,36 @@ import VLCKit
 import SwiftUI
 import Foundation
 
+enum SubViewKind_
+{
+	case None
+	case Settings
+	case Search
+	case Log
+}
+
+class SubViewKind : ObservableObject
+{
+	@Published var kind: SubViewKind_
+
+	init(of: SubViewKind_)
+	{
+		self.kind = of
+	}
+
+	func toggle(into: SubViewKind_)
+	{
+		if self.kind == into { self.kind = .None }
+		else                 { self.kind = into }
+	}
+}
+
 struct MainView : View
 {
 	@Environment(\.colorScheme)
 	var colourScheme: ColorScheme
 
-	@State var showingSettings: Bool = false
-	@State var showingLog: Bool = false
+	@ObservedObject var currentSubView: SubViewKind = SubViewKind(of: .None)
 	@State var spinAngle: Angle = .zero
 
 	@ObservedObject private var model: MainModel
@@ -120,24 +143,6 @@ struct MainView : View
 
 								// mute/unmute button
 								Button(action: {
-//									let song: Song
-//									if self.model.isMuted
-//									{
-//										song = Song(id: 100, title: "lmao what even",
-//													album: ("kekw", #imageLiteral(resourceName: "zz_NoCoverArt")),
-//													artists: [ "this is some artist" ],
-//													isFavourite: .Yes)
-//									}
-//									else
-//									{
-//										song = Song(id: 101, title: "not playing",
-//													album: (nil, nil),
-//													artists: [ "omomomo" ],
-//													isFavourite: .No)
-//									}
-//
-//									self.model.onSongChange(song: song)
-
 									self.model.isMuted.toggle()
 									self.model.poke()
 								}) {
@@ -175,8 +180,7 @@ struct MainView : View
 					.padding(.top, 4)
 
 					Button(action: {
-						self.showingSettings.toggle()
-						self.showingLog = false
+						self.currentSubView.toggle(into: .Settings)
 					}) {
 						Image(nsImage: #imageLiteral(resourceName: "Settings"))
 							.resizable()
@@ -185,9 +189,22 @@ struct MainView : View
 					}
 					.buttonStyle(PlainButtonStyle())
 
+					// if the backend doesn't support search (eg. listen.moe) then don't show the button, duh
+					if self.model.controller().getCapabilities().contains(.searchTracks)
+					{
+						Button(action: {
+							self.currentSubView.toggle(into: .Search)
+						}) {
+							Image(nsImage: #imageLiteral(resourceName: "Search"))
+								.resizable()
+								.frame(width: 16, height: 16)
+								.foregroundColor(self.iconColour)
+						}
+						.buttonStyle(PlainButtonStyle())
+					}
+
 					Button(action: {
-						self.showingLog.toggle()
-						self.showingSettings = false
+						self.currentSubView.toggle(into: .Log)
 					}) {
 						Image(nsImage: #imageLiteral(resourceName: "Log"))
 							.resizable()
@@ -247,22 +264,29 @@ struct MainView : View
 				}
 			}
 
-			if self.showingLog || self.showingSettings
+			if self.currentSubView.kind != .None
 			{
 				VStack() {
 					Divider()
-					if self.showingLog
+
+					let musicConBinding = Binding(get: { self.model.controller() },
+												  set: { self.model.set(controller: $0) })
+
+					switch self.currentSubView.kind
 					{
-						LogView()
+						case .None:
+							EmptyView()
+
+						case .Log:
+							LogView()
+
+						case .Search:
+							SearchView(musicCon: musicConBinding)
+
+						case .Settings:
+							SettingsView(musicCon: musicConBinding)
 					}
-					else if self.showingSettings
-					{
-						SettingsView(musicCon: Binding(get: { self.model.controller() },
-													   set: { self.model.set(controller: $0) }
-						))
-					}
-				}
-				.padding(.top, -8)
+				}.padding(.top, -8)
 			}
 		}
 	}

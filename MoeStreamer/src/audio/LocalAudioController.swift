@@ -9,7 +9,7 @@ private extension MusicItem
 {
 	func toAVItem() -> AVPlayerItem
 	{
-		let ret = AVPlayerItem(url: self.location!)
+		let ret = AVPlayerItem(url: self.mediaItem.location!)
 		return ret
 	}
 }

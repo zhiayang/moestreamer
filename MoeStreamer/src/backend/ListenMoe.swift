@@ -314,6 +314,16 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 		return self.audioCon
 	}
 
+	func searchSongs(name: String) -> [Song]
+	{
+		return []
+	}
+
+	func setNextSong(_ song: Song, immediately: Bool)
+	{
+		// nothing
+	}
+
 	func sessionLogin(activityView: ViewModel?, force: Bool)
 	{
 		// try to login again.

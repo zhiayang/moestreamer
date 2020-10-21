@@ -76,6 +76,14 @@ class ViewController : NSObject, NSPopoverDelegate
 					case UInt8(ascii: "\u{1b}"):
 						self.popover.performClose(nil)
 
+					case UInt8(ascii: "/"):
+						if self.viewModel.controller().getCapabilities().contains(.searchTracks)
+						{
+							self.rootView.currentSubView.toggle(into: .Search)
+							self.viewModel.poke()
+						}
+
+
 					default:
 						break
 				}
@@ -112,7 +120,7 @@ class ViewController : NSObject, NSPopoverDelegate
 
 	func popoverDidClose(_ notification: Notification)
 	{
-		self.rootView.showingSettings = false
+		self.rootView.currentSubView.kind = .None
 
 		// dirty, but reset the controller with a fresh copy so we start from the
 		// root view.
@@ -149,7 +157,6 @@ class MainModel : ViewModel, ObservableObject
 
 	private var currentSong: Song? = nil
 
-//	let objectWillChange = PassthroughSubject<Void, Never>()
 	var isPlaying: Bool = false {
 		didSet {
 			if isPlaying
@@ -169,6 +176,7 @@ class MainModel : ViewModel, ObservableObject
 				self.musicCon.audioController().pause()
 				self.musicCon.pause()
 			}
+			globalMediaKeyHandler.updateKeys()
 		}
 	}
 
@@ -238,7 +246,7 @@ class MainModel : ViewModel, ObservableObject
 		}
 	}
 
-	private static func getDefaultAlbumArt() -> AnyView
+	public static func getDefaultAlbumArt() -> AnyView
 	{
 		return AnyView(Image(nsImage: #imageLiteral(resourceName: "NoCoverArt2"))
 			.resizable()
@@ -251,6 +259,8 @@ class MainModel : ViewModel, ObservableObject
 
 	func onSongChange(song: Song?)
 	{
+		globalMediaKeyHandler.updateKeys()
+
 		// welcome to the land of toxicity.
 		let animDuration = 0.3
 

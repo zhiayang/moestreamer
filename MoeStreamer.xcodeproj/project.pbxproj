@@ -61,6 +61,7 @@
 		2BE995F223FBAB340092023C /* PopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995F123FBAB340092023C /* PopupButton.swift */; };
 		2BE995F623FBB76B0092023C /* MusicBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995F523FBB76B0092023C /* MusicBackend.swift */; };
 		2BE995F823FBEA4F0092023C /* LocalAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995F723FBEA4E0092023C /* LocalAudioController.swift */; };
+		2BF4A33C254070E100942DCF /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF4A33B254070E100942DCF /* SearchView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -136,6 +137,7 @@
 		2BE995F123FBAB340092023C /* PopupButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupButton.swift; sourceTree = "<group>"; };
 		2BE995F523FBB76B0092023C /* MusicBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicBackend.swift; sourceTree = "<group>"; };
 		2BE995F723FBEA4E0092023C /* LocalAudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAudioController.swift; sourceTree = "<group>"; };
+		2BF4A33B254070E100942DCF /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +187,7 @@
 				2BD486C323EFE3030066F1C4 /* MainView.swift */,
 				2BA9071A23F07DF200782C94 /* SettingsView.swift */,
 				2BCFF5FF23F1CEEE00A58EFE /* LogView.swift */,
+				2BF4A33B254070E100942DCF /* SearchView.swift */,
 				2BA283FB23F14607008E0DEB /* ViewWrappers.swift */,
 				2BD486D423EFE6C20066F1C4 /* ViewController.swift */,
 				2BE995E023FB9B6B0092023C /* wrappers */,
@@ -387,6 +390,7 @@
 				2BCFF60223F1DF9700A58EFE /* Logger.swift in Sources */,
 				2BA9071B23F07DF200782C94 /* SettingsView.swift in Sources */,
 				2BD486FC23EFFE0B0066F1C4 /* StreamAudioController.swift in Sources */,
+				2BF4A33C254070E100942DCF /* SearchView.swift in Sources */,
 				2BE995ED23FBA0190092023C /* LocalMusic.swift in Sources */,
 				2BE995E223FB9B7A0092023C /* ActivityIndicator.swift in Sources */,
 				2BE995E823FB9BD40092023C /* ScrollView.swift in Sources */,
@@ -562,7 +566,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.10.2;
+				MARKETING_VERSION = 0.11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -595,7 +599,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.10.2;
+				MARKETING_VERSION = 0.11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
