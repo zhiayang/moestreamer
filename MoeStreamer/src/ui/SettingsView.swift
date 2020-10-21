@@ -93,7 +93,6 @@ struct SettingsView : View
 private struct PrimarySettingsView : View
 {
 	@ObservedObject var shouldAutoRefresh = SavedSettingModel<Bool>(.shouldAutoRefresh())
-	@ObservedObject var shouldNormalise = SavedSettingModel<Bool>(.audioNormaliseVolume())
 	@ObservedObject var shouldUseKeyboard = SavedSettingModel<Bool>(.shouldUseKeyboardShortcuts())
 	@ObservedObject var shouldUseMediaKeys = SavedSettingModel<Bool>(.shouldUseMediaKeys())
 	@ObservedObject var shouldResumeOnWake = SavedSettingModel<Bool>(.shouldResumeOnWake())
@@ -148,21 +147,6 @@ private struct PrimarySettingsView : View
 					Text("notify on song change")
 						.padding(.leading, 2)
 						.tooltip("send a notification when the song changes")
-				}
-			}
-
-			HStack() {
-				Toggle(isOn: Binding(get: { self.shouldNormalise.value },
-									 set: {
-										self.shouldNormalise.value = $0
-
-										// just mute/unmute to force a volume change.
-										self.controller.audioController().mute()
-										self.controller.audioController().unmute()
-									 })) {
-					Text("normalise volume")
-						.padding(.leading, 2)
-						.tooltip("normalise the playback volume (not supported on all backends)")
 				}
 			}
 

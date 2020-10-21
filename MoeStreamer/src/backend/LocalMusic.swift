@@ -26,13 +26,10 @@ class MusicItem
 	var song: Song
 	var mediaItem: ITLibMediaItem
 
-	var volumeMultiplier: Double = 1.0
-
-	init(_ song: Song, withMediaItem item: ITLibMediaItem, withVolumeScale mult: Double)
+	init(_ song: Song, withMediaItem item: ITLibMediaItem)
 	{
 		self.song = song
 		self.mediaItem = item
-		self.volumeMultiplier = mult
 
 		self.songTitle = song.title
 	}
@@ -133,21 +130,6 @@ class LocalMusicController : ServiceController
 		}
 	}
 
-	// TODO: search songs asynchronously
-//	func searchSongs(name: String) -> [Song]
-//	{
-//		let searchWords = name.words.map({ $0.lowercased() })
-//
-//		return self.songs.filter { (item: MusicItem) -> Bool in
-//
-//			let titleWords = item.song.title.words.map({ $0.lowercased() })
-//			return searchWords.allSatisfy { (word: String) -> Bool in
-//				titleWords.contains(where: { $0.hasPrefix(word) })
-//			}
-//
-//		}.map { $0.song }
-//	}
-
 	func searchSongs(name: String, into: Binding<[Song]>, onComplete: @escaping () -> Void)
 	{
 		if name.isEmpty
@@ -241,19 +223,6 @@ class LocalMusicController : ServiceController
 		// var count = 0
 		func make_music_item(from item: ITLibMediaItem) -> MusicItem
 		{
-			// first, calculate the volume adjustment.
-			// according to iTunesDB:
-			// X = 1000 * 10 ^ (-0.1 * Y) where Y is the adjustment value in dB
-			// and X is the value that goes into the SoundCheck field
-
-			// so, `volumeNormalizationEnergy` is the SoundCheck field, and the adjustment in dB is
-			let sc = Double(item.volumeNormalizationEnergy)
-			let dbAdjust = log10(sc / 1000) / (-0.1)
-
-			// next, we need to convert from dB to percentage multiplier.
-			// a -3dB = 0.5, -6dB = 0.25, etc. this is simple, it's just 10^(dB/10)
-			let volMult = pow(10, dbAdjust / 10)
-
 			// we're setting the album art to nil and loading it in a separate thread, so we
 			// can return from this function ASAP and present something usable (ie. the song title)
 			let song = Song(id: item.persistentID.intValue,
@@ -262,7 +231,7 @@ class LocalMusicController : ServiceController
 							artists: [ item.artist?.name ?? "" ],
 							isFavourite: .No)
 
-			return MusicItem(song, withMediaItem: item, withVolumeScale: volMult)
+			return MusicItem(song, withMediaItem: item)
 		}
 
 		if let pl = self.currentPlaylist {

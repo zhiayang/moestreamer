@@ -70,17 +70,10 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 		self.volume = volume.clamped(from: 0, to: 100)
 		Settings.set(.audioVolume(), value: self.volume)
 
-		let multiplier: Double
-		if Settings.get(.audioNormaliseVolume()) {
-			multiplier = self.currentItem?.volumeMultiplier ?? 1.0
-		} else {
-			multiplier = 1
-		}
-
 		if !self.muted
 		{
 			// only actually change the volume if we aren't muted.
-			var real: Double = (Double(self.volume) / 100.0) * multiplier
+			var real = Double(self.volume) / 100.0
 			real = real.clamped(from: 0, to: 1)
 
 			self.player.volume = Float(real)
