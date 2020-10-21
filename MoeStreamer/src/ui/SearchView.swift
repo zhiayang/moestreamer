@@ -5,12 +5,19 @@
 import SwiftUI
 import Foundation
 
+enum SearchState
+{
+	case None
+	case InProgress
+	case Done
+}
+
 struct SearchView : View
 {
 	@State var searchString: String = ""
-	@State var searchField: NSTextField! = nil
+	@State var searchField: NSSearchField! = nil
 	@State var scrollPos: CGPoint? = nil
-	@State var didSearch: Bool = false
+	@State var searchState: SearchState = .None
 	@State var searchResults: [Song] = []
 
 	@Binding var musicCon: ServiceController
@@ -28,25 +35,52 @@ struct SearchView : View
 		self._musicCon = musicCon
 	}
 
+	private func performSearch(with name: String)
+	{
+		self.searchResults = []
+		self.searchState = .InProgress
+		self.musicCon.searchSongs(name: name, into: self.$searchResults, onComplete: {
+			DispatchQueue.main.async {
+				self.searchState = .Done
+			}
+		})
+	}
+
 	var body: some View {
 		VStack(spacing: 5) {
-			BetterTextField<NSTextField>(
-				placeholder: "search", text: self.$searchString, field: self.$searchField,
-				onEnter: { (_, field: NSTextField) in
-					self.searchResults = self.musicCon.searchSongs(name: field.stringValue)
-					self.didSearch = true
-				})
-				.frame(width: 200)
-				.onAppear(perform: {
-					self.didSearch = false
-					DispatchQueue.main.async {
-						self.searchField.window?.makeFirstResponder(self.searchField)
-					}
-				})
+			ZStack() {
+				BetterTextField<NSSearchField>(
+					placeholder: "search", text: self.$searchString, field: self.$searchField,
+					setupField: {
+						$0.sendsWholeSearchString = true
+						$0.sendsSearchStringImmediately = false
+
+						($0.cell as! NSSearchFieldCell).sendsWholeSearchString = true
+						($0.cell as! NSSearchFieldCell).sendsSearchStringImmediately = false
+					},
+					onEnter: { (_, field: NSSearchField) in
+						self.performSearch(with: field.stringValue)
+					})
+					.frame(width: 200)
+					.onAppear(perform: {
+						self.searchState = .None
+						DispatchQueue.main.async {
+							self.searchField.window?.makeFirstResponder(self.searchField)
+						}
+					}).frame(alignment: .center)
+
+				if self.searchState == .InProgress
+				{
+					ActivityIndicator(size: .small)
+						.frame(width: 20, height: 20)
+						.padding(.leading, 240)
+				}
+			}
+			.frame(maxWidth: .infinity)
 
 			Spacer()
 
-			if self.didSearch && self.searchResults.isEmpty
+			if self.searchState == .Done && self.searchResults.isEmpty
 			{
 				Text("no results")
 					.frame(height: 30)
@@ -83,7 +117,7 @@ struct SearchView : View
 											.frame(width: 18, height: 18)
 											.foregroundColor(self.iconColour)
 									}
-//									.buttonStyle(PlainButtonStyle())
+									.buttonStyle(PlainButtonStyle())
 									.tooltip("play the song now")
 
 									Button(action: {
@@ -95,16 +129,16 @@ struct SearchView : View
 											.foregroundColor(self.iconColour)
 											.padding(.leading, 4)
 									}
-//									.buttonStyle(PlainButtonStyle())
+									.buttonStyle(PlainButtonStyle())
 									.tooltip("play after the current song finishes")
-								}.padding(.trailing, 10)
+								}.padding(.trailing, 15)
 
 							}.frame(height: 50)
 						}
 						.frame(maxWidth: .infinity, alignment: .leading)
-
 					}.frame(width: 320)
-				}.frame(minHeight: self.searchResults.isEmpty ? 10 : 150, maxHeight: 400)
+				}
+				.frame(minHeight: self.searchResults.isEmpty ? 10 : 150, maxHeight: 400)
 			}
 
 			Spacer()

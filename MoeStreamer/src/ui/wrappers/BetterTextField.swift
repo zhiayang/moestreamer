@@ -12,11 +12,13 @@ struct BetterTextField<FieldType: NSTextField> : NSViewRepresentable
 	@Binding var field: FieldType?
 
 	var placeholder: String
+	var setupField: ((FieldType) -> Void)? = nil
 	var changeHandler: ((String, FieldType) -> Void)? = nil
 	var finishHandler: ((String, FieldType) -> Void)? = nil
 	var enterHandler: ((String, FieldType) -> Void)? = nil
 
 	init(placeholder: String, text: Binding<String>, field: Binding<FieldType?>,
+		 setupField: ((FieldType) -> Void)? = nil,
 		 onTextChanged: ((String, FieldType) -> Void)? = nil,
 		 onFinishEditing: ((String, FieldType) -> Void)? = nil,
 		 onEnter: ((String, FieldType) -> Void)? = nil)
@@ -43,6 +45,7 @@ struct BetterTextField<FieldType: NSTextField> : NSViewRepresentable
 
 		DispatchQueue.main.async {
 			self.field = textField
+			self.setupField?(self.field!)
 		}
 
 		return textField

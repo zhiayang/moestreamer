@@ -2,6 +2,7 @@
 // Copyright (c) 2020, zhiayang
 // Licensed under the Apache License Version 2.0.
 
+import SwiftUI
 import Foundation
 import iTunesLibrary
 
@@ -132,34 +133,51 @@ class LocalMusicController : ServiceController
 		}
 	}
 
-	func searchSongs(name: String) -> [Song]
+	// TODO: search songs asynchronously
+//	func searchSongs(name: String) -> [Song]
+//	{
+//		let searchWords = name.words.map({ $0.lowercased() })
+//
+//		return self.songs.filter { (item: MusicItem) -> Bool in
+//
+//			let titleWords = item.song.title.words.map({ $0.lowercased() })
+//			return searchWords.allSatisfy { (word: String) -> Bool in
+//				titleWords.contains(where: { $0.hasPrefix(word) })
+//			}
+//
+//		}.map { $0.song }
+//	}
+
+	func searchSongs(name: String, into: Binding<[Song]>, onComplete: @escaping () -> Void)
 	{
-		let searchWords = name.words.map({ $0.lowercased() })
+		if name.isEmpty
+		{
+			into.wrappedValue = []
+			onComplete()
 
-		return self.songs.filter { (item: MusicItem) -> Bool in
+			return
+		}
 
-			let titleWords = item.song.title.words.map({ $0.lowercased() })
-			return searchWords.allSatisfy { (word: String) -> Bool in
-				titleWords.contains(where: { $0.hasPrefix(word) })
+		DispatchQueue.global().async {
+
+			Logger.log(msg: "searching for: \(name)")
+			let searchWords = name.words.map({ $0.lowercased() })
+
+			// i don't believe swift's map/filter are lazy, so just use a for loop
+			// so we can append iteratively.
+			for song in self.songs
+			{
+				let titleWords = song.song.title.words.map({ $0.lowercased() })
+				if searchWords.allSatisfy({ word -> Bool in
+					titleWords.contains(where: { $0.hasPrefix(word) })
+				}) {
+					into.wrappedValue.append(song.song)
+				}
 			}
 
-		}.map { $0.song }
-
-		// ideally this would work, but it doesn't
-		/*
-			NSArray* list = @[@"test this",@"hello world",@"bye hello",@"helloween"];
-			NSString* search = [NSString stringWithFormat:@".*\\b%@\\b.*", [NSRegularExpression escapedPatternForString:@"hello"]];
-			NSPredicate* predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",search];
-			NSArray* filtered = [list filteredArrayUsingPredicate:predicate];
-			NSLog(@"%lu",(unsigned long)[filtered count]);
-			for(NSString* filter in filtered){
-			NSLog(@"%@",filter);
-
-			let search = ".*\\b\(NSRegularExpression.escapedPattern(for: name))\\b.*"
-			let pred = NSPredicate(format: "SELF.songTitle MATCHES %@", search as NSString)
-
-			let list = (self.songs as NSArray).filtered(using: pred).map { ($0 as! MusicItem).song.title }
-		*/
+			Logger.log(msg: "search: found \(into.wrappedValue.count) song\(into.wrappedValue.count == 1 ? "" : "s")")
+			onComplete()
+		}
 	}
 
 	func setNextSong(_ song: Song, immediately: Bool)
@@ -168,8 +186,15 @@ class LocalMusicController : ServiceController
 
 			Logger.log(msg: "queued: \(song.title)")
 
-			self.manuallyQueuedSongs.append(item)
-			if immediately { self.nextSong() }
+			if immediately
+			{
+				self.manuallyQueuedSongs.insert(item, at: 0)
+				self.nextSong()
+			}
+			else
+			{
+				self.manuallyQueuedSongs.append(item)
+			}
 		}
 	}
 

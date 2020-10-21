@@ -3,6 +3,7 @@
 // Licensed under the Apache License Version 2.0.
 
 import Cocoa
+import SwiftUI
 import Foundation
 import UserNotifications
 
@@ -97,8 +98,7 @@ protocol ServiceController : AnyObject
 	func audioController() -> AudioController
 	func getCapabilities() -> ServiceCapabilities
 
-	func searchSongs(name: String) -> [Song];
-
+	func searchSongs(name: String, into: Binding<[Song]>, onComplete: @escaping () -> Void)
 	func setNextSong(_ song: Song, immediately: Bool)
 
 	init(viewModel: ViewModel?)
@@ -107,6 +107,20 @@ protocol ServiceController : AnyObject
 	func getViewModel()-> ViewModel?
 }
 
+extension ServiceController
+{
+	func nextSong()
+	{
+	}
+
+	func searchSongs(name: String, into: Binding<[Song]>, onComplete: @escaping () -> Void)
+	{
+	}
+
+	func setNextSong(_ song: Song, immediately: Bool)
+	{
+	}
+}
 
 class Notifier
 {
