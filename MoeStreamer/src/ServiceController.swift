@@ -7,7 +7,7 @@ import SwiftUI
 import Foundation
 import UserNotifications
 
-struct Song : Equatable, Identifiable
+struct Song : Equatable, Identifiable, Hashable
 {
 	let id: Int
 	var title: String = ""
@@ -67,6 +67,11 @@ struct Song : Equatable, Identifiable
 	static func == (lhs: Song, rhs: Song) -> Bool
 	{
 		return lhs.id == rhs.id
+	}
+
+	func hash(into hasher: inout Hasher)
+	{
+		hasher.combine(self.id)
 	}
 }
 

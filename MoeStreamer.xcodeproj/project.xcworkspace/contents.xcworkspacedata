@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/zhiayang/Desktop/Stuff/Code/SneakyMusicStreamer/MoeStreamer.xcodeproj">
+      location = "self:">
    </FileRef>
 </Workspace>

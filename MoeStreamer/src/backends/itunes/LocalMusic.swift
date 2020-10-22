@@ -132,6 +132,7 @@ class LocalMusicController : ServiceController
 
 	func searchSongs(name: String, into: Binding<[Song]>, onComplete: @escaping () -> Void)
 	{
+		let name = name.trimmingCharacters(in: .whitespaces)
 		if name.isEmpty
 		{
 			into.wrappedValue = []

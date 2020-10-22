@@ -63,11 +63,35 @@ protocol ViewModel : AnyObject
 	func onSongChange(song: Song?)
 }
 
+struct ScrollViewCleaner: NSViewRepresentable
+{
+	func makeNSView(context: NSViewRepresentableContext<ScrollViewCleaner>) -> NSView
+	{
+		let nsView = NSView()
+		DispatchQueue.main.async {
+			if let scrollView = nsView.enclosingScrollView
+			{
+				scrollView.drawsBackground = false
+			}
+		}
+		return nsView
+	}
+
+	func updateNSView(_ nsView: NSView, context: NSViewRepresentableContext<ScrollViewCleaner>)
+	{
+	}
+}
+
 public extension View
 {
 	func tooltip(_ toolTip: String) -> some View
 	{
 		self.overlay(TooltipView(toolTip: toolTip))
+	}
+
+	func removingScrollViewBackground() -> some View
+	{
+		self.background(ScrollViewCleaner())
 	}
 }
 
