@@ -130,7 +130,7 @@ class LocalMusicController : ServiceController
 		}
 	}
 
-	func searchSongs(name: String, into: Binding<[Song]>, onComplete: @escaping () -> Void)
+	func searchSongs(name: String, into: Binding<[Song]>, inProgress: ((Song) -> Void)?, onComplete: @escaping () -> Void)
 	{
 		let name = name.trimmingCharacters(in: .whitespaces)
 		if name.isEmpty
@@ -155,6 +155,7 @@ class LocalMusicController : ServiceController
 					titleWords.contains(where: { $0.hasPrefix(word) })
 				}) {
 					into.wrappedValue.append(song.song)
+					inProgress?(song.song)
 				}
 			}
 

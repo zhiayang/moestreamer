@@ -65,11 +65,13 @@ struct SettingsView : View
 						.tooltip("which music backend to use")
 
 					PopupButton(selectedValue: self.$backend, items: MusicBackend.values, onChange: {
-						self.backendSetting.value = $0
+						if self.backendSetting.value != $0
+						{
+							self.backendSetting.value = $0
 
-						// time to change the controller.
-						changeControllerFor(self.$musicCon, backend: self.backend)
-
+							// time to change the controller.
+							changeControllerFor(self.$musicCon, backend: self.backend)
+						}
 					}).frame(width: 140)
 
 				}.padding(.top, 4)

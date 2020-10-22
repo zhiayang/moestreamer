@@ -47,7 +47,6 @@ class ViewController : NSObject, NSPopoverDelegate
 		statusBarButton.action = #selector(togglePopover(sender:))
 		statusBarButton.target = self
 
-
 		popover.contentSize = NSSize(width: 240, height: 240)
 		popover.contentViewController = NSHostingController(rootView: self.rootView)
 		popover.behavior = .transient
@@ -74,7 +73,14 @@ class ViewController : NSObject, NSPopoverDelegate
 						self.viewModel.controller().toggleFavourite()
 
 					case UInt8(ascii: "\u{1b}"):
-						self.popover.performClose(nil)
+						if self.rootView.currentSubView == .None
+						{
+							self.popover.performClose(nil)
+						}
+						else
+						{
+							self.rootView.currentSubView.toggle(into: .None)
+						}
 
 					case UInt8(ascii: "/"):
 						if self.viewModel.controller().getCapabilities().contains(.searchTracks)
@@ -116,7 +122,11 @@ class ViewController : NSObject, NSPopoverDelegate
 			self.showPopover()
 		}
 	}
-	
+
+	func becomeFirstResponder()
+	{
+		self.popover.contentViewController?.view.window?.makeFirstResponder(self.popover)
+	}
 
 	func popoverDidClose(_ notification: Notification)
 	{

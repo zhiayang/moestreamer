@@ -29,6 +29,11 @@ class SubViewKind : ObservableObject
 		if self.kind == into { self.kind = .None }
 		else                 { self.kind = into }
 	}
+
+	static func == (_ this: SubViewKind, _ k: SubViewKind_) -> Bool
+	{
+		return this.kind == k
+	}
 }
 
 struct MainView : View

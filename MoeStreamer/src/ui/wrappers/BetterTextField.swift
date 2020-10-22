@@ -65,8 +65,6 @@ struct BetterTextField<FieldType: NSTextField> : NSViewRepresentable
 	}
 
 
-
-
 	final class Coordinator : NSObject, NSTextFieldDelegate
 	{
 		var setter: (String, FieldType) -> Void
@@ -101,6 +99,22 @@ struct BetterTextField<FieldType: NSTextField> : NSViewRepresentable
 			if let textField = sender as? FieldType {
 				self.enteriser?(textField.stringValue, textField)
 			}
+		}
+	}
+}
+
+
+
+class CustomSearchField : NSSearchField
+{
+	override func cancelOperation(_ sender: Any?)
+	{
+		self.stringValue = ""
+
+		DispatchQueue.main.async {
+			// this is kinda hacky...
+			self.resignFirstResponder()
+			AppDelegate.shared.controller.becomeFirstResponder()
 		}
 	}
 }

@@ -10,6 +10,13 @@ class AppDelegate : NSObject, NSApplicationDelegate
 {
 	var controller: ViewController!
 	var wasPlayingWhenSlept: Bool = false
+	static var shared: AppDelegate! = nil
+
+	override init()
+	{
+		super.init()
+		AppDelegate.shared = self
+	}
 
 	func applicationDidFinishLaunching(_ aNotification: Notification)
 	{

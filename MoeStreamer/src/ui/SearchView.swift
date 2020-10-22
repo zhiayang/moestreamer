@@ -12,6 +12,124 @@ enum SearchState
 	case Done
 }
 
+struct SearchView : View
+{
+	@State var searchString: String = ""
+	@State var searchField: CustomSearchField! = nil
+	@State var scrollPos: CGPoint? = nil
+	@State var searchState: SearchState = .None
+	@State var searchResults: [Song] = []
+	@State var resultWindowHeight: CGFloat = 0
+
+	let defaultResultHeight: CGFloat = 10
+
+	@Binding var musicCon: ServiceController
+
+	@Environment(\.colorScheme)
+	var colourScheme: ColorScheme
+
+	var iconColour: Color {
+		return self.colourScheme == .light ? .black : .white
+	}
+
+
+	init(musicCon: Binding<ServiceController>)
+	{
+		self._musicCon = musicCon
+		self.resultWindowHeight = self.defaultResultHeight
+	}
+
+	private func performSearch(with name: String)
+	{
+		let setResultHeight = {
+			let n = min(self.searchResults.count, 3)
+			self.resultWindowHeight = defaultResultHeight + CGFloat(n * 70)
+		}
+
+		self.searchResults = []
+		self.searchState = .InProgress
+		self.musicCon.searchSongs(name: name, into: self.$searchResults, inProgress: { _ in
+
+			DispatchQueue.main.async {
+				setResultHeight()
+			}
+
+		}, onComplete: {
+			DispatchQueue.main.async {
+				setResultHeight()
+				self.searchState = .Done
+			}
+		})
+	}
+
+	var body: some View {
+
+		VStack(spacing: 5) {
+			ZStack() {
+				BetterTextField<CustomSearchField>(
+					placeholder: "search", text: self.$searchString, field: self.$searchField,
+					setupField: {
+						$0.sendsWholeSearchString = true
+						$0.sendsSearchStringImmediately = false
+
+						($0.cell as! NSSearchFieldCell).sendsWholeSearchString = true
+						($0.cell as! NSSearchFieldCell).sendsSearchStringImmediately = false
+					},
+					onEnter: { (_, field: CustomSearchField) in
+						self.performSearch(with: field.stringValue)
+					})
+					.frame(width: 200, alignment: .center)
+					.onAppear(perform: {
+						self.searchState = .None
+						DispatchQueue.main.async {
+							self.searchField.becomeFirstResponder()
+						}
+					})
+					.onDisappear(perform: {
+						DispatchQueue.main.async {
+							AppDelegate.shared.controller.becomeFirstResponder()
+						}
+					})
+
+				if self.searchState == .InProgress
+				{
+					ActivityIndicator(size: .small)
+						.frame(width: 20, height: 20)
+						.padding(.leading, 240)
+				}
+			}
+			.frame(maxWidth: .infinity)
+
+			Spacer()
+
+			VStack() {
+				if self.searchResults.isEmpty
+				{
+					Text("no results")
+				}
+				else
+				{
+					List(self.searchResults, id: \.self, rowContent: { song in
+						SongView(for: song, using: self.$musicCon)
+							.padding(.all, 6)
+							.background(Color(.sRGBLinear, white: self.colourScheme == .light ? 0.3 : 0.4,
+											  opacity: 0.15))
+							.cornerRadius(10)
+							.padding([.leading, .trailing], 5)
+					})
+				}
+			}.frame(minHeight: self.resultWindowHeight, maxHeight: self.resultWindowHeight)
+
+			Spacer()
+		}
+		.padding(.vertical, 5)
+		.padding(.horizontal, 0)
+	}
+}
+
+
+
+
 fileprivate struct SongView : View
 {
 	var song: Song
@@ -46,6 +164,35 @@ fileprivate struct SongView : View
 				MainModel.getDefaultAlbumArt()
 			}
 
+			EmptyView()
+				.padding(.trailing, 2)
+
+			VStack(alignment: .leading, spacing: 1) {
+				Button(action: {
+					self.musicCon.setNextSong(song, immediately: true)
+				}) {
+					Image(nsImage: #imageLiteral(resourceName: "zz_Play"))
+						.resizable()
+						.frame(width: 18, height: 18)
+						.foregroundColor(self.iconColour)
+						.tooltip("play the song now")
+				}
+				.buttonStyle(PlainButtonStyle())
+
+				Button(action: {
+					self.musicCon.setNextSong(song, immediately: false)
+				}) {
+					Image(nsImage: #imageLiteral(resourceName: "PlayNext"))
+						.resizable()
+						.frame(width: 18, height: 18)
+						.foregroundColor(self.iconColour)
+						.padding(.leading, 4)
+						.tooltip("play after the current song finishes")
+				}
+				.buttonStyle(PlainButtonStyle())
+
+			}.padding(.trailing, 2)
+
 			VStack(alignment: .leading) {
 				Text(song.title)
 					.multilineTextAlignment(.leading)
@@ -59,124 +206,8 @@ fileprivate struct SongView : View
 			}
 
 			Spacer()
-
-			VStack(spacing: 1) {
-				Button(action: {
-					self.musicCon.setNextSong(song, immediately: true)
-				}) {
-					Image(nsImage: #imageLiteral(resourceName: "zz_Play"))
-						.resizable()
-						.frame(width: 18, height: 18)
-						.foregroundColor(self.iconColour)
-				}
-				.buttonStyle(PlainButtonStyle())
-				.tooltip("play the song now")
-
-				Button(action: {
-					self.musicCon.setNextSong(song, immediately: false)
-				}) {
-					Image(nsImage: #imageLiteral(resourceName: "PlayNext"))
-						.resizable()
-						.frame(width: 18, height: 18)
-						.foregroundColor(self.iconColour)
-						.padding(.leading, 4)
-				}
-				.buttonStyle(PlainButtonStyle())
-				.tooltip("play after the current song finishes")
-			}.padding(.trailing, 15)
-
-		}.frame(height: 50)
-		.background(Color.red)
-	}
-}
-
-struct SearchView : View
-{
-	@State var searchString: String = ""
-	@State var searchField: NSSearchField! = nil
-	@State var scrollPos: CGPoint? = nil
-	@State var searchState: SearchState = .None
-	@State var searchResults: [Song] = []
-
-	@Binding var musicCon: ServiceController
-
-	@Environment(\.colorScheme)
-	var colourScheme: ColorScheme
-
-	var iconColour: Color {
-		return self.colourScheme == .light ? .black : .white
-	}
-
-
-	init(musicCon: Binding<ServiceController>)
-	{
-		self._musicCon = musicCon
-	}
-
-	private func performSearch(with name: String)
-	{
-		self.searchResults = []
-		self.searchState = .InProgress
-		self.musicCon.searchSongs(name: name, into: self.$searchResults, onComplete: {
-			DispatchQueue.main.async {
-				self.searchState = .Done
-			}
-		})
-	}
-
-	var body: some View {
-		VStack(spacing: 5) {
-			ZStack() {
-				BetterTextField<NSSearchField>(
-					placeholder: "search", text: self.$searchString, field: self.$searchField,
-					setupField: {
-						$0.sendsWholeSearchString = true
-						$0.sendsSearchStringImmediately = false
-
-						($0.cell as! NSSearchFieldCell).sendsWholeSearchString = true
-						($0.cell as! NSSearchFieldCell).sendsSearchStringImmediately = false
-					},
-					onEnter: { (_, field: NSSearchField) in
-						self.performSearch(with: field.stringValue)
-					})
-					.frame(width: 200)
-					.onAppear(perform: {
-						self.searchState = .None
-						DispatchQueue.main.async {
-							self.searchField.window?.makeFirstResponder(self.searchField)
-						}
-					}).frame(alignment: .center)
-
-				if self.searchState == .InProgress
-				{
-					ActivityIndicator(size: .small)
-						.frame(width: 20, height: 20)
-						.padding(.leading, 240)
-				}
-			}
-			.frame(maxWidth: .infinity)
-
-			Spacer()
-
-			if self.searchState == .Done && self.searchResults.isEmpty
-			{
-				Text("no results")
-					.frame(height: 30)
-			}
-			else
-			{
-				List(self.searchResults, id: \.self, rowContent: { song in
-					SongView(for: song, using: self.$musicCon)
-						.removingScrollViewBackground()
-				})
-				.frame(minHeight: self.searchResults.isEmpty ? 10 : 150, maxHeight: 400)
-				.background(Color.green)
-			}
-
-			Spacer()
 		}
-		.padding(.vertical, 5)
-		.padding(.horizontal, 0)
-		.frame(maxHeight: .infinity)
+		.padding(.leading, 5)
+		.frame(height: 50)
 	}
 }

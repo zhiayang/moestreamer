@@ -103,7 +103,7 @@ protocol ServiceController : AnyObject
 	func audioController() -> AudioController
 	func getCapabilities() -> ServiceCapabilities
 
-	func searchSongs(name: String, into: Binding<[Song]>, onComplete: @escaping () -> Void)
+	func searchSongs(name: String, into: Binding<[Song]>, inProgress: ((Song) -> Void)?, onComplete: @escaping () -> Void)
 	func setNextSong(_ song: Song, immediately: Bool)
 
 	init(viewModel: ViewModel?)
@@ -118,7 +118,7 @@ extension ServiceController
 	{
 	}
 
-	func searchSongs(name: String, into: Binding<[Song]>, onComplete: @escaping () -> Void)
+	func searchSongs(name: String, into: Binding<[Song]>, inProgress: ((Song) -> Void)? = nil, onComplete: @escaping () -> Void)
 	{
 	}
 
