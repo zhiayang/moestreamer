@@ -41,6 +41,14 @@ At the moment, these shortcuts cannot be customised.
 |(un)favourite|          <kbd>F</kbd>          |
 
 
+## Building
+```
+$ carthage update --platform macos
+$ xcodebuild
+```
+
+Alternatively, open the Xcode project and build it there (you still need to run `carthage`).
+
 ## License
 
 Contributions from `my_cat_is_ugly` on Twitch.
