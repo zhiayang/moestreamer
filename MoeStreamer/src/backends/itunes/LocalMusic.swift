@@ -168,8 +168,6 @@ class LocalMusicController : ServiceController
 	{
 		if let item = self.songsById[song.id] {
 
-			Logger.log(msg: "queued: \(song.title)")
-
 			if immediately
 			{
 				self.manuallyQueuedSongs.insert(item, at: 0)
@@ -178,6 +176,10 @@ class LocalMusicController : ServiceController
 			else
 			{
 				self.manuallyQueuedSongs.append(item)
+				let msg = "queued: \(song.title)"
+			
+				Logger.log(msg: msg)
+				self.viewModel?.setStatus(s: msg, timeout: 1.5)
 			}
 		}
 	}
