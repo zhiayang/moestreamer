@@ -99,7 +99,7 @@ class Logger : ObservableObject
 
 		Logger.instance.add(x)
 		if let vw = withView {
-			vw.setStatus(s: x.message(), timeout: 1.0)
+			vw.setStatus(s: x.message(), timeout: 1.5)
 		}
 	}
 
@@ -110,7 +110,7 @@ class Logger : ObservableObject
 
 		Logger.instance.add(x)
 		if let vw = withView {
-			vw.setStatus(s: x.message(), timeout: 1.0)
+			vw.setStatus(s: x.message(), timeout: 1.5)
 		}
 	}
 

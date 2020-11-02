@@ -39,9 +39,10 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 
 		super.init()
 
-		NotificationCenter.default.addObserver(self, selector: #selector(itemFinishedPlaying(_:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: self.player.currentItem)
+		NotificationCenter.default.addObserver(self, selector: #selector(itemFinishedPlaying(_:)),
+											   name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
+											   object: self.player.currentItem)
 	}
-
 
 	func enqueue(item: MusicItem)
 	{
@@ -94,6 +95,16 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 		return self.muted
 	}
 
+	func isPlaying() -> Bool
+	{
+		return self.playing
+	}
+
+	func getElapsedTime() -> Double
+	{
+		return self.player.currentTime().seconds
+	}
+
 	func mute()
 	{
 		self.player.volume = 0
@@ -108,11 +119,6 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 		self.setVolume(volume: self.volume)
 
 		Settings.set(.audioMuted(), value: false)
-	}
-
-	func isPlaying() -> Bool
-	{
-		return self.playing
 	}
 
 	func play()
@@ -132,5 +138,4 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 		self.player.replaceCurrentItem(with: nil)
 		self.playing = false
 	}
-
 }

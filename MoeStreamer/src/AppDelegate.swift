@@ -36,10 +36,6 @@ class AppDelegate : NSObject, NSApplicationDelegate
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
 			self.controller.showPopover()
 		}
-
-		if Settings.get(.shouldNotifySongChange()) {
-			Notifier.create()
-		}
 	}
 
 	@objc func onSleep()

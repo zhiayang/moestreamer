@@ -124,19 +124,15 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 	{
 		if self.currentSong?.id != song.id
 		{
-			if !quiet
-			{
+			if !quiet {
 				Logger.log(msg: "song: \(song.title)")
-				Notifier.instance?.notify(song: song)
 			}
 
-			//			self.activityView?.onSongChange(song: song)
 			Statistics.instance.logSongPlayed()
 		}
 
 		self.currentSong = song
 		self.activityView?.onSongChange(song: song)
-		//		self.activityView?.poke()
 	}
 
 	func toggleFavourite()

@@ -6,13 +6,14 @@ import Cocoa
 import Foundation
 import KeychainSwift
 
-enum SettingKey
+enum SettingKey : Hashable
 {
 	case shouldAutoRefresh(key: String = "refreshMetadataOnOpen", default: Bool = true)
 	case shouldNotifySongChange(key: String = "notifyOnSongChange", default: Bool = false)
 	case shouldUseKeyboardShortcuts(key: String = "useKeyboardShortcuts", default: Bool = false)
 	case shouldUseMediaKeys(key: String = "useMediaKeys", default: Bool = false)
 	case shouldResumeOnWake(key: String = "resumeOnWake", default: Bool = false)
+	case shouldUpdateNowPlaying(key: String = "updateNowPlaying", default: Bool = false)
 
 	case audioMuted(key: String = "muted", default: Bool = false)
 	case audioVolume(key: String = "volume", default: Int = 50)
@@ -39,6 +40,7 @@ enum SettingKey
 			case .shouldUseKeyboardShortcuts(let key, _): return key
 			case .shouldUseMediaKeys(let key, _):         return key
 			case .shouldResumeOnWake(let key, _):         return key
+			case .shouldUpdateNowPlaying(let key, _):     return key
 			case .audioMuted(let key, _):                 return key
 			case .audioVolume(let key, _):                return key
 			case .listenMoeUsername(let key, _):          return key
@@ -61,6 +63,7 @@ enum SettingKey
 			case .shouldUseKeyboardShortcuts(_, let def): return def
 			case .shouldUseMediaKeys(_, let def):         return def
 			case .shouldResumeOnWake(_, let def):         return def
+			case .shouldUpdateNowPlaying(_, let def):     return def
 			case .audioMuted(_, let def):                 return def
 			case .audioVolume(_, let def):                return def
 			case .listenMoeUsername(_, let def):          return def
@@ -80,8 +83,11 @@ enum SettingKey
 	}
 }
 
-enum Settings
+class Settings
 {
+	private static var runningId: Int = 0
+	private static var observers: [SettingKey: [(Int, (SettingKey) -> Void)]] = [:]
+
 	static func get<T>(_ key: SettingKey) -> T
 	{
 		return (UserDefaults.standard.object(forKey: key.key) as? T) ?? (key.defaultValue as! T)
@@ -89,7 +95,38 @@ enum Settings
 
 	static func set<T>(_ key: SettingKey, value: T)
 	{
-		return UserDefaults.standard.set(value, forKey: key.key)
+		UserDefaults.standard.set(value, forKey: key.key)
+
+		for cb in observers[key] ?? [] {
+			cb.1(key)
+		}
+	}
+
+	static func observe(_ key: SettingKey, callback: @escaping (SettingKey) -> Void) -> Any
+	{
+		observers[key, default: []].append((runningId, callback))
+		defer { runningId += 1 }
+
+		return runningId
+	}
+
+	static func unobserve(_ key: SettingKey, token: Any)
+	{
+		guard observers[key] != nil else {
+			return
+		}
+
+		guard let token = token as? Int else {
+			return
+		}
+
+		for i in 0 ..< observers[key]!.count
+		{
+			let obs = observers[key]![i]
+			if obs.0 == token {
+				observers[key]!.remove(at: i)
+			}
+		}
 	}
 
 	static func getKeychain(_ key: SettingKey) -> String

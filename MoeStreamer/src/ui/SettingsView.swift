@@ -94,13 +94,10 @@ struct SettingsView : View
 
 private struct PrimarySettingsView : View
 {
-	@ObservedObject var shouldAutoRefresh = SavedSettingModel<Bool>(.shouldAutoRefresh())
-	@ObservedObject var shouldUseKeyboard = SavedSettingModel<Bool>(.shouldUseKeyboardShortcuts())
-	@ObservedObject var shouldUseMediaKeys = SavedSettingModel<Bool>(.shouldUseMediaKeys())
-	@ObservedObject var shouldResumeOnWake = SavedSettingModel<Bool>(.shouldResumeOnWake())
-	@ObservedObject var shouldNotifySong  = SavedSettingModel<Bool>(.shouldNotifySongChange(), didset: {
-		if $0 { Notifier.create() }
-	})
+	@ObservedObject var shouldAutoRefresh       = SavedSettingModel<Bool>(.shouldAutoRefresh())
+	@ObservedObject var shouldUseKeyboard       = SavedSettingModel<Bool>(.shouldUseKeyboardShortcuts())
+	@ObservedObject var shouldUseMediaKeys      = SavedSettingModel<Bool>(.shouldUseMediaKeys())
+	@ObservedObject var shouldResumeOnWake      = SavedSettingModel<Bool>(.shouldResumeOnWake())
 
 	@ObservedObject var streamBufferMs    = SavedSettingModel<Int>(.streamBufferMs(), willset: {
 		return (100 ... 10000).contains($0)
@@ -141,14 +138,6 @@ private struct PrimarySettingsView : View
 					Text("resume on wake")
 						.padding(.leading, 2)
 						.tooltip("resume playback when waking from sleep")
-				}
-			}
-
-			HStack() {
-				Toggle(isOn: self.$shouldNotifySong.value) {
-					Text("notify on song change")
-						.padding(.leading, 2)
-						.tooltip("send a notification when the song changes")
 				}
 			}
 

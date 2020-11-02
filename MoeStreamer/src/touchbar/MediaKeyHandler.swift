@@ -16,18 +16,43 @@ class MediaKeyHandler : NSObject
 {
 	fileprivate var enabled: Bool = false
 	fileprivate var eventTap: CFMachPort! = nil
-	fileprivate var mediaKeyRefreshTimer: Timer? = nil
 	fileprivate var controller: ServiceController? = nil
 	fileprivate var runLoopSource: CFRunLoopSource! = nil
 
 	override init()
 	{
 		super.init()
-		self.updateKeys()
+		self.updateMediaCentre(with: nil)
 	}
 
-	@objc func doNothing(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus
+	@objc func handleEvent(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus
 	{
+		guard let vm = self.controller?.getViewModel() as? MainModel else {
+			return .success
+		}
+
+		let remote = MPRemoteCommandCenter.shared()
+
+		switch event.command {
+			case remote.playCommand:
+				vm.isPlaying = true
+
+			case remote.pauseCommand:
+				vm.isPlaying = false
+
+			case remote.togglePlayPauseCommand:
+				vm.isPlaying.toggle()
+
+			case remote.nextTrackCommand:
+				vm.controller().nextSong()
+
+			case remote.previousTrackCommand:
+				vm.controller().previousSong()
+
+			default:
+				break
+		}
+		vm.poke()
 		return .success
 	}
 
@@ -35,26 +60,22 @@ class MediaKeyHandler : NSObject
 	{
 		let remote = MPRemoteCommandCenter.shared()
 		remote.playCommand.isEnabled = true
-		remote.playCommand.addTarget(self, action: #selector(doNothing))
+		remote.playCommand.addTarget(self, action: #selector(handleEvent))
 
 		remote.pauseCommand.isEnabled = true
-		remote.pauseCommand.addTarget(self, action: #selector(doNothing))
+		remote.pauseCommand.addTarget(self, action: #selector(handleEvent))
 
 		remote.togglePlayPauseCommand.isEnabled = true
-		remote.togglePlayPauseCommand.addTarget(self, action: #selector(doNothing))
+		remote.togglePlayPauseCommand.addTarget(self, action: #selector(handleEvent))
 
 		remote.previousTrackCommand.isEnabled = true
-		remote.previousTrackCommand.addTarget(self, action: #selector(doNothing))
+		remote.previousTrackCommand.addTarget(self, action: #selector(handleEvent))
 
 		remote.nextTrackCommand.isEnabled = true
-		remote.nextTrackCommand.addTarget(self, action: #selector(doNothing))
-
-		// since we already always hijacking the media keys, just hijack it even more.
-		// force-update the media keys every 2 seconds.
-		self.mediaKeyRefreshTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
-			self.updateKeys()
-		}
+		remote.nextTrackCommand.addTarget(self, action: #selector(handleEvent))
+		MPNowPlayingInfoCenter.default().playbackState = .paused
 	}
+
 
 	private func deactivateMPRemote()
 	{
@@ -67,8 +88,6 @@ class MediaKeyHandler : NSObject
 		remote.togglePlayPauseCommand.removeTarget(self)
 
 		MPNowPlayingInfoCenter.default().playbackState = .stopped
-
-		self.mediaKeyRefreshTimer?.invalidate()
 	}
 
 	private func setup()
@@ -123,12 +142,40 @@ class MediaKeyHandler : NSObject
 			   : self.destroy()
 	}
 
-	func updateKeys()
+	private func getMetadata(for song: Song?) -> [String: Any]
+	{
+		var ret = [String: Any]()
+		guard let song = song else {
+			return ret
+		}
+
+		ret[MPMediaItemPropertyTitle] = song.title
+		ret[MPMediaItemPropertyArtist] = song.artists.joined(separator: ", ")
+		ret[MPMediaItemPropertyPlaybackDuration] = song.duration
+		ret[MPNowPlayingInfoPropertyElapsedPlaybackTime] = 0.0
+
+		guard let art = song.album.1 else {
+			ret[MPMediaItemPropertyArtwork] = nil
+			return ret
+		}
+
+		let artwork = MPMediaItemArtwork(boundsSize: CGSize(width: art.size.width, height: art.size.height),
+										 requestHandler: { _ in return art })
+
+		ret[MPMediaItemPropertyArtwork] = artwork
+
+		return ret
+	}
+
+	func updateMediaCentre(with song: Song?)
 	{
 		let vm = self.controller?.getViewModel() as? MainModel
+
+		MPNowPlayingInfoCenter.default().nowPlayingInfo = self.getMetadata(for: song ?? vm?.getCurrentSong())
 		MPNowPlayingInfoCenter.default().playbackState = (vm?.isPlaying ?? false)
 			? .playing
 			: .paused
+
 	}
 }
 
@@ -163,7 +210,7 @@ fileprivate func handlerCallback(proxy: CGEventTapProxy, type: CGEventType, even
 
 	let keycode = Int32((nse.data1 & 0xFFFF0000) >> 16)
 
-	if ![NX_KEYTYPE_PLAY, NX_KEYTYPE_FAST, NX_KEYTYPE_NEXT].contains(keycode) {
+	if ![NX_KEYTYPE_PLAY, NX_KEYTYPE_FAST, NX_KEYTYPE_NEXT, NX_KEYTYPE_PREVIOUS, NX_KEYTYPE_REWIND].contains(keycode) {
 		return Unmanaged.passRetained(event)
 	}
 
@@ -184,9 +231,16 @@ fileprivate func handlerCallback(proxy: CGEventTapProxy, type: CGEventType, even
 		}
 		else if keycode == NX_KEYTYPE_NEXT || keycode == NX_KEYTYPE_FAST
 		{
-			this.controller?.nextSong()
 			print("media key: next")
+			this.controller?.nextSong()
 		}
+		else if keycode == NX_KEYTYPE_PREVIOUS || keycode == NX_KEYTYPE_REWIND
+		{
+			print("media key: prev")
+			this.controller?.previousSong()
+		}
+
+		globalMediaKeyHandler.updateMediaCentre(with: nil)
 	}
 
 	return nil

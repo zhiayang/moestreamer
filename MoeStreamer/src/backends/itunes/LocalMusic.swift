@@ -51,6 +51,7 @@ class LocalMusicController : ServiceController
 	// oof
 	private var songsById: [Int: MusicItem] = [:]
 
+	private var manualQueueIndex: Int = 0
 	private var manuallyQueuedSongs: [MusicItem] = [ ]
 
 	private var shuffleBehaviour: ShuffleBehaviour
@@ -81,7 +82,7 @@ class LocalMusicController : ServiceController
 		return self.currentSong != nil && !self.isWaitingForFirstSong
 	}
 
-	private func changeSong(_ song: MusicItem) -> MusicItem
+	private func updateCurrentSong(_ song: MusicItem) -> MusicItem
 	{
 		self.currentSong = song
 
@@ -95,12 +96,16 @@ class LocalMusicController : ServiceController
 
 	func getNextSong() -> MusicItem?
 	{
-		if !self.manuallyQueuedSongs.isEmpty
+		if self.manualQueueIndex < self.manuallyQueuedSongs.count
 		{
-			defer { self.manuallyQueuedSongs.remove(at: 0) }
-			let song = self.manuallyQueuedSongs.first!
-
-			return self.changeSong(song)
+			defer { self.manualQueueIndex += 1 }
+			return self.updateCurrentSong(self.manuallyQueuedSongs[self.manualQueueIndex])
+		}
+		else
+		{
+			// reset once we exhaust the queue, so the list doesn't grow infinitely long
+			self.manualQueueIndex = 0
+			self.manuallyQueuedSongs = [ ]
 		}
 
 		self.currentIdx += 1
@@ -121,7 +126,7 @@ class LocalMusicController : ServiceController
 					continue
 				}
 
-				return self.changeSong(ret)
+				return self.updateCurrentSong(ret)
 			}
 		}
 		else
@@ -146,6 +151,8 @@ class LocalMusicController : ServiceController
 			Logger.log(msg: "searching for: \(name)")
 			let searchWords = name.words.map({ $0.lowercased() })
 
+			into.wrappedValue = [ ]
+
 			// i don't believe swift's map/filter are lazy, so just use a for loop
 			// so we can append iteratively.
 			for song in self.songs
@@ -164,12 +171,13 @@ class LocalMusicController : ServiceController
 		}
 	}
 
-	func setNextSong(_ song: Song, immediately: Bool)
+	func enqueueSong(_ song: Song, immediately: Bool)
 	{
 		if let item = self.songsById[song.id] {
 
 			if immediately
 			{
+				self.manualQueueIndex = 0
 				self.manuallyQueuedSongs.insert(item, at: 0)
 				self.nextSong()
 			}
@@ -193,6 +201,33 @@ class LocalMusicController : ServiceController
 	{
 		if let n = self.getNextSong() {
 			self.audioCon.enqueue(item: n)
+		}
+	}
+
+	func previousSong()
+	{
+		// the threshold is 4 seconds, for now.
+		if self.audioCon.getElapsedTime() > 4.0
+		{
+			// just rewind the current song, instead of going to the previous song.
+			if let s = self.currentSong {
+				self.audioCon.enqueue(item: s)
+			}
+		}
+		else
+		{
+			if self.manualQueueIndex > 0
+			{
+				self.manualQueueIndex -= 1
+				if let s = self.getNextSong() {
+					self.audioCon.enqueue(item: s)
+				}
+			}
+			else if self.currentIdx > 0
+			{
+				self.currentIdx -= 1
+				self.audioCon.enqueue(item: self.updateCurrentSong(self.songs[self.currentIdx]))
+			}
 		}
 	}
 
@@ -233,7 +268,8 @@ class LocalMusicController : ServiceController
 							title: item.title,
 							album: (item.album.title, nil),
 							artists: [ item.artist?.name ?? "" ],
-							isFavourite: .No)
+							isFavourite: .No,
+							duration: Double(item.totalTime) / 1000.0)
 
 			return MusicItem(song, withMediaItem: item)
 		}
@@ -270,6 +306,10 @@ class LocalMusicController : ServiceController
 						self.songs = grouped.values.flatMap({ $0 })
 				}
 
+				self.songs.forEach { (item: MusicItem) in
+					self.songsById[item.song.id] = item
+				}
+
 				// spin up a background task to fetch the images for each item in the queue.
 				DispatchQueue.global().async {
 					self.songs.forEach({
@@ -293,10 +333,6 @@ class LocalMusicController : ServiceController
 
 					Logger.log("itunes", msg: "loaded \(self.songs.count) songs from playlist \(pl.name)")
 					self.viewModel?.unspin()
-				}
-
-				self.songs.forEach { (item: MusicItem) in
-					self.songsById[item.song.id] = item
 				}
 			}
 		}
@@ -364,7 +400,7 @@ class LocalMusicController : ServiceController
 
 	func getCapabilities() -> ServiceCapabilities
 	{
-		return [ .nextTrack, .searchTracks ]
+		return [ .nextTrack, .searchTracks, .timeInfo ]
 	}
 
 	func setViewModel(viewModel: ViewModel)

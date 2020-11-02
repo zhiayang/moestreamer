@@ -66,6 +66,9 @@ class ViewController : NSObject, NSPopoverDelegate
 						self.viewModel.isPlaying.toggle()
 						self.viewModel.poke()
 
+					case UInt8(ascii: "j"):
+						self.viewModel.controller().previousSong()
+
 					case UInt8(ascii: "l"):
 						self.viewModel.controller().nextSong()
 
@@ -186,7 +189,7 @@ class MainModel : ViewModel, ObservableObject
 				self.musicCon.audioController().pause()
 				self.musicCon.pause()
 			}
-			globalMediaKeyHandler.updateKeys()
+			globalMediaKeyHandler.updateMediaCentre(with: self.currentSong)
 		}
 	}
 
@@ -269,8 +272,6 @@ class MainModel : ViewModel, ObservableObject
 
 	func onSongChange(song: Song?)
 	{
-		globalMediaKeyHandler.updateKeys()
-
 		// welcome to the land of toxicity.
 		let animDuration = 0.3
 
@@ -311,6 +312,8 @@ class MainModel : ViewModel, ObservableObject
 			}
 
 			self.currentSong = song
+			globalMediaKeyHandler.updateMediaCentre(with: self.currentSong)
+
 			withAnimation(.easeOut(duration: animDuration)) {
 				self.textOpacity = 0
 
@@ -333,6 +336,11 @@ class MainModel : ViewModel, ObservableObject
 				}
 			}
 		}
+	}
+
+	func getCurrentSong() -> Song?
+	{
+		return self.currentSong
 	}
 
 	func controller() -> ServiceController

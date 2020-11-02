@@ -169,7 +169,7 @@ fileprivate struct SongView : View
 
 			VStack(alignment: .leading, spacing: 1) {
 				Button(action: {
-					self.musicCon.setNextSong(song, immediately: true)
+					self.musicCon.enqueueSong(song, immediately: true)
 				}) {
 					Image(nsImage: #imageLiteral(resourceName: "zz_Play"))
 						.resizable()
@@ -180,7 +180,7 @@ fileprivate struct SongView : View
 				.buttonStyle(PlainButtonStyle())
 
 				Button(action: {
-					self.musicCon.setNextSong(song, immediately: false)
+					self.musicCon.enqueueSong(song, immediately: false)
 				}) {
 					Image(nsImage: #imageLiteral(resourceName: "PlayNext"))
 						.resizable()
