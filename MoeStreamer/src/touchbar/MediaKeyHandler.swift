@@ -185,12 +185,12 @@ fileprivate func handlerCallback(proxy: CGEventTapProxy, type: CGEventType, even
 								 refcon: UnsafeMutableRawPointer?) -> Unmanaged<CGEvent>?
 {
 	guard let obj = refcon else {
-		return Unmanaged.passRetained(event)
+		return Unmanaged.passUnretained(event)
 	}
 
 	let this = Unmanaged<MediaKeyHandler>.fromOpaque(obj).takeUnretainedValue()
 	if !this.enabled {
-		return Unmanaged.passRetained(event)
+		return Unmanaged.passUnretained(event)
 	}
 
 	if [.tapDisabledByTimeout, .tapDisabledByUserInput ].contains(type)
@@ -200,18 +200,18 @@ fileprivate func handlerCallback(proxy: CGEventTapProxy, type: CGEventType, even
 			CGEvent.tapEnable(tap: this.eventTap, enable: true)
 		}
 
-		return Unmanaged.passRetained(event)
+		return Unmanaged.passUnretained(event)
 	}
 
 	// NSScreenChangedEventType == 8
 	guard let nse = NSEvent(cgEvent: event), nse.subtype == .screenChanged else {
-		return Unmanaged.passRetained(event)
+		return Unmanaged.passUnretained(event)
 	}
 
 	let keycode = Int32((nse.data1 & 0xFFFF0000) >> 16)
 
 	if ![NX_KEYTYPE_PLAY, NX_KEYTYPE_FAST, NX_KEYTYPE_NEXT, NX_KEYTYPE_PREVIOUS, NX_KEYTYPE_REWIND].contains(keycode) {
-		return Unmanaged.passRetained(event)
+		return Unmanaged.passUnretained(event)
 	}
 
 	let flags = (nse.data1 & 0x0000FFFF)
