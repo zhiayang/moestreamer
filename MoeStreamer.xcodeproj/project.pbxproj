@@ -10,6 +10,8 @@
 		2B125D7D253753D1000C45C5 /* MediaKeyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */; };
 		2B22659F25412DB600F970B9 /* ListenMoeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B22659E25412DB600F970B9 /* ListenMoeController.swift */; };
 		2B4077E6256D74810054F4DC /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4077E5256D74810054F4DC /* Client.swift */; };
+		2B4077E8256D84400054F4DC /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4077E7256D84400054F4DC /* MainModel.swift */; };
+		2B4077EB256D8B8C0054F4DC /* Socket in Frameworks */ = {isa = PBXBuildFile; productRef = 2B4077EA256D8B8C0054F4DC /* Socket */; };
 		2B520CA12537F2A400FECA0E /* DFRFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B520CA02537F2A400FECA0E /* DFRFoundation.framework */; };
 		2B9DB59E23F0074500950421 /* ListenMoeSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DB59D23F0074500950421 /* ListenMoeSession.swift */; };
 		2B9DB5A023F0085E00950421 /* ServiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DB59F23F0085E00950421 /* ServiceController.swift */; };
@@ -80,6 +82,7 @@
 		2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKeyHandler.swift; sourceTree = "<group>"; };
 		2B22659E25412DB600F970B9 /* ListenMoeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenMoeController.swift; sourceTree = "<group>"; };
 		2B4077E5256D74810054F4DC /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		2B4077E7256D84400054F4DC /* MainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModel.swift; sourceTree = "<group>"; };
 		2B520C9F2537ECC300FECA0E /* MoeStreamer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MoeStreamer-Bridging-Header.h"; sourceTree = "<group>"; };
 		2B520CA02537F2A400FECA0E /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = ../../../../System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<group>"; };
 		2B84385923F0208D00291BDA /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
@@ -155,6 +158,7 @@
 				2BD486DA23EFF3AB0066F1C4 /* AVFoundation.framework in Frameworks */,
 				2BD486E423EFF3D60066F1C4 /* CoreText.framework in Frameworks */,
 				2BD486E023EFF3BD0066F1C4 /* CoreGraphics.framework in Frameworks */,
+				2B4077EB256D8B8C0054F4DC /* Socket in Frameworks */,
 				2BD486D823EFF3A40066F1C4 /* AudioToolbox.framework in Frameworks */,
 				2BA155E42541274E00BB33FF /* SwiftyJSON in Frameworks */,
 				2BA155E1254126BB00BB33FF /* KeychainSwift in Frameworks */,
@@ -210,6 +214,7 @@
 				2BCFF5FF23F1CEEE00A58EFE /* LogView.swift */,
 				2BF4A33B254070E100942DCF /* SearchView.swift */,
 				2BA283FB23F14607008E0DEB /* ViewWrappers.swift */,
+				2B4077E7256D84400054F4DC /* MainModel.swift */,
 				2BD486D423EFE6C20066F1C4 /* ViewController.swift */,
 				2BE995E023FB9B6B0092023C /* wrappers */,
 			);
@@ -351,6 +356,7 @@
 				2BA155E32541274E00BB33FF /* SwiftyJSON */,
 				2BA155E6254127AF00BB33FF /* Deque */,
 				2BA155EA254127D800BB33FF /* Starscream */,
+				2B4077EA256D8B8C0054F4DC /* Socket */,
 			);
 			productName = SneakyMusicStreamer;
 			productReference = 2BD486BE23EFE3030066F1C4 /* MoeStreamer.app */;
@@ -387,6 +393,7 @@
 				2BA155E22541274E00BB33FF /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				2BA155E5254127AF00BB33FF /* XCRemoteSwiftPackageReference "Deque" */,
 				2BA155E9254127D800BB33FF /* XCRemoteSwiftPackageReference "Starscream" */,
+				2B4077E9256D8B8C0054F4DC /* XCRemoteSwiftPackageReference "BlueSocket" */,
 			);
 			productRefGroup = 2BD486BF23EFE3030066F1C4 /* Products */;
 			projectDirPath = "";
@@ -429,6 +436,7 @@
 				2BE995E423FB9B990092023C /* BetterTextField.swift in Sources */,
 				2BCFF60023F1CEEE00A58EFE /* LogView.swift in Sources */,
 				2BE995F223FBAB340092023C /* PopupButton.swift in Sources */,
+				2B4077E8256D84400054F4DC /* MainModel.swift in Sources */,
 				2BE995F823FBEA4F0092023C /* LocalAudioController.swift in Sources */,
 				2BE995F023FBA0CE0092023C /* AudioController.swift in Sources */,
 				2BD486D523EFE6C20066F1C4 /* ViewController.swift in Sources */,
@@ -664,6 +672,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2B4077E9256D8B8C0054F4DC /* XCRemoteSwiftPackageReference "BlueSocket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Kitura/BlueSocket";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.200;
+			};
+		};
 		2BA155D9254125B300BB33FF /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/siteline/SwiftUI-Introspect.git";
@@ -715,6 +731,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2B4077EA256D8B8C0054F4DC /* Socket */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B4077E9256D8B8C0054F4DC /* XCRemoteSwiftPackageReference "BlueSocket" */;
+			productName = Socket;
+		};
 		2BA155DA254125B300BB33FF /* Introspect */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2BA155D9254125B300BB33FF /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;

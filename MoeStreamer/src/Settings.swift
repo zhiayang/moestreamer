@@ -105,6 +105,13 @@ class Settings
 		}
 	}
 
+	static func notifyObservers(for key: SettingKey)
+	{
+		for cb in observers[key] ?? [] {
+			cb.1(key)
+		}
+	}
+
 	static func observe(_ key: SettingKey, callback: @escaping (SettingKey) -> Void) -> Any
 	{
 		observers[key, default: []].append((runningId, callback))
