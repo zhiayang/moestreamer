@@ -113,6 +113,8 @@ protocol ServiceController : AnyObject
 
 	func setViewModel(viewModel: ViewModel)
 	func getViewModel() -> ViewModel?
+
+	func getElapsedTime() -> Double
 }
 
 extension ServiceController

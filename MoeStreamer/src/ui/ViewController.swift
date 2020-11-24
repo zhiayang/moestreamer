@@ -8,6 +8,21 @@ import SwiftUI
 import Combine
 import Foundation
 
+enum PlaybackState
+{
+	case Playing(elapsed: Double)
+	case Paused(elapsed: Double)
+
+	var elapsed: Double {
+		switch self
+		{
+			case .Playing(let elapsed): return elapsed
+			case .Paused(let elapsed):  return elapsed
+		}
+	}
+
+	var playing: Bool { if case .Playing(_) = self { return true } else { return false } }
+}
 
 class ViewController : NSObject, NSPopoverDelegate
 {
@@ -40,7 +55,12 @@ class ViewController : NSObject, NSPopoverDelegate
 		}
 		
 		self.rootView = MainView(model: self.viewModel)
-		
+
+		// make the viewmodel update the NowPlaying info
+		self.viewModel.subscribe(with: { song, state in
+			globalMediaKeyHandler.updateMediaCentre(with: song, state: state)
+		})
+
 		statusBarButton.image = NSImage(named: "Icon")
 		statusBarButton.image?.size = NSSize(width: 16.0, height: 16.0)
 		statusBarButton.image?.isTemplate = true
@@ -169,6 +189,7 @@ class MainModel : ViewModel, ObservableObject
 	@Published var truncateArtists: Bool = false
 
 	private var currentSong: Song? = nil
+	private var subscribers: [(Song?, PlaybackState) -> Void] = []
 
 	var isPlaying: Bool = false {
 		didSet {
@@ -189,7 +210,10 @@ class MainModel : ViewModel, ObservableObject
 				self.musicCon.audioController().pause()
 				self.musicCon.pause()
 			}
-			globalMediaKeyHandler.updateMediaCentre(with: self.currentSong)
+
+			for sub in self.subscribers {
+				sub(self.currentSong, self.getPlaybackState())
+			}
 		}
 	}
 
@@ -213,6 +237,14 @@ class MainModel : ViewModel, ObservableObject
 			self.musicCon.audioController().setVolume(volume: newValue)
 		}
 	}
+
+	func getPlaybackState() -> PlaybackState
+	{
+		return self.isPlaying
+			? .Playing(elapsed: self.musicCon.getElapsedTime())
+			: .Paused(elapsed: self.musicCon.getElapsedTime())
+	}
+
 
 	func poke()
 	{
@@ -239,6 +271,11 @@ class MainModel : ViewModel, ObservableObject
 				}
 			}
 		}
+	}
+
+	func subscribe(with: @escaping (Song?, PlaybackState) -> Void)
+	{
+		self.subscribers.append(with)
 	}
 
 	func setStatus(s: String, timeout: TimeInterval? = nil)
@@ -312,7 +349,9 @@ class MainModel : ViewModel, ObservableObject
 			}
 
 			self.currentSong = song
-			globalMediaKeyHandler.updateMediaCentre(with: self.currentSong)
+			for sub in self.subscribers {
+				sub(self.currentSong, self.getPlaybackState())
+			}
 
 			withAnimation(.easeOut(duration: animDuration)) {
 				self.textOpacity = 0

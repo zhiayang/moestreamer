@@ -24,6 +24,7 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 	private var isPlaying: Bool = false
 
 	private var audioCon: StreamAudioController
+	private var lastSongChange = Date()
 
 	required init(viewModel: ViewModel?)
 	{
@@ -133,6 +134,7 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 
 		self.currentSong = song
 		self.activityView?.onSongChange(song: song)
+		self.lastSongChange = Date()
 	}
 
 	func toggleFavourite()
@@ -232,6 +234,11 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 		{
 			print("got unknown response with opcode \(json["op"].int!)")
 		}
+	}
+
+	func getElapsedTime() -> Double
+	{
+		return self.lastSongChange.timeIntervalSinceNow * -1
 	}
 
 	func isReady() -> Bool

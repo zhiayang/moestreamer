@@ -98,6 +98,7 @@ private struct PrimarySettingsView : View
 	@ObservedObject var shouldUseKeyboard       = SavedSettingModel<Bool>(.shouldUseKeyboardShortcuts())
 	@ObservedObject var shouldUseMediaKeys      = SavedSettingModel<Bool>(.shouldUseMediaKeys())
 	@ObservedObject var shouldResumeOnWake      = SavedSettingModel<Bool>(.shouldResumeOnWake())
+	@ObservedObject var shouldUseDiscord        = SavedSettingModel<Bool>(.shouldUseDiscordPresence())
 
 	@ObservedObject var streamBufferMs    = SavedSettingModel<Int>(.streamBufferMs(), willset: {
 		return (100 ... 10000).contains($0)
@@ -146,6 +147,14 @@ private struct PrimarySettingsView : View
 					Text("automatically refresh metadata")
 						.padding(.leading, 2)
 						.tooltip("force a metadata refresh every time the app is opened")
+				}
+			}
+
+			HStack() {
+				Toggle(isOn: self.$shouldUseDiscord.value) {
+					Text("discord rich presence")
+						.padding(.leading, 2)
+						.tooltip("show now playing information on discord through rich presence")
 				}
 			}
 

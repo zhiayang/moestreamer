@@ -342,6 +342,10 @@ class LocalMusicController : ServiceController
 		}
 	}
 
+	func getElapsedTime() -> Double
+	{
+		return self.audioCon.getElapsedTime()
+	}
 
 
 

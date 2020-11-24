@@ -19,10 +19,12 @@ class MediaKeyHandler : NSObject
 	fileprivate var controller: ServiceController? = nil
 	fileprivate var runLoopSource: CFRunLoopSource! = nil
 
+	private var currentSong: Song? = nil
+
 	override init()
 	{
 		super.init()
-		self.updateMediaCentre(with: nil)
+		self.updateMediaCentre(with: nil, state: .Paused(elapsed: 0))
 	}
 
 	@objc func handleEvent(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus
@@ -142,17 +144,16 @@ class MediaKeyHandler : NSObject
 			   : self.destroy()
 	}
 
-	private func getMetadata(for song: Song?) -> [String: Any]
+	private func getMetadata(for song: Song, state: PlaybackState) -> [String: Any]
 	{
 		var ret = [String: Any]()
-		guard let song = song else {
-			return ret
-		}
+
 
 		ret[MPMediaItemPropertyTitle] = song.title
 		ret[MPMediaItemPropertyArtist] = song.artists.joined(separator: ", ")
 		ret[MPMediaItemPropertyPlaybackDuration] = song.duration
-		ret[MPNowPlayingInfoPropertyElapsedPlaybackTime] = 0.0
+		ret[MPNowPlayingInfoPropertyPlaybackRate] = 1
+		ret[MPNowPlayingInfoPropertyElapsedPlaybackTime] = state.elapsed
 
 		guard let art = song.album.1 else {
 			ret[MPMediaItemPropertyArtwork] = nil
@@ -167,15 +168,14 @@ class MediaKeyHandler : NSObject
 		return ret
 	}
 
-	func updateMediaCentre(with song: Song?)
+	func updateMediaCentre(with song: Song?, state: PlaybackState)
 	{
-		let vm = self.controller?.getViewModel() as? MainModel
+		guard let song = song else {
+			return
+		}
 
-		MPNowPlayingInfoCenter.default().nowPlayingInfo = self.getMetadata(for: song ?? vm?.getCurrentSong())
-		MPNowPlayingInfoCenter.default().playbackState = (vm?.isPlaying ?? false)
-			? .playing
-			: .paused
-
+		MPNowPlayingInfoCenter.default().nowPlayingInfo = self.getMetadata(for: song, state: state)
+		MPNowPlayingInfoCenter.default().playbackState = (state.playing ? .playing : .paused)
 	}
 }
 
@@ -219,15 +219,17 @@ fileprivate func handlerCallback(proxy: CGEventTapProxy, type: CGEventType, even
 
 	if isPressed
 	{
+		guard let vm = this.controller?.getViewModel() as? MainModel else {
+			return nil
+		}
+
 		if keycode == NX_KEYTYPE_PLAY
 		{
 			print("media key: play/pause")
 
-			let vm = this.controller?.getViewModel() as? MainModel
-
 			// poke it, so the play/pause button updates properly.
-			vm?.isPlaying.toggle()
-			vm?.poke()
+			vm.isPlaying.toggle()
+			vm.poke()
 		}
 		else if keycode == NX_KEYTYPE_NEXT || keycode == NX_KEYTYPE_FAST
 		{
@@ -240,7 +242,7 @@ fileprivate func handlerCallback(proxy: CGEventTapProxy, type: CGEventType, even
 			this.controller?.previousSong()
 		}
 
-		globalMediaKeyHandler.updateMediaCentre(with: nil)
+		globalMediaKeyHandler.updateMediaCentre(with: nil, state: vm.getPlaybackState())
 	}
 
 	return nil

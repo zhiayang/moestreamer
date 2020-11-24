@@ -14,6 +14,7 @@ enum SettingKey : Hashable
 	case shouldUseMediaKeys(key: String = "useMediaKeys", default: Bool = false)
 	case shouldResumeOnWake(key: String = "resumeOnWake", default: Bool = false)
 	case shouldUpdateNowPlaying(key: String = "updateNowPlaying", default: Bool = false)
+	case shouldUseDiscordPresence(key: String = "discordRichPresence", default: Bool = false)
 
 	case audioMuted(key: String = "muted", default: Bool = false)
 	case audioVolume(key: String = "volume", default: Int = 50)
@@ -41,6 +42,7 @@ enum SettingKey : Hashable
 			case .shouldUseMediaKeys(let key, _):         return key
 			case .shouldResumeOnWake(let key, _):         return key
 			case .shouldUpdateNowPlaying(let key, _):     return key
+			case .shouldUseDiscordPresence(let key, _):   return key
 			case .audioMuted(let key, _):                 return key
 			case .audioVolume(let key, _):                return key
 			case .listenMoeUsername(let key, _):          return key
@@ -64,6 +66,7 @@ enum SettingKey : Hashable
 			case .shouldUseMediaKeys(_, let def):         return def
 			case .shouldResumeOnWake(_, let def):         return def
 			case .shouldUpdateNowPlaying(_, let def):     return def
+			case .shouldUseDiscordPresence(_, let def):   return def
 			case .audioMuted(_, let def):                 return def
 			case .audioVolume(_, let def):                return def
 			case .listenMoeUsername(_, let def):          return def

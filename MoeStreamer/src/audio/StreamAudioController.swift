@@ -40,7 +40,6 @@ class StreamAudioController : NSObject, AudioController, VLCMediaPlayerDelegate
 		self.stopped = false
 	}
 
-
 	func setVolume(volume: Int)
 	{
 		let vol = volume < 0 ? 0 : volume > 100 ? 100 : volume
