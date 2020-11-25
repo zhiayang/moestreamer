@@ -19,7 +19,7 @@ class DiscordRPC
 {
 	private let rpcVersion = 1
 	private let clientId = "780836425990012928"
-	private let readIntervalMs: Int = 500
+	private var readIntervalMs: Int = 500
 
 	private var socket: Socket?
 	private var dispatch: DispatchQueue
@@ -35,6 +35,8 @@ class DiscordRPC
 			return nil
 		}
 
+		// start at 500ms.
+		self.readIntervalMs = 500
 		model.subscribe(with: { song, state in
 			if let song = song {
 				self.updatePresence(with: song, state: state)
@@ -83,7 +85,6 @@ class DiscordRPC
 
 			// setup the receiver.
 			self.receive()
-			self.subscribe(to: "ACTIVITY_JOIN")
 			return true
 		}
 
@@ -94,22 +95,46 @@ class DiscordRPC
 
 	private func updatePresence(with song: Song, state: PlaybackState)
 	{
-		let json: [String: Any] = [
-			"cmd": "SET_ACTIVITY",
-			"args": [
-				"pid": Int(getpid()),
-				"activity": [
-					"instance": true,
-					"state": song.artists.isEmpty ? "-" : song.artists.joined(separator: ", "),
-					"details": song.title,
-					"assets": [
-						"large_image": "default-cover",
-						"large_text": "uwu"
+		let getEndTimestamp: () -> Int = {
+			guard let dur = song.duration else {
+				return 0
+			}
+
+			return Int(Date().addingTimeInterval(dur - state.elapsed).timeIntervalSince1970)
+		}
+
+		let json: [String: Any]
+
+		if state.playing
+		{
+			json = [
+				"cmd": "SET_ACTIVITY",
+				"nonce": UUID().uuidString,
+				"args": [
+					"pid": Int(getpid()),
+					"activity": [
+						"instance": true,
+						"state": song.artists.isEmpty ? "-" : song.artists.joined(separator: ", "),
+						"details": song.title,
+						"assets": [
+							"large_image": "uwu",
+							"large_text": "uwu"
+						],
+						"timestamps": [
+							"end": getEndTimestamp()
+						]
 					]
 				]
-			],
-			"nonce": UUID().uuidString
-		]
+			]
+		}
+		else
+		{
+			json = [
+				"cmd": "SET_ACTIVITY",
+				"nonce": UUID().uuidString,
+				"args": [ "pid": Int(getpid()) ]
+			]
+		}
 
 		let _ = self.send(opcode: .Frame, msg: JSON(json).rawString()!)
 	}
@@ -146,12 +171,12 @@ class DiscordRPC
 			case Error = "ERROR"
 		}
 
-		if json["evt"]?.null != nil {
-			return
-		}
-
 		guard let evt = json["evt"]?.string, let event = Event(rawValue: evt) else {
-			Logger.log("discord", msg: "invalid event \(json["evt"]?.rawString() ?? "?")")
+			// if there was a nonce, it's a response. since, we didn't parse an "ERROR",
+			// then it must be a success, so we can just ignore it.
+			if json["nonce"]?.exists() == false {
+				Logger.log("discord", msg: "invalid event \(json["evt"]?.rawString() ?? "?")")
+			}
 			return
 		}
 
@@ -163,7 +188,7 @@ class DiscordRPC
 
 			case .Error:
 				let code = json["code"]?.intValue ?? 0
-				let message = json["message"]?.stringValue ?? "unknown"
+				let message = json["data"]?.dictionary?["message"]?.string ?? "unknown"
 				Logger.log("discord", msg: "error (\(code)): \(message)")
 		}
 	}
@@ -174,6 +199,10 @@ class DiscordRPC
 			guard let socket = self.socket, socket.isConnected else {
 				return
 			}
+
+			// gradually increase the interval, because we don't actually care about
+			// what discord is telling us.
+			self.readIntervalMs = min(10000, self.readIntervalMs * 2);
 
 			// re-queue the next one
 			self.receive()
