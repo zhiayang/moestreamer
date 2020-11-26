@@ -8,7 +8,7 @@ import SwiftUI
 import Combine
 import Foundation
 
-enum PlaybackState
+enum PlaybackState : Equatable
 {
 	case Playing(elapsed: Double)
 	case Paused(elapsed: Double)
@@ -71,7 +71,12 @@ class ViewController : NSObject, NSPopoverDelegate
 			}
 		})
 
-		Settings.notifyObservers(for: .shouldUseDiscordPresence())
+		// notify the observers (ie. conditionally connect to discord RPC -- that's the sole purpose)
+		// in a separate queue, so we don't block the rest of the initialisation of the app while
+		// the rpc client does the ipc open + album art upload + other nonsense.
+		DispatchQueue.main.async {
+			Settings.notifyObservers(for: .shouldUseDiscordPresence())
+		}
 
 		statusBarButton.image = NSImage(named: "Icon")
 		statusBarButton.image?.size = NSSize(width: 16.0, height: 16.0)

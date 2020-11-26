@@ -104,6 +104,14 @@ private struct PrimarySettingsView : View
 		return (100 ... 10000).contains($0)
 	})
 
+
+	@State var passField: NSSecureTextField! = nil
+
+	@ObservedObject
+	var discordToken = SavedSettingModel<String>(.discordUserToken(), disableLogging: true,
+												 getter: Settings.getKeychain,
+												 setter: Settings.setKeychain)
+
 	@Binding var controller: ServiceController
 
 	init(con: Binding<ServiceController>)
@@ -169,6 +177,17 @@ private struct PrimarySettingsView : View
 				}
 
 			}.padding(.top, 4)
+
+			if self.shouldUseDiscord.value
+			{
+				HStack() {
+					Text("token")
+						.frame(width: 40)
+
+					BetterTextField<NSSecureTextField>(placeholder: "", text: self.$discordToken.value, field: self.$passField)
+						.frame(width: 200)
+				}.padding(.top, 4)
+			}
 
 		}.frame(width: settingsFrameWidth)
 	}

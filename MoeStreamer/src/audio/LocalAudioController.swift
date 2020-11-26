@@ -67,7 +67,8 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 
 	func getElapsedTime() -> Double
 	{
-		return self.player.currentTime().seconds
+		let s = self.player.currentTime().seconds
+		return s.isNaN ? 0 : s
 	}
 
 	func setVolume(volume: Int)

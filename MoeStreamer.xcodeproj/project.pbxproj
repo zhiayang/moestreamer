@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2B125D7D253753D1000C45C5 /* MediaKeyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */; };
 		2B22659F25412DB600F970B9 /* ListenMoeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B22659E25412DB600F970B9 /* ListenMoeController.swift */; };
+		2B2D2C7D256E9F1700ED6DB5 /* RateLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2D2C7C256E9F1700ED6DB5 /* RateLimiter.swift */; };
+		2B2D2C7F256E9F4800ED6DB5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2D2C7E256E9F4800ED6DB5 /* Extensions.swift */; };
 		2B4077E6256D74810054F4DC /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4077E5256D74810054F4DC /* Client.swift */; };
 		2B4077E8256D84400054F4DC /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4077E7256D84400054F4DC /* MainModel.swift */; };
 		2B4077EB256D8B8C0054F4DC /* Socket in Frameworks */ = {isa = PBXBuildFile; productRef = 2B4077EA256D8B8C0054F4DC /* Socket */; };
@@ -81,9 +83,10 @@
 /* Begin PBXFileReference section */
 		2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKeyHandler.swift; sourceTree = "<group>"; };
 		2B22659E25412DB600F970B9 /* ListenMoeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenMoeController.swift; sourceTree = "<group>"; };
+		2B2D2C7C256E9F1700ED6DB5 /* RateLimiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateLimiter.swift; sourceTree = "<group>"; };
+		2B2D2C7E256E9F4800ED6DB5 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2B4077E5256D74810054F4DC /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		2B4077E7256D84400054F4DC /* MainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModel.swift; sourceTree = "<group>"; };
-		2B520C9F2537ECC300FECA0E /* MoeStreamer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MoeStreamer-Bridging-Header.h"; sourceTree = "<group>"; };
 		2B520CA02537F2A400FECA0E /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = ../../../../System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<group>"; };
 		2B84385923F0208D00291BDA /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
 		2B9DB59D23F0074500950421 /* ListenMoeSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenMoeSession.swift; sourceTree = "<group>"; };
@@ -194,6 +197,8 @@
 			isa = PBXGroup;
 			children = (
 				2B4077E5256D74810054F4DC /* Client.swift */,
+				2B2D2C7C256E9F1700ED6DB5 /* RateLimiter.swift */,
+				2B2D2C7E256E9F4800ED6DB5 /* Extensions.swift */,
 			);
 			path = discord;
 			sourceTree = "<group>";
@@ -234,7 +239,6 @@
 				2BD83F8B23F331E100422034 /* Statistics.swift */,
 				2B9DB59F23F0085E00950421 /* ServiceController.swift */,
 				2BD486C123EFE3030066F1C4 /* AppDelegate.swift */,
-				2B520C9F2537ECC300FECA0E /* MoeStreamer-Bridging-Header.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -426,6 +430,7 @@
 				2BD486C423EFE3030066F1C4 /* MainView.swift in Sources */,
 				2BCFF60223F1DF9700A58EFE /* Logger.swift in Sources */,
 				2B4077E6256D74810054F4DC /* Client.swift in Sources */,
+				2B2D2C7D256E9F1700ED6DB5 /* RateLimiter.swift in Sources */,
 				2BA9071B23F07DF200782C94 /* SettingsView.swift in Sources */,
 				2BD486FC23EFFE0B0066F1C4 /* StreamAudioController.swift in Sources */,
 				2BF4A33C254070E100942DCF /* SearchView.swift in Sources */,
@@ -448,6 +453,7 @@
 				2BD83F8C23F331E100422034 /* Statistics.swift in Sources */,
 				2BE995F623FBB76B0092023C /* MusicBackend.swift in Sources */,
 				2BD486C223EFE3030066F1C4 /* AppDelegate.swift in Sources */,
+				2B2D2C7F256E9F4800ED6DB5 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,9 +610,10 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.14.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -637,9 +644,10 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.14.0;
+				MARKETING_VERSION = 0.14.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
