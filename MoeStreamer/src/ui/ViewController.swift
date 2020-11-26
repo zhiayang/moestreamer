@@ -67,6 +67,7 @@ class ViewController : NSObject, NSPopoverDelegate
 				self.discordRPC = DiscordRPC(model: self.viewModel)
 				let _ = self.discordRPC?.connect()
 			} else if !v {
+				self.discordRPC?.disconnect()
 				self.discordRPC = nil
 			}
 		})

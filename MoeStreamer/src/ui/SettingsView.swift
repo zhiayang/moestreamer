@@ -49,6 +49,8 @@ struct SettingsView : View
 																		 getter: Settings.getKE,
 																		 setter: Settings.setKE)
 
+	@ObservedObject var shouldUseDiscord = SavedSettingModel<Bool>(.shouldUseDiscordPresence())
+
 	init(musicCon: Binding<ServiceController>)
 	{
 		self._musicCon = musicCon
@@ -57,7 +59,7 @@ struct SettingsView : View
 	var body: some View {
 		ZStack() {
 			VStack(spacing: 16) {
-				PrimarySettingsView(con: self.$musicCon)
+				PrimarySettingsView(con: self.$musicCon, discord: self.$shouldUseDiscord.value)
 
 				HStack() {
 					Text("music source")
@@ -84,6 +86,11 @@ struct SettingsView : View
 				{
 					LocalMusicSettingsView(con: self.$musicCon)
 				}
+
+				if self.shouldUseDiscord.value
+				{
+					DiscordSettingsView()
+				}
 			}
 		}
 		.frame(width: settingsFrameWidth)
@@ -98,25 +105,18 @@ private struct PrimarySettingsView : View
 	@ObservedObject var shouldUseKeyboard       = SavedSettingModel<Bool>(.shouldUseKeyboardShortcuts())
 	@ObservedObject var shouldUseMediaKeys      = SavedSettingModel<Bool>(.shouldUseMediaKeys())
 	@ObservedObject var shouldResumeOnWake      = SavedSettingModel<Bool>(.shouldResumeOnWake())
-	@ObservedObject var shouldUseDiscord        = SavedSettingModel<Bool>(.shouldUseDiscordPresence())
+	@Binding var shouldUseDiscord: Bool;
 
-	@ObservedObject var streamBufferMs    = SavedSettingModel<Int>(.streamBufferMs(), willset: {
+	@ObservedObject var streamBufferMs = SavedSettingModel<Int>(.streamBufferMs(), willset: {
 		return (100 ... 10000).contains($0)
 	})
 
-
-	@State var passField: NSSecureTextField! = nil
-
-	@ObservedObject
-	var discordToken = SavedSettingModel<String>(.discordUserToken(), disableLogging: true,
-												 getter: Settings.getKeychain,
-												 setter: Settings.setKeychain)
-
 	@Binding var controller: ServiceController
 
-	init(con: Binding<ServiceController>)
+	init(con: Binding<ServiceController>, discord: Binding<Bool>)
 	{
 		self._controller = con
+		self._shouldUseDiscord = discord
 	}
 
 	var body: some View {
@@ -159,7 +159,7 @@ private struct PrimarySettingsView : View
 			}
 
 			HStack() {
-				Toggle(isOn: self.$shouldUseDiscord.value) {
+				Toggle(isOn: self.$shouldUseDiscord) {
 					Text("discord rich presence")
 						.padding(.leading, 2)
 						.tooltip("show now playing information on discord through rich presence")
@@ -177,17 +177,6 @@ private struct PrimarySettingsView : View
 				}
 
 			}.padding(.top, 4)
-
-			if self.shouldUseDiscord.value
-			{
-				HStack() {
-					Text("token")
-						.frame(width: 40)
-
-					BetterTextField<NSSecureTextField>(placeholder: "", text: self.$discordToken.value, field: self.$passField)
-						.frame(width: 200)
-				}.padding(.top, 4)
-			}
 
 		}.frame(width: settingsFrameWidth)
 	}
@@ -250,6 +239,38 @@ private struct LocalMusicSettingsView : View
 				}).frame(width: 140)
 			}.padding(.bottom, 4)
 		}
+	}
+}
+
+
+private struct DiscordSettingsView : View
+{
+	@State var appIdField: NSTextField! = nil
+	@State var tokenField: NSSecureTextField! = nil
+
+	@ObservedObject
+	var discordAppId = SavedSettingModel<String>(.discordAppId())
+
+	@ObservedObject
+	var discordToken = SavedSettingModel<String>(.discordUserToken(), disableLogging: true,
+												 getter: Settings.getKeychain,
+												 setter: Settings.setKeychain)
+
+	var body: some View {
+		VStack(spacing: 3) {
+			Text("discord settings")
+			Divider().frame(width: 200).padding(.bottom, 8).padding(.top, 1)
+
+			HStack() {
+				Text("appid").frame(width: 40)
+				BetterTextField<NSTextField>(placeholder: "", text: self.$discordAppId.value, field: self.$appIdField)
+			}
+
+			HStack() {
+				Text("token").frame(width: 40)
+				BetterTextField<NSSecureTextField>(placeholder: "", text: self.$discordToken.value, field: self.$tokenField)
+			}
+		}.frame(width: 240)
 	}
 }
 
@@ -381,7 +402,6 @@ private struct ListenMoeSettingsView : View
 							.tooltip("login to services automatically")
 					}
 					.padding(.leading, 4)
-//					.border(Color.green)
 
 					Spacer()
 
@@ -404,7 +424,6 @@ private struct ListenMoeSettingsView : View
 						Text("login")
 					}
 					.padding(.bottom, 2)
-//					.border(Color.yellow)
 				}
 
 				HStack() {
@@ -416,7 +435,6 @@ private struct ListenMoeSettingsView : View
 							.font(.system(size: 10))
 							.lineLimit(1)
 							.transition(.opacity)
-//							.fixedSize(horizontal: false, vertical: true)
 							.padding(.trailing, 4)
 					}
 				}

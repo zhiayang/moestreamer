@@ -9,13 +9,12 @@ import Foundation
 
 extension Socket
 {
-	func send(opcode: Opcode, msg: String) -> Bool
+	private func send(opcode: Opcode, data: Data) -> Bool
 	{
 		if !self.isConnected {
 			return false
 		}
 
-		let data = msg.data(using: .utf8)!
 		let buf = UnsafeMutableRawBufferPointer.allocate(byteCount: 8 + data.count, alignment: 1)
 		defer { buf.deallocate() }
 
@@ -32,9 +31,14 @@ extension Socket
 		}
 	}
 
+	func send(opcode: Opcode, msg: String) -> Bool
+	{
+		return self.send(opcode: opcode, data: msg.data(using: .utf8)!)
+	}
+
 	func send(opcode: Opcode, json: JSON) -> Bool
 	{
-		return self.send(opcode: opcode, msg: json.rawString()!)
+		return self.send(opcode: opcode, data: try! json.rawData(options: []))
 	}
 }
 
@@ -98,5 +102,19 @@ extension NSImage
 		}
 
 		return self.copyWith(size: newSize)
+	}
+}
+
+
+typealias AlbumHash = UInt64
+extension AlbumHash
+{
+	var hexString: String {
+		return String(self, radix: 0x10, uppercase: false)
+	}
+
+	static func from<S: StringProtocol>(hexString str: S) -> AlbumHash?
+	{
+		return AlbumHash(str, radix: 0x10)
 	}
 }

@@ -21,15 +21,39 @@ fileprivate struct Asset : Equatable
 {
 	var id: String
 	var name: String
-	var albumHash: UInt
+	var hash: String { return self.hashValue.hexString }
+	var hashValue: AlbumHash
+
+	init(id: String, name: String, hash: AlbumHash)
+	{
+		self.id = id
+		self.name = name
+		self.hashValue = hash
+	}
 }
+
+// fnv-1a
+fileprivate func hash(of string: String) -> AlbumHash
+{
+	let prime: UInt64 = 1099511628211
+	let offset: UInt64 = 14695981039346656037
+
+	var ret = offset
+	for b in string.utf8
+	{
+		ret ^= UInt64(b)
+		ret = ret &* prime
+	}
+
+	return ret
+}
+
 
 class DiscordRPC
 {
 	private static let rpcVersion = 1
-	private static let clientId = "780836425990012928"
 	private static let assetLimit = 148 // conservatively
-	private static let assetsURL = URL(string: "https://discord.com/api/v6/oauth2/applications/\(clientId)/assets")!
+	private static let defaultClientId = "780836425990012928"
 
 	private let just: JustOf<HTTP>
 	private var readIntervalMs: Int = 500
@@ -37,25 +61,30 @@ class DiscordRPC
 	private var socket: Socket? = nil
 	private var dispatch: DispatchQueue
 	private var rateLimiter: RateLimiter!
+	private var haveUploadToken: Bool = false
 
 	// part of me feels like this is super thread-unsafe, and that part of me would be right.
 	private var cancelPresenceUpdate: Bool = false
-	private var existingRemoteAssets: [UInt: Asset] = [:]
+	private var existingRemoteAssets: [AlbumHash: Asset] = [:]
 
 	// wait 8 seconds before re-asking discord for the list of assets
 	private let assetUploadConfirmationInterval: Double = 8
 
+	private let assetsURL: URL
+	private let clientId: String
 
 	init?(model: MainModel)
 	{
+		let appid: String = Settings.get(.discordAppId())
+		self.clientId = appid.isEmpty ? DiscordRPC.defaultClientId : appid
+		self.assetsURL = URL(string: "https://discord.com/api/v6/oauth2/applications/\(self.clientId)/assets")!
+
 		self.dispatch = DispatchQueue.init(label: "\(Bundle.main.bundleIdentifier ?? "").discordRPC")
 
 		let token = Settings.getKeychain(.discordUserToken())
-		guard !token.isEmpty else {
-			return nil
-		}
+		self.haveUploadToken = !token.isEmpty
 
-		self.just = JustOf<HTTP>(defaults: JustSessionDefaults(headers: ["Authorization": token]))
+		self.just = JustOf<HTTP>(defaults: JustSessionDefaults(headers: token.isEmpty ? [:] : ["Authorization": token]))
 		self.rateLimiter = RateLimiter(5, every: 21, callback: self.updatePresence, dispatch: self.dispatch)
 
 		// start at 500ms.
@@ -71,8 +100,7 @@ class DiscordRPC
 
 	deinit
 	{
-		let _ = self.socket?.send(opcode: .Close, msg: "")
-		self.socket?.close()
+		self.disconnect()
 	}
 
 	private func createSocket() -> Socket?
@@ -98,6 +126,13 @@ class DiscordRPC
 		}
 	}
 
+	func disconnect()
+	{
+		let _ = self.socket?.send(opcode: .Close, msg: "")
+		self.socket?.close()
+		self.socket = nil
+	}
+
 	func connect() -> Bool
 	{
 		guard let socket = self.socket else {
@@ -117,7 +152,7 @@ class DiscordRPC
 			}
 
 			// handshake.
-			if !socket.send(opcode: .Handshake, json: JSON([ "v": DiscordRPC.rpcVersion, "client_id": DiscordRPC.clientId ])) {
+			if !socket.send(opcode: .Handshake, json: JSON([ "v": DiscordRPC.rpcVersion, "client_id": self.clientId ])) {
 				Logger.log("discord", msg: "handshake failed")
 				return false
 			}
@@ -126,7 +161,7 @@ class DiscordRPC
 
 			// setup the receiver.
 			self.receive()
-			self.existingRemoteAssets = self.getExistingAssets()
+			self.updateExistingAssets()
 			return true
 		}
 
@@ -188,7 +223,7 @@ class DiscordRPC
 					"details": song.title,
 					"state": song.artists.isEmpty ? "-" : song.artists.joined(separator: ", "),
 					"assets": [
-						"large_image": (asset != nil) ? "album-art-\(asset!.albumHash)" : "default-cover",
+						"large_image": (asset != nil) ? "album-art-\(asset!.hash)" : "default-cover",
 						"large_text": "uwu"
 					],
 					"timestamps": [
@@ -204,11 +239,11 @@ class DiscordRPC
 
 	private func getAlbumArtAsset(for song: Song, callback: @escaping (Asset) -> Void) -> Asset?
 	{
-		guard let albumName = song.album.0 else {
+		guard self.haveUploadToken, let albumName = song.album.0 else {
 			return nil
 		}
 
-		let albumHash = UInt(bitPattern: albumName.hashValue)
+		let albumHash = hash(of: albumName)
 
 		// if it exists in our list, then just return it.
 		if let existing = self.existingRemoteAssets[albumHash] {
@@ -227,7 +262,7 @@ class DiscordRPC
 			{
 				let victim = self.existingRemoteAssets.first!
 
-				let resp = self.just.delete(DiscordRPC.assetsURL.appendingPathComponent("\(victim.value.id)"))
+				let resp = self.just.delete(self.assetsURL.appendingPathComponent("\(victim.value.id)"))
 				if !(200...299).contains(resp.statusCode!) {
 					print("failed to delete old album art: \(resp.text ?? "?")")
 					continue
@@ -236,9 +271,9 @@ class DiscordRPC
 				self.existingRemoteAssets.removeValue(forKey: victim.key)
 			}
 
-			let resp = self.just.post(DiscordRPC.assetsURL, json: [
+			let resp = self.just.post(self.assetsURL, json: [
 				"image": base64,
-				"name": "album-art-\(UInt(bitPattern: albumName.hashValue))",
+				"name": "album-art-\(albumHash.hexString)",
 				"type": 1
 			])
 
@@ -248,10 +283,10 @@ class DiscordRPC
 			}
 
 			let json = JSON(parseJSON: body)
-			let asset = Asset(id: json["id"].stringValue, name: json["name"].stringValue, albumHash: albumHash)
+			let asset = Asset(id: json["id"].stringValue, name: json["name"].stringValue, hash: albumHash)
 			self.existingRemoteAssets.updateValue(asset, forKey: albumHash)
 
-			print("uploaded art for album \(albumName) (hash \(albumHash))")
+			print("uploaded art for album \(albumName) (hash \(albumHash.hexString))")
 
 			// now, send another presence update... after a few seconds in case discord is pepega.
 			// if we got cancelled, then... don't.
@@ -270,7 +305,9 @@ class DiscordRPC
 	private func resendPresence(for asset: Asset, using callback: @escaping (Asset) -> Void)
 	{
 		self.dispatch.asyncAfter(deadline: .now() + self.assetUploadConfirmationInterval) {
-			if self.getExistingAssets()[asset.albumHash] != nil {
+			self.updateExistingAssets()
+
+			if self.existingRemoteAssets[asset.hashValue] != nil {
 				callback(asset)
 			} else {
 				self.resendPresence(for: asset, using: callback)
@@ -278,12 +315,17 @@ class DiscordRPC
 		}
 	}
 
-	private func getExistingAssets() -> [UInt: Asset]
+	private func updateExistingAssets()
 	{
+		guard self.haveUploadToken else {
+			return
+		}
+
 		// no need authorisation to read the asset list.
-		let resp = Just.get(DiscordRPC.assetsURL)
+		let resp = Just.get(self.assetsURL)
 		guard resp.ok && resp.text != nil else {
-			return [:]
+			print("failed to update assets: \(resp.statusCode ?? 0)")
+			return
 		}
 
 		let json = JSON(parseJSON: resp.text!)
@@ -296,32 +338,17 @@ class DiscordRPC
 					return nil
 				}
 
-				guard let hash = UInt(name[name.index(name.startIndex, offsetBy: prefix.count)...]) else {
+				let substr = name[name.index(name.startIndex, offsetBy: prefix.count)...]
+				guard let hash = UInt64.from(hexString: substr) else {
 					return nil
 				}
 
-				return Asset(id: id, name: name, albumHash: hash)
+				return Asset(id: id, name: name, hash: hash)
 			}
 			.filter({ $0 != nil })
-			.map({ ($0!.albumHash, $0!) })
+			.map({ ($0!.hashValue, $0!) })
 
 		self.existingRemoteAssets = Dictionary(list, uniquingKeysWith: { $1 })
-		return self.existingRemoteAssets
-	}
-
-
-
-
-
-	private func subscribe(to event: String)
-	{
-		if let socket = self.socket {
-			let _ = socket.send(opcode: .Frame,
-								json: JSON([ "cmd":   "SUBSCRIBE",
-											 "evt":   event,
-											 "nonce": UUID().uuidString
-								]))
-		}
 	}
 
 	private func handlePayload(opcode: Opcode, data: Data)

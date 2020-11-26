@@ -33,6 +33,7 @@ enum SettingKey : Hashable
 
 	case musicBackend(key: String = "musicBackend", default: MusicBackend = .ListenMoe())
 
+	case discordAppId(key: String = "discordAppId", default: String = "")
 	case discordUserToken(key: String = "discordUserToken", default: String = "")
 
 	var key: String {
@@ -57,6 +58,7 @@ enum SettingKey : Hashable
 			case .logLinesRetain(let key, _):             return key
 			case .musicBackend(let key, _):               return key
 			case .discordUserToken(let key, _):           return key
+			case .discordAppId(let key, _):               return key
 		}
 	}
 
@@ -82,6 +84,7 @@ enum SettingKey : Hashable
 			case .logLinesRetain(_, let def):             return def
 			case .musicBackend(_, let def):               return def
 			case .discordUserToken(_, let def):           return def
+			case .discordAppId(_, let def):               return def
 		}
 	}
 
