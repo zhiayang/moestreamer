@@ -48,8 +48,9 @@ struct SearchView : View
 
 		self.searchResults = []
 		self.searchState = .InProgress
-		self.musicCon.searchSongs(name: name, into: self.$searchResults, inProgress: { _ in
+		self.musicCon.searchSongs(name: name, inProgress: {
 
+			self.searchResults.append($0)
 			DispatchQueue.main.async {
 				setResultHeight()
 			}
@@ -75,8 +76,8 @@ struct SearchView : View
 						($0.cell as! NSSearchFieldCell).sendsWholeSearchString = true
 						($0.cell as! NSSearchFieldCell).sendsSearchStringImmediately = false
 					},
-					onEnter: { (_, field: CustomSearchField) in
-						self.performSearch(with: field.stringValue)
+					onFinishEditing: { (text, _) in
+						self.performSearch(with: text)
 					})
 					.frame(width: 200, alignment: .center)
 					.onAppear(perform: {
@@ -118,7 +119,9 @@ struct SearchView : View
 							.padding([.leading, .trailing], 5)
 					})
 				}
-			}.frame(minHeight: self.resultWindowHeight, maxHeight: self.resultWindowHeight)
+			}
+			.animation(.interactiveSpring())
+			.frame(minHeight: self.resultWindowHeight, maxHeight: self.resultWindowHeight)
 
 			Spacer()
 		}

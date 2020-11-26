@@ -132,12 +132,11 @@ class MainModel : ViewModel, ObservableObject
 
 	public static func getDefaultAlbumArt() -> AnyView
 	{
-		return AnyView(Image(nsImage: #imageLiteral(resourceName: "NoCoverArt2"))
-						.resizable()
-						.saturation(0.85)
-						.background(Rectangle()
-										.foregroundColor(Color(.sRGB, red: 0.114, green: 0.122, blue: 0.169))
-						)
+		return AnyView(
+			Image(nsImage: #imageLiteral(resourceName: "NoCoverArt2"))
+				.resizable()
+				.saturation(0.85)
+				.background(Rectangle().foregroundColor(Color(.sRGB, red: 0.114, green: 0.122, blue: 0.169)))
 		)
 	}
 

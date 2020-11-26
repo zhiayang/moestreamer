@@ -135,4 +135,3 @@ extension NSTableView
 		self.backgroundColor = .clear
 	}
 }
-

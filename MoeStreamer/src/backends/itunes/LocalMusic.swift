@@ -135,12 +135,11 @@ class LocalMusicController : ServiceController
 		}
 	}
 
-	func searchSongs(name: String, into: Binding<[Song]>, inProgress: ((Song) -> Void)?, onComplete: @escaping () -> Void)
+	func searchSongs(name: String, inProgress: ((Song) -> Void)?, onComplete: @escaping () -> Void)
 	{
 		let name = name.trimmingCharacters(in: .whitespaces)
 		if name.isEmpty
 		{
-			into.wrappedValue = []
 			onComplete()
 
 			return
@@ -151,7 +150,7 @@ class LocalMusicController : ServiceController
 			Logger.log(msg: "searching for: \(name)")
 			let searchWords = name.words.map({ $0.lowercased() })
 
-			into.wrappedValue = [ ]
+			var found = 0
 
 			// i don't believe swift's map/filter are lazy, so just use a for loop
 			// so we can append iteratively.
@@ -161,12 +160,12 @@ class LocalMusicController : ServiceController
 				if searchWords.allSatisfy({ word -> Bool in
 					titleWords.contains(where: { $0.hasPrefix(word) })
 				}) {
-					into.wrappedValue.append(song.song)
 					inProgress?(song.song)
+					found += 1
 				}
 			}
 
-			Logger.log(msg: "search: found \(into.wrappedValue.count) song\(into.wrappedValue.count == 1 ? "" : "s")")
+			Logger.log(msg: "search: found \(found) song\(found == 1 ? "" : "s")")
 			onComplete()
 		}
 	}

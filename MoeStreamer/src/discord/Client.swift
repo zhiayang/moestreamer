@@ -395,7 +395,6 @@ class DiscordRPC
 		{
 			case .Ready:
 				Logger.log("discord", msg: "ipc ready")
-				break
 
 			case .Error:
 				let code = json["code"]?.intValue ?? 0
