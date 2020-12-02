@@ -18,6 +18,7 @@ enum SettingKey : Hashable
 
 	case audioMuted(key: String = "muted", default: Bool = false)
 	case audioVolume(key: String = "volume", default: Int = 50)
+	case audioVolumeScale(key: String = "volumeScale", default: Int = 100)
 
 	case listenMoeUsername(key: String = "listenMoe_username", default: String = "")
 	case listenMoePassword(key: String = "listenMoe_password", default: String = "")
@@ -48,6 +49,7 @@ enum SettingKey : Hashable
 			case .shouldUseDiscordPresence(let key, _):   return key
 			case .audioMuted(let key, _):                 return key
 			case .audioVolume(let key, _):                return key
+			case .audioVolumeScale(let key, _):           return key
 			case .listenMoeUsername(let key, _):          return key
 			case .listenMoePassword(let key, _):          return key
 			case .listenMoeAutoLogin(let key, _):         return key
@@ -74,6 +76,7 @@ enum SettingKey : Hashable
 			case .shouldUseDiscordPresence(_, let def):   return def
 			case .audioMuted(_, let def):                 return def
 			case .audioVolume(_, let def):                return def
+			case .audioVolumeScale(_, let def):           return def
 			case .listenMoeUsername(_, let def):          return def
 			case .listenMoePassword(_, let def):          return def
 			case .listenMoeAutoLogin(_, let def):         return def

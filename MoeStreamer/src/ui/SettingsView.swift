@@ -3,6 +3,7 @@
 // Licensed under the Apache License Version 2.0.
 
 import Cocoa
+import Combine
 import SwiftUI
 import Foundation
 
@@ -111,6 +112,10 @@ private struct PrimarySettingsView : View
 		return (100 ... 10000).contains($0)
 	})
 
+	@ObservedObject var audioVolumeScale = SavedSettingModel<Int>(.audioVolumeScale(), willset: {
+		return (1 ... 100).contains($0)
+	})
+
 	@Binding var controller: ServiceController
 
 	init(con: Binding<ServiceController>, discord: Binding<Bool>)
@@ -164,19 +169,42 @@ private struct PrimarySettingsView : View
 						.padding(.leading, 2)
 						.tooltip("show now playing information on discord through rich presence")
 				}
+			}.padding(.bottom, 4)
+
+			HStack() {
+				Text("volume scale (%)")
+					.padding(.leading, 2)
+					.tooltip("the scale of the volume slider")
+					.frame(width: 120)
+
+				Stepper(value: self.$audioVolumeScale.value, in: 1 ... 100, step: 1) {
+					TextField("", text: Binding(get: {
+						String(self.audioVolumeScale.value)
+					}, set: { new in
+						if let int = Int(new) {
+							self.audioVolumeScale.value = int
+						}
+					})).frame(width: 48)
+				}
 			}
 
 			HStack() {
 				Text("stream buffer (ms)")
 					.padding(.leading, 2)
 					.tooltip("how much audio to buffer (effectively stream delay)")
+					.frame(width: 120)
 
 				Stepper(value: self.$streamBufferMs.value, in: 100 ... 10000, step: 100) {
-					TextField("", value: self.$streamBufferMs.value, formatter: IntegerNumberFormatter())
-						.frame(width: 48)
+					TextField("", text: Binding(get: {
+						String(self.streamBufferMs.value)
+					}, set: { new in
+						if let int = Int(new) {
+							self.streamBufferMs.value = int
+						}
+					})).frame(width: 48)
 				}
 
-			}.padding(.top, 4)
+			}
 
 		}.frame(width: settingsFrameWidth)
 	}

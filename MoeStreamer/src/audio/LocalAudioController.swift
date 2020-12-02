@@ -76,10 +76,13 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 		self.volume = volume.clamped(from: 0, to: 100)
 		Settings.set(.audioVolume(), value: self.volume)
 
+		let scale: Int = Settings.get(.audioVolumeScale())
+		let scaledVol = Double(self.volume * scale) / 100.0
+
 		if !self.muted
 		{
 			// only actually change the volume if we aren't muted.
-			var real = Double(self.volume) / 100.0
+			var real = Double(scaledVol) / 100.0
 			real = real.clamped(from: 0, to: 1)
 
 			self.player.volume = Float(real)
