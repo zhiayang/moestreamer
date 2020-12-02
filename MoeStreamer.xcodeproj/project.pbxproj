@@ -63,6 +63,7 @@
 		2BE995F223FBAB340092023C /* PopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995F123FBAB340092023C /* PopupButton.swift */; };
 		2BE995F623FBB76B0092023C /* MusicBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995F523FBB76B0092023C /* MusicBackend.swift */; };
 		2BE995F823FBEA4F0092023C /* LocalAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995F723FBEA4E0092023C /* LocalAudioController.swift */; };
+		2BECD3E92577784500FF2544 /* NotifCentreNowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BECD3E82577784500FF2544 /* NotifCentreNowPlaying.swift */; };
 		2BF4A33C254070E100942DCF /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF4A33B254070E100942DCF /* SearchView.swift */; };
 /* End PBXBuildFile section */
 
@@ -138,6 +139,7 @@
 		2BE995F123FBAB340092023C /* PopupButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupButton.swift; sourceTree = "<group>"; };
 		2BE995F523FBB76B0092023C /* MusicBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicBackend.swift; sourceTree = "<group>"; };
 		2BE995F723FBEA4E0092023C /* LocalAudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAudioController.swift; sourceTree = "<group>"; };
+		2BECD3E82577784500FF2544 /* NotifCentreNowPlaying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifCentreNowPlaying.swift; sourceTree = "<group>"; };
 		2BF4A33B254070E100942DCF /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -203,12 +205,13 @@
 			path = discord;
 			sourceTree = "<group>";
 		};
-		2B520C9D2537E9C200FECA0E /* touchbar */ = {
+		2B520C9D2537E9C200FECA0E /* system */ = {
 			isa = PBXGroup;
 			children = (
 				2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */,
+				2BECD3E82577784500FF2544 /* NotifCentreNowPlaying.swift */,
 			);
-			path = touchbar;
+			path = system;
 			sourceTree = "<group>";
 		};
 		2B79C81423F1FD19001C87CD /* ui */ = {
@@ -233,7 +236,7 @@
 				2B79C81423F1FD19001C87CD /* ui */,
 				2BE995EE23FBA0A50092023C /* audio */,
 				2BE995EB23FB9FC10092023C /* backends */,
-				2B520C9D2537E9C200FECA0E /* touchbar */,
+				2B520C9D2537E9C200FECA0E /* system */,
 				2BA9071823F0731300782C94 /* Settings.swift */,
 				2BCFF60123F1DF9700A58EFE /* Logger.swift */,
 				2BD83F8B23F331E100422034 /* Statistics.swift */,
@@ -454,6 +457,7 @@
 				2BE995F623FBB76B0092023C /* MusicBackend.swift in Sources */,
 				2BD486C223EFE3030066F1C4 /* AppDelegate.swift in Sources */,
 				2B2D2C7F256E9F4800ED6DB5 /* Extensions.swift in Sources */,
+				2BECD3E92577784500FF2544 /* NotifCentreNowPlaying.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -610,7 +614,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.14.3;
+				MARKETING_VERSION = 0.15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -644,7 +648,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.14.3;
+				MARKETING_VERSION = 0.15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";

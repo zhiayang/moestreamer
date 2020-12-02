@@ -193,7 +193,10 @@ class LocalMusicController : ServiceController
 
 	func refresh()
 	{
-		// nothing
+		// just refresh the playlist.
+		self.viewModel?.spin()
+		self.updateSongList()
+		self.viewModel?.unspin()
 	}
 
 	func nextSong()

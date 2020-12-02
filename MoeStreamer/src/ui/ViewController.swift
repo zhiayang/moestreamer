@@ -35,6 +35,7 @@ class ViewController : NSObject, NSPopoverDelegate
 	private var viewModel: MainModel! = nil
 	private var rootView: MainView! = nil
 	private var discordRPC: DiscordRPC? = nil
+	private var nowPlayingCentre: NowPlayingCentre! = nil
 
 	override init()
 	{
@@ -55,10 +56,11 @@ class ViewController : NSObject, NSPopoverDelegate
 		}
 		
 		self.rootView = MainView(model: self.viewModel)
+		self.nowPlayingCentre = NowPlayingCentre(controller: self.viewModel.controller())
 
 		// make the viewmodel update the NowPlaying info
 		self.viewModel.subscribe(with: { song, state in
-			globalMediaKeyHandler.updateMediaCentre(with: song, state: state)
+			self.nowPlayingCentre.updateMediaCentre(with: song, state: state)
 		})
 
 		let _ = Settings.observe(.shouldUseDiscordPresence(), callback: { key in

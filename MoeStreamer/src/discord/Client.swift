@@ -224,7 +224,7 @@ class DiscordRPC
 					"state": song.artists.isEmpty ? "-" : song.artists.joined(separator: ", "),
 					"assets": [
 						"large_image": (asset != nil) ? "album-art-\(asset!.hash)" : "default-cover",
-						"large_text": "uwu"
+						"large_text": song.title
 					],
 					"timestamps": [
 						"end": ts

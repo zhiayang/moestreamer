@@ -6,11 +6,7 @@ import Cocoa
 import Foundation
 import MediaPlayer
 
-@available(macOS 10.12.2, *)
-fileprivate extension NSTouchBarItem.Identifier
-{
-	static let playPause = NSTouchBarItem.Identifier("\(Bundle.main.bundleIdentifier!).TouchBarItem.playPause")
-}
+var globalMediaKeyHandler = MediaKeyHandler()
 
 class MediaKeyHandler : NSObject
 {
@@ -19,77 +15,9 @@ class MediaKeyHandler : NSObject
 	fileprivate var controller: ServiceController? = nil
 	fileprivate var runLoopSource: CFRunLoopSource! = nil
 
-	private var currentSong: Song? = nil
-
 	override init()
 	{
 		super.init()
-		self.updateMediaCentre(with: nil, state: .Paused(elapsed: 0))
-	}
-
-	@objc func handleEvent(_ event: MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus
-	{
-		guard let vm = self.controller?.getViewModel() as? MainModel else {
-			return .success
-		}
-
-		let remote = MPRemoteCommandCenter.shared()
-
-		switch event.command {
-			case remote.playCommand:
-				vm.isPlaying = true
-
-			case remote.pauseCommand:
-				vm.isPlaying = false
-
-			case remote.togglePlayPauseCommand:
-				vm.isPlaying.toggle()
-
-			case remote.nextTrackCommand:
-				vm.controller().nextSong()
-
-			case remote.previousTrackCommand:
-				vm.controller().previousSong()
-
-			default:
-				break
-		}
-		vm.poke()
-		return .success
-	}
-
-	private func activateMPRemote()
-	{
-		let remote = MPRemoteCommandCenter.shared()
-		remote.playCommand.isEnabled = true
-		remote.playCommand.addTarget(self, action: #selector(handleEvent))
-
-		remote.pauseCommand.isEnabled = true
-		remote.pauseCommand.addTarget(self, action: #selector(handleEvent))
-
-		remote.togglePlayPauseCommand.isEnabled = true
-		remote.togglePlayPauseCommand.addTarget(self, action: #selector(handleEvent))
-
-		remote.previousTrackCommand.isEnabled = true
-		remote.previousTrackCommand.addTarget(self, action: #selector(handleEvent))
-
-		remote.nextTrackCommand.isEnabled = true
-		remote.nextTrackCommand.addTarget(self, action: #selector(handleEvent))
-		MPNowPlayingInfoCenter.default().playbackState = .paused
-	}
-
-
-	private func deactivateMPRemote()
-	{
-		let remote = MPRemoteCommandCenter.shared()
-
-		remote.playCommand.removeTarget(self)
-		remote.pauseCommand.removeTarget(self)
-		remote.nextTrackCommand.removeTarget(self)
-		remote.previousTrackCommand.removeTarget(self)
-		remote.togglePlayPauseCommand.removeTarget(self)
-
-		MPNowPlayingInfoCenter.default().playbackState = .stopped
 	}
 
 	private func setup()
@@ -113,7 +41,6 @@ class MediaKeyHandler : NSObject
 		enabled = true
 
 		Logger.log(msg: "media keys enabled")
-		self.activateMPRemote()
 	}
 
 	private func destroy()
@@ -127,7 +54,6 @@ class MediaKeyHandler : NSObject
 			CFMachPortInvalidate(self.eventTap)
 
 			Logger.log(msg: "media keys ignored")
-			self.deactivateMPRemote()
 		}
 	}
 
@@ -143,43 +69,7 @@ class MediaKeyHandler : NSObject
 		enable ? self.setup()
 			   : self.destroy()
 	}
-
-	private func getMetadata(for song: Song, state: PlaybackState) -> [String: Any]
-	{
-		var ret = [String: Any]()
-
-
-		ret[MPMediaItemPropertyTitle] = song.title
-		ret[MPMediaItemPropertyArtist] = song.artists.joined(separator: ", ")
-		ret[MPMediaItemPropertyPlaybackDuration] = song.duration
-		ret[MPNowPlayingInfoPropertyPlaybackRate] = 1
-		ret[MPNowPlayingInfoPropertyElapsedPlaybackTime] = state.elapsed
-
-		guard let art = song.album.1 else {
-			ret[MPMediaItemPropertyArtwork] = nil
-			return ret
-		}
-
-		let artwork = MPMediaItemArtwork(boundsSize: CGSize(width: art.size.width, height: art.size.height),
-										 requestHandler: { _ in return art })
-
-		ret[MPMediaItemPropertyArtwork] = artwork
-
-		return ret
-	}
-
-	func updateMediaCentre(with song: Song?, state: PlaybackState)
-	{
-		guard let song = song else {
-			return
-		}
-
-		MPNowPlayingInfoCenter.default().nowPlayingInfo = self.getMetadata(for: song, state: state)
-		MPNowPlayingInfoCenter.default().playbackState = (state.playing ? .playing : .paused)
-	}
 }
-
-var globalMediaKeyHandler = MediaKeyHandler()
 
 fileprivate func handlerCallback(proxy: CGEventTapProxy, type: CGEventType, event: CGEvent,
 								 refcon: UnsafeMutableRawPointer?) -> Unmanaged<CGEvent>?
@@ -242,7 +132,7 @@ fileprivate func handlerCallback(proxy: CGEventTapProxy, type: CGEventType, even
 			this.controller?.previousSong()
 		}
 
-		globalMediaKeyHandler.updateMediaCentre(with: nil, state: vm.getPlaybackState())
+//		globalMediaKeyHandler.updateMediaCentre(with: nil, state: vm.getPlaybackState())
 	}
 
 	return nil
