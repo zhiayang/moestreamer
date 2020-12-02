@@ -109,7 +109,7 @@ class LocalMusicController : ServiceController
 		}
 
 		self.currentIdx += 1
-		
+
 		if self.currentIdx == self.songs.count {
 			self.songs = self.songs.shuffled()
 			self.currentIdx = 0
@@ -184,7 +184,7 @@ class LocalMusicController : ServiceController
 			{
 				self.manuallyQueuedSongs.append(item)
 				let msg = "queued: \(song.title)"
-			
+
 				Logger.log(msg: msg)
 				self.viewModel?.setStatus(s: msg, timeout: 1.5)
 			}
@@ -195,6 +195,13 @@ class LocalMusicController : ServiceController
 	{
 		// just refresh the playlist.
 		self.viewModel?.spin()
+
+		// grab the library again
+		self.library = try! ITLibrary(apiVersion: "1.0")
+		if let newPL = self.library.allPlaylists.first(where: { $0.name == self.currentPlaylist?.name }) {
+			self.currentPlaylist = newPL
+		}
+
 		self.updateSongList()
 		self.viewModel?.unspin()
 	}
