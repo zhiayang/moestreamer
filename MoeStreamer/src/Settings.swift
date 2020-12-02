@@ -15,6 +15,7 @@ enum SettingKey : Hashable
 	case shouldResumeOnWake(key: String = "resumeOnWake", default: Bool = false)
 	case shouldUpdateNowPlaying(key: String = "updateNowPlaying", default: Bool = false)
 	case shouldUseDiscordPresence(key: String = "discordRichPresence", default: Bool = false)
+	case shouldPreventIdleSleep(key: String = "preventIdleSleep", default: Bool = false)
 
 	case audioMuted(key: String = "muted", default: Bool = false)
 	case audioVolume(key: String = "volume", default: Int = 50)
@@ -40,54 +41,56 @@ enum SettingKey : Hashable
 	var key: String {
 		switch self
 		{
-			case .shouldAutoRefresh(let key, _):          return key
-			case .shouldNotifySongChange(let key, _):     return key
-			case .shouldUseKeyboardShortcuts(let key, _): return key
-			case .shouldUseMediaKeys(let key, _):         return key
-			case .shouldResumeOnWake(let key, _):         return key
-			case .shouldUpdateNowPlaying(let key, _):     return key
-			case .shouldUseDiscordPresence(let key, _):   return key
-			case .audioMuted(let key, _):                 return key
-			case .audioVolume(let key, _):                return key
-			case .audioVolumeScale(let key, _):           return key
-			case .listenMoeUsername(let key, _):          return key
-			case .listenMoePassword(let key, _):          return key
-			case .listenMoeAutoLogin(let key, _):         return key
-			case .localMusicPlaylist(let key, _):         return key
-			case .localMusicShuffle(let key, _):          return key
-			case .statSongsPlayed(let key, _):            return key
-			case .streamBufferMs(let key, _):             return key
-			case .logLinesRetain(let key, _):             return key
-			case .musicBackend(let key, _):               return key
-			case .discordUserToken(let key, _):           return key
-			case .discordAppId(let key, _):               return key
+			case .shouldAutoRefresh(let key, _):            return key
+			case .shouldNotifySongChange(let key, _):       return key
+			case .shouldUseKeyboardShortcuts(let key, _):   return key
+			case .shouldUseMediaKeys(let key, _):           return key
+			case .shouldResumeOnWake(let key, _):           return key
+			case .shouldUpdateNowPlaying(let key, _):       return key
+			case .shouldUseDiscordPresence(let key, _):     return key
+			case .shouldPreventIdleSleep(let key, _):       return key
+			case .audioMuted(let key, _):                   return key
+			case .audioVolume(let key, _):                  return key
+			case .audioVolumeScale(let key, _):             return key
+			case .listenMoeUsername(let key, _):            return key
+			case .listenMoePassword(let key, _):            return key
+			case .listenMoeAutoLogin(let key, _):           return key
+			case .localMusicPlaylist(let key, _):           return key
+			case .localMusicShuffle(let key, _):            return key
+			case .statSongsPlayed(let key, _):              return key
+			case .streamBufferMs(let key, _):               return key
+			case .logLinesRetain(let key, _):               return key
+			case .musicBackend(let key, _):                 return key
+			case .discordUserToken(let key, _):             return key
+			case .discordAppId(let key, _):                 return key
 		}
 	}
 
 	var defaultValue: Any {
 		switch self
 		{
-			case .shouldAutoRefresh(_, let def):          return def
-			case .shouldNotifySongChange(_, let def):     return def
-			case .shouldUseKeyboardShortcuts(_, let def): return def
-			case .shouldUseMediaKeys(_, let def):         return def
-			case .shouldResumeOnWake(_, let def):         return def
-			case .shouldUpdateNowPlaying(_, let def):     return def
-			case .shouldUseDiscordPresence(_, let def):   return def
-			case .audioMuted(_, let def):                 return def
-			case .audioVolume(_, let def):                return def
-			case .audioVolumeScale(_, let def):           return def
-			case .listenMoeUsername(_, let def):          return def
-			case .listenMoePassword(_, let def):          return def
-			case .listenMoeAutoLogin(_, let def):         return def
-			case .localMusicPlaylist(_, let def):         return def
-			case .localMusicShuffle(_, let def):          return def
-			case .statSongsPlayed(_, let def):            return def
-			case .streamBufferMs(_, let def):             return def
-			case .logLinesRetain(_, let def):             return def
-			case .musicBackend(_, let def):               return def
-			case .discordUserToken(_, let def):           return def
-			case .discordAppId(_, let def):               return def
+			case .shouldAutoRefresh(_, let def):            return def
+			case .shouldNotifySongChange(_, let def):       return def
+			case .shouldUseKeyboardShortcuts(_, let def):   return def
+			case .shouldUseMediaKeys(_, let def):           return def
+			case .shouldResumeOnWake(_, let def):           return def
+			case .shouldUpdateNowPlaying(_, let def):       return def
+			case .shouldUseDiscordPresence(_, let def):     return def
+			case .shouldPreventIdleSleep(_, let def):       return def
+			case .audioMuted(_, let def):                   return def
+			case .audioVolume(_, let def):                  return def
+			case .audioVolumeScale(_, let def):             return def
+			case .listenMoeUsername(_, let def):            return def
+			case .listenMoePassword(_, let def):            return def
+			case .listenMoeAutoLogin(_, let def):           return def
+			case .localMusicPlaylist(_, let def):           return def
+			case .localMusicShuffle(_, let def):            return def
+			case .statSongsPlayed(_, let def):              return def
+			case .streamBufferMs(_, let def):               return def
+			case .logLinesRetain(_, let def):               return def
+			case .musicBackend(_, let def):                 return def
+			case .discordUserToken(_, let def):             return def
+			case .discordAppId(_, let def):                 return def
 		}
 	}
 

@@ -36,6 +36,7 @@ class ViewController : NSObject, NSPopoverDelegate
 	private var rootView: MainView! = nil
 	private var discordRPC: DiscordRPC? = nil
 	private var nowPlayingCentre: NowPlayingCentre! = nil
+	private var insomniaInducer = InsomniaInducer()
 
 	override init()
 	{
@@ -54,7 +55,7 @@ class ViewController : NSObject, NSPopoverDelegate
 			case .LocalMusic:
 				self.viewModel = MainModel(backend: LocalMusicController.self)
 		}
-		
+
 		self.rootView = MainView(model: self.viewModel)
 		self.nowPlayingCentre = NowPlayingCentre(controller: self.viewModel.controller())
 
@@ -71,6 +72,27 @@ class ViewController : NSObject, NSPopoverDelegate
 			} else if !v {
 				self.discordRPC?.disconnect()
 				self.discordRPC = nil
+			}
+		})
+
+		let _ = Settings.observe(.shouldPreventIdleSleep(), callback: { key in
+			Settings.get(key)
+				? self.insomniaInducer.enable()
+				: self.insomniaInducer.disable()
+
+			// InsomniaInducer::activate() will check that its activated, so no need to check here.
+			// if the setting changed while a song was playing, then also disable sleep so we don't
+			// need to wait till the song changes.
+			if self.viewModel.isPlaying {
+				self.insomniaInducer.activate()
+			}
+		})
+
+		self.viewModel.subscribe(with: { song, state in
+			if state.playing {
+				self.insomniaInducer.activate()
+			} else {
+				self.insomniaInducer.deactivate()
 			}
 		})
 

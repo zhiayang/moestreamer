@@ -106,6 +106,8 @@ private struct PrimarySettingsView : View
 	@ObservedObject var shouldUseKeyboard       = SavedSettingModel<Bool>(.shouldUseKeyboardShortcuts())
 	@ObservedObject var shouldUseMediaKeys      = SavedSettingModel<Bool>(.shouldUseMediaKeys())
 	@ObservedObject var shouldResumeOnWake      = SavedSettingModel<Bool>(.shouldResumeOnWake())
+	@ObservedObject var shouldPreventIdleSleep  = SavedSettingModel<Bool>(.shouldPreventIdleSleep())
+
 	@Binding var shouldUseDiscord: Bool;
 
 	@ObservedObject var streamBufferMs = SavedSettingModel<Int>(.streamBufferMs(), willset: {
@@ -169,7 +171,17 @@ private struct PrimarySettingsView : View
 						.padding(.leading, 2)
 						.tooltip("show now playing information on discord through rich presence")
 				}
-			}.padding(.bottom, 4)
+			}
+
+			HStack() {
+				Toggle(isOn: self.$shouldPreventIdleSleep.value) {
+					Text("prevent idle sleep")
+						.padding(.leading, 2)
+						.tooltip("prevent the computer from going to sleep when music is playing")
+				}
+			}
+
+			EmptyView().padding(.bottom, 4)
 
 			HStack() {
 				Text("volume scale (%)")

@@ -64,6 +64,7 @@
 		2BE995F623FBB76B0092023C /* MusicBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995F523FBB76B0092023C /* MusicBackend.swift */; };
 		2BE995F823FBEA4F0092023C /* LocalAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE995F723FBEA4E0092023C /* LocalAudioController.swift */; };
 		2BECD3E92577784500FF2544 /* NotifCentreNowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BECD3E82577784500FF2544 /* NotifCentreNowPlaying.swift */; };
+		2BECD3EB2577852F00FF2544 /* InsomniaInducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BECD3EA2577852F00FF2544 /* InsomniaInducer.swift */; };
 		2BF4A33C254070E100942DCF /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF4A33B254070E100942DCF /* SearchView.swift */; };
 /* End PBXBuildFile section */
 
@@ -140,6 +141,7 @@
 		2BE995F523FBB76B0092023C /* MusicBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicBackend.swift; sourceTree = "<group>"; };
 		2BE995F723FBEA4E0092023C /* LocalAudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAudioController.swift; sourceTree = "<group>"; };
 		2BECD3E82577784500FF2544 /* NotifCentreNowPlaying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifCentreNowPlaying.swift; sourceTree = "<group>"; };
+		2BECD3EA2577852F00FF2544 /* InsomniaInducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsomniaInducer.swift; sourceTree = "<group>"; };
 		2BF4A33B254070E100942DCF /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -210,6 +212,7 @@
 			children = (
 				2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */,
 				2BECD3E82577784500FF2544 /* NotifCentreNowPlaying.swift */,
+				2BECD3EA2577852F00FF2544 /* InsomniaInducer.swift */,
 			);
 			path = system;
 			sourceTree = "<group>";
@@ -451,6 +454,7 @@
 				2B125D7D253753D1000C45C5 /* MediaKeyHandler.swift in Sources */,
 				2B9DB5A023F0085E00950421 /* ServiceController.swift in Sources */,
 				2BA9071923F0731300782C94 /* Settings.swift in Sources */,
+				2BECD3EB2577852F00FF2544 /* InsomniaInducer.swift in Sources */,
 				2B9DB59E23F0074500950421 /* ListenMoeSession.swift in Sources */,
 				2BA283FC23F14607008E0DEB /* ViewWrappers.swift in Sources */,
 				2BD83F8C23F331E100422034 /* Statistics.swift in Sources */,
@@ -614,7 +618,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.15.0;
+				MARKETING_VERSION = 0.16.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -648,7 +652,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.15.0;
+				MARKETING_VERSION = 0.16.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
