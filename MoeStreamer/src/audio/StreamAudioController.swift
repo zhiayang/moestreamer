@@ -130,4 +130,13 @@ class StreamAudioController : NSObject, AudioController, VLCMediaPlayerDelegate
 				break
 		}
 	}
+
+	func setPlaybackMirrorDevice(to: AudioDevice)
+	{
+	}
+
+	func getPlaybackMirrorDevice() -> AudioDevice
+	{
+		return .none()
+	}
 }

@@ -15,6 +15,7 @@
 		2B4077E8256D84400054F4DC /* MainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4077E7256D84400054F4DC /* MainModel.swift */; };
 		2B4077EB256D8B8C0054F4DC /* Socket in Frameworks */ = {isa = PBXBuildFile; productRef = 2B4077EA256D8B8C0054F4DC /* Socket */; };
 		2B520CA12537F2A400FECA0E /* DFRFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B520CA02537F2A400FECA0E /* DFRFoundation.framework */; };
+		2B743D9D25EE737D00CC7D1D /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B743D9C25EE737D00CC7D1D /* AudioEngine.swift */; };
 		2B9DB59E23F0074500950421 /* ListenMoeSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DB59D23F0074500950421 /* ListenMoeSession.swift */; };
 		2B9DB5A023F0085E00950421 /* ServiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DB59F23F0085E00950421 /* ServiceController.swift */; };
 		2BA155DB254125B300BB33FF /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 2BA155DA254125B300BB33FF /* Introspect */; };
@@ -27,6 +28,9 @@
 		2BA283FC23F14607008E0DEB /* ViewWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA283FB23F14607008E0DEB /* ViewWrappers.swift */; };
 		2BA9071923F0731300782C94 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA9071823F0731300782C94 /* Settings.swift */; };
 		2BA9071B23F07DF200782C94 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA9071A23F07DF200782C94 /* SettingsView.swift */; };
+		2BCEB21925EE16A400F731DD /* AudioDevices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCEB21825EE16A400F731DD /* AudioDevices.swift */; };
+		2BCEB21B25EE16BD00F731DD /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BCEB21A25EE16BD00F731DD /* CoreAudio.framework */; };
+		2BCEB21E25EE24E700F731DD /* CoreAudioWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCEB21D25EE24E700F731DD /* CoreAudioWrapper.swift */; };
 		2BCFF60023F1CEEE00A58EFE /* LogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCFF5FF23F1CEEE00A58EFE /* LogView.swift */; };
 		2BCFF60223F1DF9700A58EFE /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCFF60123F1DF9700A58EFE /* Logger.swift */; };
 		2BD486C223EFE3030066F1C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD486C123EFE3030066F1C4 /* AppDelegate.swift */; };
@@ -90,6 +94,7 @@
 		2B4077E5256D74810054F4DC /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		2B4077E7256D84400054F4DC /* MainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainModel.swift; sourceTree = "<group>"; };
 		2B520CA02537F2A400FECA0E /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = ../../../../System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<group>"; };
+		2B743D9C25EE737D00CC7D1D /* AudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngine.swift; sourceTree = "<group>"; };
 		2B84385923F0208D00291BDA /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
 		2B9DB59D23F0074500950421 /* ListenMoeSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenMoeSession.swift; sourceTree = "<group>"; };
 		2B9DB59F23F0085E00950421 /* ServiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceController.swift; sourceTree = "<group>"; };
@@ -98,6 +103,9 @@
 		2BA283FB23F14607008E0DEB /* ViewWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewWrappers.swift; sourceTree = "<group>"; };
 		2BA9071823F0731300782C94 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		2BA9071A23F07DF200782C94 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2BCEB21825EE16A400F731DD /* AudioDevices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDevices.swift; sourceTree = "<group>"; };
+		2BCEB21A25EE16BD00F731DD /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		2BCEB21D25EE24E700F731DD /* CoreAudioWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreAudioWrapper.swift; sourceTree = "<group>"; };
 		2BCFF5FF23F1CEEE00A58EFE /* LogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogView.swift; sourceTree = "<group>"; };
 		2BCFF60123F1DF9700A58EFE /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		2BD367ED23FDBCA900926068 /* Deque.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Deque.framework; path = Carthage/Build/Mac/Deque.framework; sourceTree = "<group>"; };
@@ -168,6 +176,7 @@
 				2B4077EB256D8B8C0054F4DC /* Socket in Frameworks */,
 				2BD486D823EFF3A40066F1C4 /* AudioToolbox.framework in Frameworks */,
 				2BA155E42541274E00BB33FF /* SwiftyJSON in Frameworks */,
+				2BCEB21B25EE16BD00F731DD /* CoreAudio.framework in Frameworks */,
 				2BA155E1254126BB00BB33FF /* KeychainSwift in Frameworks */,
 				2BE995EA23FB9F210092023C /* iTunesLibrary.framework in Frameworks */,
 				2BD486F723EFF4350066F1C4 /* VLCKit.framework in Frameworks */,
@@ -249,6 +258,15 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		2BCEB21C25EE24CE00F731DD /* coreaudio */ = {
+			isa = PBXGroup;
+			children = (
+				2BCEB21825EE16A400F731DD /* AudioDevices.swift */,
+				2BCEB21D25EE24E700F731DD /* CoreAudioWrapper.swift */,
+			);
+			path = coreaudio;
+			sourceTree = "<group>";
+		};
 		2BD486B523EFE3030066F1C4 = {
 			isa = PBXGroup;
 			children = (
@@ -282,6 +300,7 @@
 		2BD486D623EFF3A40066F1C4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2BCEB21A25EE16BD00F731DD /* CoreAudio.framework */,
 				2B520CA02537F2A400FECA0E /* DFRFoundation.framework */,
 				2BD367ED23FDBCA900926068 /* Deque.framework */,
 				2BE995E923FB9F210092023C /* iTunesLibrary.framework */,
@@ -335,9 +354,11 @@
 		2BE995EE23FBA0A50092023C /* audio */ = {
 			isa = PBXGroup;
 			children = (
+				2BCEB21C25EE24CE00F731DD /* coreaudio */,
 				2BD486FB23EFFE0B0066F1C4 /* StreamAudioController.swift */,
 				2BE995F723FBEA4E0092023C /* LocalAudioController.swift */,
 				2BE995EF23FBA0CE0092023C /* AudioController.swift */,
+				2B743D9C25EE737D00CC7D1D /* AudioEngine.swift */,
 			);
 			path = audio;
 			sourceTree = "<group>";
@@ -438,6 +459,7 @@
 				2B4077E6256D74810054F4DC /* Client.swift in Sources */,
 				2B2D2C7D256E9F1700ED6DB5 /* RateLimiter.swift in Sources */,
 				2BA9071B23F07DF200782C94 /* SettingsView.swift in Sources */,
+				2B743D9D25EE737D00CC7D1D /* AudioEngine.swift in Sources */,
 				2BD486FC23EFFE0B0066F1C4 /* StreamAudioController.swift in Sources */,
 				2BF4A33C254070E100942DCF /* SearchView.swift in Sources */,
 				2BE995ED23FBA0190092023C /* LocalMusic.swift in Sources */,
@@ -445,6 +467,7 @@
 				2BE995E823FB9BD40092023C /* ScrollView.swift in Sources */,
 				2BE995E623FB9BB10092023C /* VolumeSlider.swift in Sources */,
 				2BE995E423FB9B990092023C /* BetterTextField.swift in Sources */,
+				2BCEB21E25EE24E700F731DD /* CoreAudioWrapper.swift in Sources */,
 				2BCFF60023F1CEEE00A58EFE /* LogView.swift in Sources */,
 				2BE995F223FBAB340092023C /* PopupButton.swift in Sources */,
 				2B4077E8256D84400054F4DC /* MainModel.swift in Sources */,
@@ -460,6 +483,7 @@
 				2BD83F8C23F331E100422034 /* Statistics.swift in Sources */,
 				2BE995F623FBB76B0092023C /* MusicBackend.swift in Sources */,
 				2BD486C223EFE3030066F1C4 /* AppDelegate.swift in Sources */,
+				2BCEB21925EE16A400F731DD /* AudioDevices.swift in Sources */,
 				2B2D2C7F256E9F4800ED6DB5 /* Extensions.swift in Sources */,
 				2BECD3E92577784500FF2544 /* NotifCentreNowPlaying.swift in Sources */,
 			);
@@ -483,6 +507,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -545,6 +570,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -618,7 +644,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.16.1;
+				MARKETING_VERSION = "0.17.0-rc1";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -652,7 +678,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.16.1;
+				MARKETING_VERSION = "0.17.0-rc1";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";

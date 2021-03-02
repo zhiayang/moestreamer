@@ -17,4 +17,7 @@ protocol AudioController
 	func pause()
 	func stop()
 	func isPlaying() -> Bool
+
+	func setPlaybackMirrorDevice(to: AudioDevice)
+	func getPlaybackMirrorDevice() -> AudioDevice
 }

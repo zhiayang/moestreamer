@@ -9,6 +9,9 @@ import Foundation
 
 private let settingsFrameWidth: CGFloat = 280
 
+// fuck it -- global time. this is so fuckin dumb.
+private var mirrorDevice: AudioDevice = .none()
+
 private func changeControllerFor(_ oldController: Binding<ServiceController>, backend: MusicBackend)
 {
 	let vm = oldController.wrappedValue.getViewModel()
@@ -52,6 +55,8 @@ struct SettingsView : View
 
 	@ObservedObject var shouldUseDiscord = SavedSettingModel<Bool>(.shouldUseDiscordPresence())
 
+	@State var mirrorPlaybackDevice: AudioDevice = mirrorDevice
+
 	init(musicCon: Binding<ServiceController>)
 	{
 		self._musicCon = musicCon
@@ -62,22 +67,40 @@ struct SettingsView : View
 			VStack(spacing: 16) {
 				PrimarySettingsView(con: self.$musicCon, discord: self.$shouldUseDiscord.value)
 
-				HStack() {
-					Text("music source")
-						.padding(.leading, 2)
-						.tooltip("which music backend to use")
+				VStack(spacing: 4) {
+					HStack() {
+						Text("mirror sound")
+							.padding(.leading, 24)
+							.tooltip("mirror playback to the selected audio device")
 
-					PopupButton(selectedValue: self.$backend, items: MusicBackend.values, onChange: {
-						if self.backendSetting.value != $0
-						{
-							self.backendSetting.value = $0
+						Spacer()
 
-							// time to change the controller.
-							changeControllerFor(self.$musicCon, backend: self.backend)
-						}
-					}).frame(width: 140)
+						PopupButton(selectedValue: self.$mirrorPlaybackDevice, items: AudioDeviceManager.getAudioDevices(), onChange: {
+							mirrorDevice = $0
+							self.mirrorPlaybackDevice = $0
+							self.musicCon.audioController().setPlaybackMirrorDevice(to: $0)
+						})
+						.frame(width: 155)
+					}
 
-				}.padding(.top, 4)
+					HStack() {
+						Text("music source")
+							.padding(.leading, 24)
+							.tooltip("which music backend to use")
+
+						Spacer()
+
+						PopupButton(selectedValue: self.$backend, items: MusicBackend.values, onChange: {
+							if self.backendSetting.value != $0
+							{
+								self.backendSetting.value = $0
+
+								// time to change the controller.
+								changeControllerFor(self.$musicCon, backend: self.backend)
+							}
+						}).frame(width: 155)
+					}
+				}
 
 				if self.backend == .ListenMoe()
 				{
@@ -108,8 +131,6 @@ private struct PrimarySettingsView : View
 	@ObservedObject var shouldResumeOnWake      = SavedSettingModel<Bool>(.shouldResumeOnWake())
 	@ObservedObject var shouldPreventIdleSleep  = SavedSettingModel<Bool>(.shouldPreventIdleSleep())
 
-	@Binding var shouldUseDiscord: Bool;
-
 	@ObservedObject var streamBufferMs = SavedSettingModel<Int>(.streamBufferMs(), willset: {
 		return (100 ... 10000).contains($0)
 	})
@@ -118,6 +139,7 @@ private struct PrimarySettingsView : View
 		return (1 ... 100).contains($0)
 	})
 
+	@Binding var shouldUseDiscord: Bool
 	@Binding var controller: ServiceController
 
 	init(con: Binding<ServiceController>, discord: Binding<Bool>)
@@ -181,8 +203,6 @@ private struct PrimarySettingsView : View
 				}
 			}
 
-			EmptyView().padding(.bottom, 4)
-
 			HStack() {
 				Text("volume scale (%)")
 					.padding(.leading, 2)
@@ -198,7 +218,7 @@ private struct PrimarySettingsView : View
 						}
 					})).frame(width: 48)
 				}
-			}
+			}.padding(.top, 8)
 
 			HStack() {
 				Text("stream buffer (ms)")
@@ -215,7 +235,6 @@ private struct PrimarySettingsView : View
 						}
 					})).frame(width: 48)
 				}
-
 			}
 
 		}.frame(width: settingsFrameWidth)
@@ -257,26 +276,30 @@ private struct LocalMusicSettingsView : View
 
 			HStack() {
 				Text("playlist")
-					.padding(.leading, 2)
+					.padding(.leading, 60)
 					.tooltip("which iTunes playlist to use")
+
+				Spacer()
 
 				PopupButton(selectedValue: self.$playlist.value, items: self.getPlaylists(), onChange: {
 					if let con = self.controller as? LocalMusicController {
 						con.setCurrentPlaylist(playlist: $0)
 					}
-				}).frame(width: 140)
+				}).frame(width: 155)
 			}.padding(.bottom, 4)
 
 			HStack() {
 				Text("shuffle")
-					.padding(.leading, 2)
+					.padding(.leading, 60)
 					.tooltip("how to shuffle the playlist")
+
+				Spacer()
 
 				PopupButton(selectedValue: self.$shuffle.value, items: ShuffleBehaviour.values, onChange: {
 					if let con = self.controller as? LocalMusicController {
 						con.setShuffleBehaviour(as: $0)
 					}
-				}).frame(width: 140)
+				}).frame(width: 155)
 			}.padding(.bottom, 4)
 		}
 	}

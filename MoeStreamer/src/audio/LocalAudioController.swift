@@ -28,47 +28,37 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 	private var muted: Bool = Settings.get(.audioMuted())
 	private var volume: Int = Settings.get(.audioVolume())
 
-	private var currentItem: MusicItem? = nil
 	private var getNextSong: () -> MusicItem?
-	private var player: AVPlayer
+	private var engine: AudioEngine
 
 	init(nextSongCallback: @escaping () -> MusicItem?)
 	{
-		self.player = AVPlayer(playerItem: nil)
+		self.engine = AudioEngine()
 		self.getNextSong = nextSongCallback
 
 		super.init()
-
-		NotificationCenter.default.addObserver(self, selector: #selector(itemFinishedPlaying(_:)),
-											   name: NSNotification.Name.AVPlayerItemDidPlayToEndTime,
-											   object: self.player.currentItem)
+		self.engine.prepare()
 	}
 
 	func enqueue(item: MusicItem)
 	{
-		let av = item.toAVItem()
-		self.player.replaceCurrentItem(with: av)
-		self.currentItem = item
+		self.engine.replaceCurrentItem(with: item, onComplete: {
+			if let n = self.getNextSong() {
+				self.enqueue(item: n)
+			}
+		})
 
 		self.setVolume(volume: self.volume)
 
 		// if we were paused before, don't play it.
 		if self.playing {
-			self.player.play()
-		}
-	}
-
-	@objc func itemFinishedPlaying(_ notif: NSNotification)
-	{
-		if let n = self.getNextSong() {
-			self.enqueue(item: n)
+			self.engine.play()
 		}
 	}
 
 	func getElapsedTime() -> Double
 	{
-		let s = self.player.currentTime().seconds
-		return s.isNaN ? 0 : s
+		return self.engine.getPlayerTime().clamped(from: 0, to: .infinity)
 	}
 
 	func setVolume(volume: Int)
@@ -85,11 +75,11 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 			var real = Double(scaledVol) / 100.0
 			real = real.clamped(from: 0, to: 1)
 
-			self.player.volume = Float(real)
+			self.engine.setVolume(Float(real))
 		}
 		else
 		{
-			self.player.volume = 0
+			self.engine.setVolume(0)
 		}
 	}
 
@@ -110,7 +100,7 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 
 	func mute()
 	{
-		self.player.volume = 0
+		self.engine.setVolume(0)
 		self.muted = true
 
 		Settings.set(.audioMuted(), value: true)
@@ -126,19 +116,34 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 
 	func play()
 	{
-		self.player.play()
+		self.engine.play()
 		self.playing = true
 	}
 
 	func pause()
 	{
-		self.player.pause()
+		self.engine.pause()
 		self.playing = false
 	}
 
 	func stop()
 	{
-		self.player.replaceCurrentItem(with: nil)
+		self.engine.stop()
 		self.playing = false
 	}
+
+	func setPlaybackMirrorDevice(to device: AudioDevice)
+	{
+		if device == .none() {
+			self.engine.unsetMirrorDevice()
+		} else {
+			self.engine.setMirrorDevice(device: device)
+		}
+	}
+
+	func getPlaybackMirrorDevice() -> AudioDevice
+	{
+		return self.engine.getMirrorDevice()
+	}
 }
+
