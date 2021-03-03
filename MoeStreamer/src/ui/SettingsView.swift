@@ -69,8 +69,8 @@ struct SettingsView : View
 
 				VStack(spacing: 4) {
 					HStack() {
-						Text("mirror sound")
-							.padding(.leading, 24)
+						Text("mirrors")
+							.padding(.leading, 30)
 							.tooltip("mirror playback to the selected audio device")
 
 						Spacer()
@@ -80,12 +80,12 @@ struct SettingsView : View
 							self.mirrorPlaybackDevice = $0
 							self.musicCon.audioController().setPlaybackMirrorDevice(to: $0)
 						})
-						.frame(width: 155)
+						.frame(width: 180)
 					}
 
 					HStack() {
-						Text("music source")
-							.padding(.leading, 24)
+						Text("source")
+							.padding(.leading, 30)
 							.tooltip("which music backend to use")
 
 						Spacer()
@@ -98,7 +98,7 @@ struct SettingsView : View
 								// time to change the controller.
 								changeControllerFor(self.$musicCon, backend: self.backend)
 							}
-						}).frame(width: 155)
+						}).frame(width: 180)
 					}
 				}
 
@@ -276,7 +276,7 @@ private struct LocalMusicSettingsView : View
 
 			HStack() {
 				Text("playlist")
-					.padding(.leading, 60)
+					.padding(.leading, 30)
 					.tooltip("which iTunes playlist to use")
 
 				Spacer()
@@ -285,12 +285,12 @@ private struct LocalMusicSettingsView : View
 					if let con = self.controller as? LocalMusicController {
 						con.setCurrentPlaylist(playlist: $0)
 					}
-				}).frame(width: 155)
+				}).frame(width: 180)
 			}.padding(.bottom, 4)
 
 			HStack() {
 				Text("shuffle")
-					.padding(.leading, 60)
+					.padding(.leading, 30)
 					.tooltip("how to shuffle the playlist")
 
 				Spacer()
@@ -299,7 +299,7 @@ private struct LocalMusicSettingsView : View
 					if let con = self.controller as? LocalMusicController {
 						con.setShuffleBehaviour(as: $0)
 					}
-				}).frame(width: 155)
+				}).frame(width: 180)
 			}.padding(.bottom, 4)
 		}
 	}

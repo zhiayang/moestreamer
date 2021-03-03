@@ -137,17 +137,11 @@ class AudioEngine
 			self.p2.scheduleBuffer(buffer, completionHandler: nil)
 		})
 
-		try! self.e1.outputNode.auAudioUnit.setDeviceID(device.dev)
+		try! self.e2.outputNode.auAudioUnit.setDeviceID(device.dev)
 
 		self.mirrorDevice = device
-		if self.p1.isPlaying
-		{
-			self.pause()
-
-			// this delay is necessary for some reason. if not, then nothing will play.
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-				self.play()
-			}
+		if self.p1.isPlaying {
+			self.refreshPlayers()
 		}
 	}
 
@@ -161,5 +155,15 @@ class AudioEngine
 	func getMirrorDevice() -> AudioDevice
 	{
 		return self.mirrorDevice
+	}
+
+	private func refreshPlayers()
+	{
+		self.pause()
+
+		// this delay is necessary for some reason. if not, then nothing will play.
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+			self.play()
+		}
 	}
 }
