@@ -16,8 +16,7 @@ class AudioEngine
 	private var mirrorDevice: AudioDevice
 	private var savedElapsedTime: Double = 0
 
-	// super thread unsafe
-	private var didStopPlayer: Bool = false
+	private var songGeneration = Atomic64(0)
 
 	init()
 	{
@@ -58,31 +57,35 @@ class AudioEngine
 			return
 		}
 
+		// store the current gen first, so the closure can capture it,
+		// then increment it. incr() returns the old value.
+		let currentGen = self.songGeneration.incr()
+
 		// if the player was playing, then we should resume it after replacing the song.
 		let shouldResume = self.p1.isPlaying
 
 		// either way, we need to stop in order to clear the current queue
 		// of scheduled buffers/songs in the player.
 		self.p1.stop()
-		self.didStopPlayer = true
 
+		// apparently, when you stop the player, all the completion handlers for all the scheduled songs are
+		// called -- even if they never even got a chance to play. that would explain the repeated calls.
 		self.p1.scheduleFile(file, at: nil, completionCallbackType: .dataPlayedBack, completionHandler: { [weak self] _ in
-			guard let self = self else {
+
+			// if and only if the captured generation is exactly 1 behind the current generation, then we are responsible
+			// for controlling the playback and/or calling the next completion handler. if not, then we quit.
+			guard let self = self, currentGen + 1 == self.songGeneration.value else {
 				return
 			}
 
-			if self.didStopPlayer {
-				self.didStopPlayer = false
-				return
-			}
-
+			// since onComplete probably ends up calling this function itself, we have to do it from
+			// a separate thread, since apparently calling stop() from inside this handler causes a deadlock
 			DispatchQueue.main.async {
-				// since onComplete probably ends up calling this function itself, we have to do it from
-				// a separate thread, since apparently calling stop() from inside this handler causes a deadlock
 				onComplete()
 			}
 		})
 
+		// if it was playing before, then resume playing.
 		if shouldResume {
 			self.p1.play()
 		}

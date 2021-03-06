@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B009AC825F3389C001364F0 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B009AC725F3389C001364F0 /* Atomic.swift */; };
 		2B125D7D253753D1000C45C5 /* MediaKeyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */; };
 		2B22659F25412DB600F970B9 /* ListenMoeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B22659E25412DB600F970B9 /* ListenMoeController.swift */; };
 		2B2D2C7D256E9F1700ED6DB5 /* RateLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2D2C7C256E9F1700ED6DB5 /* RateLimiter.swift */; };
@@ -87,6 +88,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2B009AC725F3389C001364F0 /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKeyHandler.swift; sourceTree = "<group>"; };
 		2B22659E25412DB600F970B9 /* ListenMoeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenMoeController.swift; sourceTree = "<group>"; };
 		2B2D2C7C256E9F1700ED6DB5 /* RateLimiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateLimiter.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 				2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */,
 				2BECD3E82577784500FF2544 /* NotifCentreNowPlaying.swift */,
 				2BECD3EA2577852F00FF2544 /* InsomniaInducer.swift */,
+				2B009AC725F3389C001364F0 /* Atomic.swift */,
 			);
 			path = system;
 			sourceTree = "<group>";
@@ -400,7 +403,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = zhiayang;
 				TargetAttributes = {
 					2BD486BD23EFE3030066F1C4 = {
@@ -472,6 +475,7 @@
 				2BE995F223FBAB340092023C /* PopupButton.swift in Sources */,
 				2B4077E8256D84400054F4DC /* MainModel.swift in Sources */,
 				2BE995F823FBEA4F0092023C /* LocalAudioController.swift in Sources */,
+				2B009AC825F3389C001364F0 /* Atomic.swift in Sources */,
 				2BE995F023FBA0CE0092023C /* AudioController.swift in Sources */,
 				2BD486D523EFE6C20066F1C4 /* ViewController.swift in Sources */,
 				2B125D7D253753D1000C45C5 /* MediaKeyHandler.swift in Sources */,
@@ -644,7 +648,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = "0.17.0-rc3";
+				MARKETING_VERSION = "0.17.0-rc4";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -678,7 +682,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = "0.17.0-rc3";
+				MARKETING_VERSION = "0.17.0-rc4";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
