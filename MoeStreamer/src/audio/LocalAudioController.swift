@@ -42,9 +42,9 @@ class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 
 	func enqueue(item: MusicItem)
 	{
-		self.engine.replaceCurrentItem(with: item, onComplete: {
-			if let n = self.getNextSong() {
-				self.enqueue(item: n)
+		self.engine.replaceCurrentItem(with: item, onComplete: { [weak self] in
+			if let n = self?.getNextSong() {
+				self?.enqueue(item: n)
 			}
 		})
 

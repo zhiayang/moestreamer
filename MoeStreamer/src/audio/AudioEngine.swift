@@ -58,14 +58,21 @@ class AudioEngine
 			return
 		}
 
-		if self.p1.isPlaying
-		{
-			self.didStopPlayer = true
-			self.p1.stop()
-		}
+		// if the player was playing, then we should resume it after replacing the song.
+		let shouldResume = self.p1.isPlaying
+
+		// either way, we need to stop in order to clear the current queue
+		// of scheduled buffers/songs in the player.
+		self.p1.stop()
+		self.didStopPlayer = true
 
 		self.p1.scheduleFile(file, at: nil, completionCallbackType: .dataPlayedBack, completionHandler: { [weak self] _ in
-			if self?.didStopPlayer ?? true {
+			guard let self = self else {
+				return
+			}
+
+			if self.didStopPlayer {
+				self.didStopPlayer = false
 				return
 			}
 
@@ -76,9 +83,7 @@ class AudioEngine
 			}
 		})
 
-		if self.didStopPlayer
-		{
-			self.didStopPlayer = false
+		if shouldResume {
 			self.p1.play()
 		}
 	}
