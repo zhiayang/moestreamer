@@ -186,7 +186,7 @@ class DiscordRPC
 		{
 			self.cancelPresenceUpdate = false
 			let endTime = song.duration.map({ Int(Date().addingTimeInterval($0 - state.elapsed).timeIntervalSince1970) })
-				?? 0
+				?? (-1)
 
 			// if possible, this will also asynchronously upload the art if it didn't already exist remotely,
 			// and re-send a presence update once we have it uploaded.
@@ -226,7 +226,7 @@ class DiscordRPC
 						"large_image": (asset != nil) ? "album-art-\(asset!.hash)" : "default-cover",
 						"large_text": song.title
 					],
-					"timestamps": [
+					"timestamps": ts == -1 ? [String: Any]() : [
 						"end": ts
 					]
 				]
@@ -240,6 +240,11 @@ class DiscordRPC
 	private func getAlbumArtAsset(for song: Song, callback: @escaping (Asset) -> Void) -> Asset?
 	{
 		guard self.haveUploadToken, let albumName = song.album.0 else {
+			return nil
+		}
+
+		// don't try to upload for listen moe, we'll run out of space.
+		if song.source == .ListenMoe() {
 			return nil
 		}
 

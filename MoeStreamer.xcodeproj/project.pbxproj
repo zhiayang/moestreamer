@@ -648,7 +648,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = "0.17.0-rc4";
+				MARKETING_VERSION = "0.17.0-rc5";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -682,7 +682,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = "0.17.0-rc4";
+				MARKETING_VERSION = "0.17.0-rc5";
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";

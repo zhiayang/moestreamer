@@ -96,8 +96,10 @@ class AudioEngine
 		self.p1.stop()
 		self.p2.stop()
 
-		self.e1.stop()
-		self.e2.stop()
+		DispatchQueue.main.async {
+			self.e1.stop()
+			self.e2.stop()
+		}
 	}
 
 	func play()

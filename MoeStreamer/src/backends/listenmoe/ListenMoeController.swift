@@ -176,7 +176,7 @@ class ListenMoeController : ServiceController, WebSocketDelegate
 
 			DispatchQueue.global().async {
 
-				var s = Song(id: song["id"].int!)
+				var s = Song(id: song["id"].int!, source: .ListenMoe())
 
 				s.title = song["title"].string!
 				for x in song["artists"].array!
