@@ -102,9 +102,9 @@ class NowPlayingCentre : NSObject
 			ret[MPMediaItemPropertyArtwork] = nil
 			return ret
 		}
-
+//		ret[MPMediaItemPropertyArtwork] = nil
 		let artwork = MPMediaItemArtwork(boundsSize: CGSize(width: art.size.width, height: art.size.height),
-										 requestHandler: { _ in return art })
+										 requestHandler: { [weak art] _ in return art ?? #imageLiteral(resourceName: "NoCoverArt2") })
 
 		ret[MPMediaItemPropertyArtwork] = artwork
 
@@ -116,6 +116,7 @@ class NowPlayingCentre : NSObject
 		guard let song = song else {
 			return
 		}
+
 
 		MPNowPlayingInfoCenter.default().nowPlayingInfo = self.getMetadata(for: song, state: state)
 		MPNowPlayingInfoCenter.default().playbackState = (state.playing ? .playing : .paused)

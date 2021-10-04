@@ -15,6 +15,7 @@ struct Song : Equatable, Identifiable, Hashable
 	var artists: [String] = [ ]
 	var isFavourite: FavouriteState = .No
 	var duration: Double? = nil
+	var source: MusicBackend
 
 	enum FavouriteState
 	{
