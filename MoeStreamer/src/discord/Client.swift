@@ -77,7 +77,7 @@ class DiscordRPC
 	{
 		let appid: String = Settings.get(.discordAppId())
 		self.clientId = appid.isEmpty ? DiscordRPC.defaultClientId : appid
-		self.assetsURL = URL(string: "https://discord.com/api/v6/oauth2/applications/\(self.clientId)/assets")!
+		self.assetsURL = URL(string: "https://discord.com/api/v8/oauth2/applications/\(self.clientId)/assets")!
 
 		self.dispatch = DispatchQueue.init(label: "\(Bundle.main.bundleIdentifier ?? "").discordRPC")
 
@@ -283,7 +283,7 @@ class DiscordRPC
 			])
 
 			guard let status = resp.statusCode, let body = resp.text, (200...299).contains(status) else {
-				print("art upload failed")
+				print("art upload failed: \(resp.text ?? "none")")
 				return
 			}
 

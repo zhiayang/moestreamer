@@ -183,7 +183,6 @@ fileprivate struct SongView : View
 				.buttonStyle(PlainButtonStyle())
 
 				Button(action: {
-					print("album = \(song.album.1)")
 					self.musicCon.enqueueSong(song, immediately: false)
 				}) {
 					Image(nsImage: #imageLiteral(resourceName: "PlayNext"))
