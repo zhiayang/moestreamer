@@ -37,6 +37,7 @@ enum SettingKey : Hashable
 
 	case discordAppId(key: String = "discordAppId", default: String = "")
 	case discordUserToken(key: String = "discordUserToken", default: String = "")
+	case discordAutoFetchToken(key: String = "discordAutoFetchToken", default: Bool = true)
 
 	var key: String {
 		switch self
@@ -63,6 +64,7 @@ enum SettingKey : Hashable
 			case .musicBackend(let key, _):                 return key
 			case .discordUserToken(let key, _):             return key
 			case .discordAppId(let key, _):                 return key
+			case .discordAutoFetchToken(let key, _):        return key
 		}
 	}
 
@@ -91,6 +93,7 @@ enum SettingKey : Hashable
 			case .musicBackend(_, let def):                 return def
 			case .discordUserToken(_, let def):             return def
 			case .discordAppId(_, let def):                 return def
+			case .discordAutoFetchToken(_, let def):        return def
 		}
 	}
 
