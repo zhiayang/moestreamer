@@ -20,7 +20,7 @@ extension StringProtocol
 }
 
 // the only reason this is a class is so we can have reference semantics.
-struct MusicItem
+class MusicItem
 {
 	var songTitle: String
 	var song: Song
@@ -322,10 +322,8 @@ class LocalMusicController : ServiceController
 
 				// spin up a background task to fetch the images for each item in the queue.
 				DispatchQueue.global().async {
-					self.songs = self.songs.map({ song in
-						var s = song.song
-						s.album.1 = song.mediaItem.artwork?.image
-						return MusicItem(s, withMediaItem: song.mediaItem)
+					self.songs.forEach({ item in
+						item.song.album.1 = item.mediaItem.artwork?.image
 					})
 
 					if self.isWaitingForFirstSong
