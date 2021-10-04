@@ -319,6 +319,10 @@ private struct DiscordSettingsView : View
 												 getter: Settings.getKeychain,
 												 setter: Settings.setKeychain)
 
+	@ObservedObject
+	var discordAutoToken = SavedSettingModel<Bool>(.discordAutoFetchToken())
+
+
 	var body: some View {
 		VStack(spacing: 3) {
 			Text("discord settings")
@@ -332,6 +336,15 @@ private struct DiscordSettingsView : View
 			HStack() {
 				Text("token").frame(width: 40)
 				BetterTextField<NSSecureTextField>(placeholder: "", text: self.$discordToken.value, field: self.$tokenField)
+					.disabled(self.discordAutoToken.value)
+			}
+
+			HStack() {
+				Toggle(isOn: self.$discordAutoToken.value) {
+					Text("automatically extract token")
+						.padding(.leading, 2)
+						.tooltip("try to extract the token from a running Discord instance on the machine")
+				}
 			}
 		}.frame(width: 240)
 	}

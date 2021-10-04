@@ -48,6 +48,50 @@ fileprivate func hash(of string: String) -> AlbumHash
 	return ret
 }
 
+fileprivate func getDiscordToken() -> String?
+{
+	guard let appsup = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+		print("could not find Application Support folder (what...)")
+		return nil
+	}
+
+	let db_dir = appsup.appendingPathComponent("discord/Local Storage/leveldb/")
+	do {
+		let dbs = try FileManager.default.contentsOfDirectory(at: db_dir, includingPropertiesForKeys: [
+			.contentModificationDateKey
+		], options: [.skipsHiddenFiles, .skipsSubdirectoryDescendants])
+
+		let sorted_ldbs = try dbs.filter({ $0.lastPathComponent.hasSuffix(".ldb") || $0.lastPathComponent.hasSuffix(".log") }).sorted(by: {
+			let date0 = try $0.promisedItemResourceValues(forKeys:[.contentModificationDateKey]).contentModificationDate!
+			let date1 = try $1.promisedItemResourceValues(forKeys:[.contentModificationDateKey]).contentModificationDate!
+			return date0.compare(date1) == .orderedDescending
+		})
+
+		for ldb in sorted_ldbs
+		{
+			do {
+				let contents = try Data(contentsOf: ldb)
+				if let range = contents.firstRange(of: "mfa.".data(using: .utf8)!) {
+					let token = contents[range.startIndex ..< range.endIndex + 84]
+					return token.toString()
+				}
+
+			} catch {
+				print("failed to read file \(ldb.lastPathComponent): \(error)")
+				continue
+			}
+		}
+
+	} catch {
+		print("failed to get discord data: \(error)")
+	}
+
+	return nil
+}
+
+
+
+
 
 class DiscordRPC
 {
@@ -61,7 +105,7 @@ class DiscordRPC
 	private var socket: Socket? = nil
 	private var dispatch: DispatchQueue
 	private var rateLimiter: RateLimiter!
-	private var haveUploadToken: Bool = false
+	private var uploadToken: (String?, Bool) = (nil, false)
 
 	// part of me feels like this is super thread-unsafe, and that part of me would be right.
 	private var cancelPresenceUpdate: Bool = false
@@ -79,12 +123,10 @@ class DiscordRPC
 		self.clientId = appid.isEmpty ? DiscordRPC.defaultClientId : appid
 		self.assetsURL = URL(string: "https://discord.com/api/v8/oauth2/applications/\(self.clientId)/assets")!
 
+
 		self.dispatch = DispatchQueue.init(label: "\(Bundle.main.bundleIdentifier ?? "").discordRPC")
 
-		let token = Settings.getKeychain(.discordUserToken())
-		self.haveUploadToken = !token.isEmpty
-
-		self.just = JustOf<HTTP>(defaults: JustSessionDefaults(headers: token.isEmpty ? [:] : ["Authorization": token]))
+		self.just = JustOf<HTTP>(defaults: JustSessionDefaults())
 		self.rateLimiter = RateLimiter(5, every: 21, callback: self.updatePresence, dispatch: self.dispatch)
 
 		// start at 500ms.
@@ -96,6 +138,25 @@ class DiscordRPC
 				self.rateLimiter.enqueueUpdate(for: song, state: state)
 			}
 		})
+
+		DispatchQueue.main.async {
+			if !Settings.get(.discordAutoFetchToken())
+			{
+				let token = Settings.getKeychain(.discordUserToken())
+				if !token.isEmpty
+				{
+					self.uploadToken = (token, true)
+					return
+				}
+			}
+
+			if let token = getDiscordToken()
+			{
+				self.uploadToken = (token, true)
+				Logger.log("discord", msg: "found auth token")
+//				print("token = \(token)")
+			}
+		}
 	}
 
 	deinit
@@ -239,7 +300,7 @@ class DiscordRPC
 
 	private func getAlbumArtAsset(for song: Song, callback: @escaping (Asset) -> Void) -> Asset?
 	{
-		guard self.haveUploadToken, let albumName = song.album.0 else {
+		guard self.uploadToken.1, let token = self.uploadToken.0, let albumName = song.album.0 else {
 			return nil
 		}
 
@@ -276,11 +337,13 @@ class DiscordRPC
 				self.existingRemoteAssets.removeValue(forKey: victim.key)
 			}
 
+			print("attempting to upload art for album \(albumName) (hash \(albumHash.hexString))")
+
 			let resp = self.just.post(self.assetsURL, json: [
 				"image": base64,
 				"name": "album-art-\(albumHash.hexString)",
 				"type": 1
-			])
+			], headers: ["Authorization": token])
 
 			guard let status = resp.statusCode, let body = resp.text, (200...299).contains(status) else {
 				print("art upload failed: \(resp.text ?? "none")")
@@ -291,7 +354,8 @@ class DiscordRPC
 			let asset = Asset(id: json["id"].stringValue, name: json["name"].stringValue, hash: albumHash)
 			self.existingRemoteAssets.updateValue(asset, forKey: albumHash)
 
-			print("uploaded art for album \(albumName) (hash \(albumHash.hexString))")
+			Logger.log("discord", msg: "uploaded art for album \(albumName) (hash \(albumHash.hexString)")
+
 
 			// now, send another presence update... after a few seconds in case discord is pepega.
 			// if we got cancelled, then... don't.
@@ -322,12 +386,12 @@ class DiscordRPC
 
 	private func updateExistingAssets()
 	{
-		guard self.haveUploadToken else {
+		guard self.uploadToken.1, let token = self.uploadToken.0 else {
 			return
 		}
 
 		// no need authorisation to read the asset list.
-		let resp = Just.get(self.assetsURL)
+		let resp = Just.get(self.assetsURL, headers: ["Authorization": token])
 		guard resp.ok && resp.text != nil else {
 			print("failed to update assets: \(resp.statusCode ?? 0)")
 			return
