@@ -42,12 +42,29 @@ At the moment, these shortcuts cannot be customised.
 
 
 ## Building
+
+### macOS 11 (Bug Sir) or higher
+
+Here, you should use CocoaPods to install VLCKit:
+ 
 ```
-$ carthage update --platform macos
-$ xcodebuild
+pod install
 ```
 
-Alternatively, open the Xcode project and build it there (you still need to run `carthage`).
+Then, open `MoeStreamer.xcworkspace` instead of `xcproj` (because that's how CocoaPods works...). Once the VLCKit people release 3.3.18 with the fix for macOS 11 I'll get rid of cocoapods.
+
+
+### macOS Catalina (10.15) or lower
+You can install VLCKit via Carthage:
+
+```
+carthage update --platform macos
+```
+
+However, you need to open the project in Xcode, and add `VLCKit.framework`, under the *Frameworks, Libraries, and Embedded Content* list in the **Target Settings**. Choose "Embed and Sign".
+
+Either way, after installing the dependencies, either run `xcodebuild` from the terminal, or open Xcode 
+and build it from there. 
 
 ## License
 

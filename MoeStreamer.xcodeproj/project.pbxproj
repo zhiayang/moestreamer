@@ -53,8 +53,6 @@
 		2BD486F323EFF40F0066F1C4 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486F223EFF40F0066F1C4 /* VideoToolbox.framework */; };
 		2BD486F423EFF41B0066F1C4 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486E923EFF3E60066F1C4 /* libbz2.tbd */; };
 		2BD486F523EFF41F0066F1C4 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486EB23EFF3F40066F1C4 /* libiconv.tbd */; };
-		2BD486F723EFF4350066F1C4 /* VLCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486F623EFF4350066F1C4 /* VLCKit.framework */; };
-		2BD486FA23EFF7520066F1C4 /* VLCKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BD486F623EFF4350066F1C4 /* VLCKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2BD486FC23EFFE0B0066F1C4 /* StreamAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD486FB23EFFE0B0066F1C4 /* StreamAudioController.swift */; };
 		2BD83F8A23F2A01A00422034 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2BD83F8923F2A01A00422034 /* README.md */; };
 		2BD83F8C23F331E100422034 /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD83F8B23F331E100422034 /* Statistics.swift */; };
@@ -71,6 +69,7 @@
 		2BECD3E92577784500FF2544 /* NotifCentreNowPlaying.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BECD3E82577784500FF2544 /* NotifCentreNowPlaying.swift */; };
 		2BECD3EB2577852F00FF2544 /* InsomniaInducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BECD3EA2577852F00FF2544 /* InsomniaInducer.swift */; };
 		2BF4A33C254070E100942DCF /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF4A33B254070E100942DCF /* SearchView.swift */; };
+		8F53165C907008ABADB0A007 /* Pods_MoeStreamer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B0FB67BA661AA97492AED6E /* Pods_MoeStreamer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -81,13 +80,13 @@
 			dstSubfolderSpec = 10;
 			files = (
 				2BA155E8254127AF00BB33FF /* Deque in CopyFiles */,
-				2BD486FA23EFF7520066F1C4 /* VLCKit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1CAE6D49F4CB037FF524697F /* Pods-MoeStreamer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MoeStreamer.debug.xcconfig"; path = "Target Support Files/Pods-MoeStreamer/Pods-MoeStreamer.debug.xcconfig"; sourceTree = "<group>"; };
 		2B009AC725F3389C001364F0 /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKeyHandler.swift; sourceTree = "<group>"; };
 		2B22659E25412DB600F970B9 /* ListenMoeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenMoeController.swift; sourceTree = "<group>"; };
@@ -105,6 +104,7 @@
 		2BA283FB23F14607008E0DEB /* ViewWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewWrappers.swift; sourceTree = "<group>"; };
 		2BA9071823F0731300782C94 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		2BA9071A23F07DF200782C94 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2BAC5E1C279D98800091AF50 /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = Pods/VLCKit/VLCKit.xcframework; sourceTree = "<group>"; };
 		2BCEB21825EE16A400F731DD /* AudioDevices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDevices.swift; sourceTree = "<group>"; };
 		2BCEB21A25EE16BD00F731DD /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		2BCEB21D25EE24E700F731DD /* CoreAudioWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreAudioWrapper.swift; sourceTree = "<group>"; };
@@ -153,6 +153,8 @@
 		2BECD3E82577784500FF2544 /* NotifCentreNowPlaying.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotifCentreNowPlaying.swift; sourceTree = "<group>"; };
 		2BECD3EA2577852F00FF2544 /* InsomniaInducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsomniaInducer.swift; sourceTree = "<group>"; };
 		2BF4A33B254070E100942DCF /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		48C481F60F5C684444BD577C /* Pods-MoeStreamer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MoeStreamer.release.xcconfig"; path = "Target Support Files/Pods-MoeStreamer/Pods-MoeStreamer.release.xcconfig"; sourceTree = "<group>"; };
+		7B0FB67BA661AA97492AED6E /* Pods_MoeStreamer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MoeStreamer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,10 +183,10 @@
 				2BCEB21B25EE16BD00F731DD /* CoreAudio.framework in Frameworks */,
 				2BA155E1254126BB00BB33FF /* KeychainSwift in Frameworks */,
 				2BE995EA23FB9F210092023C /* iTunesLibrary.framework in Frameworks */,
-				2BD486F723EFF4350066F1C4 /* VLCKit.framework in Frameworks */,
 				2BD486F123EFF40A0066F1C4 /* Security.framework in Frameworks */,
 				2BA155EB254127D800BB33FF /* Starscream in Frameworks */,
 				2BD486E623EFF3DA0066F1C4 /* CoreVideo.framework in Frameworks */,
+				8F53165C907008ABADB0A007 /* Pods_MoeStreamer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,6 +279,7 @@
 				2BD486C023EFE3030066F1C4 /* MoeStreamer */,
 				2BD486BF23EFE3030066F1C4 /* Products */,
 				2BD486D623EFF3A40066F1C4 /* Frameworks */,
+				AC661A3A459D76CF1C73FB8D /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -303,6 +306,7 @@
 		2BD486D623EFF3A40066F1C4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2BAC5E1C279D98800091AF50 /* VLCKit.xcframework */,
 				2BCEB21A25EE16BD00F731DD /* CoreAudio.framework */,
 				2B520CA02537F2A400FECA0E /* DFRFoundation.framework */,
 				2BD367ED23FDBCA900926068 /* Deque.framework */,
@@ -328,6 +332,7 @@
 				2BD486DB23EFF3B10066F1C4 /* CFNetwork.framework */,
 				2BD486D923EFF3AB0066F1C4 /* AVFoundation.framework */,
 				2BD486D723EFF3A40066F1C4 /* AudioToolbox.framework */,
+				7B0FB67BA661AA97492AED6E /* Pods_MoeStreamer.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -366,6 +371,15 @@
 			path = audio;
 			sourceTree = "<group>";
 		};
+		AC661A3A459D76CF1C73FB8D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1CAE6D49F4CB037FF524697F /* Pods-MoeStreamer.debug.xcconfig */,
+				48C481F60F5C684444BD577C /* Pods-MoeStreamer.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -373,10 +387,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2BD486D123EFE3070066F1C4 /* Build configuration list for PBXNativeTarget "MoeStreamer" */;
 			buildPhases = (
+				A16BD6E8FF8935601388E1F0 /* [CP] Check Pods Manifest.lock */,
 				2BD486BA23EFE3030066F1C4 /* Sources */,
 				2BD486BB23EFE3030066F1C4 /* Frameworks */,
 				2BD486BC23EFE3030066F1C4 /* Resources */,
 				2BD486F923EFF7490066F1C4 /* CopyFiles */,
+				A71EF2AA4F4A4DA0A41D7D36 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -403,7 +419,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1240;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = zhiayang;
 				TargetAttributes = {
 					2BD486BD23EFE3030066F1C4 = {
@@ -421,12 +437,12 @@
 			);
 			mainGroup = 2BD486B523EFE3030066F1C4;
 			packageReferences = (
-				2BA155D9254125B300BB33FF /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
-				2BA155DC2541263800BB33FF /* XCRemoteSwiftPackageReference "Just" */,
-				2BA155DF254126BB00BB33FF /* XCRemoteSwiftPackageReference "keychain-swift" */,
-				2BA155E22541274E00BB33FF /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
-				2BA155E5254127AF00BB33FF /* XCRemoteSwiftPackageReference "Deque" */,
-				2BA155E9254127D800BB33FF /* XCRemoteSwiftPackageReference "Starscream" */,
+				2BA155D9254125B300BB33FF /* XCRemoteSwiftPackageReference "SwiftUI-Introspect.git" */,
+				2BA155DC2541263800BB33FF /* XCRemoteSwiftPackageReference "Just.git" */,
+				2BA155DF254126BB00BB33FF /* XCRemoteSwiftPackageReference "keychain-swift.git" */,
+				2BA155E22541274E00BB33FF /* XCRemoteSwiftPackageReference "SwiftyJSON.git" */,
+				2BA155E5254127AF00BB33FF /* XCRemoteSwiftPackageReference "Deque.git" */,
+				2BA155E9254127D800BB33FF /* XCRemoteSwiftPackageReference "Starscream.git" */,
 				2B4077E9256D8B8C0054F4DC /* XCRemoteSwiftPackageReference "BlueSocket" */,
 			);
 			productRefGroup = 2BD486BF23EFE3030066F1C4 /* Products */;
@@ -450,6 +466,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A16BD6E8FF8935601388E1F0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MoeStreamer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A71EF2AA4F4A4DA0A41D7D36 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MoeStreamer/Pods-MoeStreamer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MoeStreamer/Pods-MoeStreamer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MoeStreamer/Pods-MoeStreamer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2BD486BA23EFE3030066F1C4 /* Sources */ = {
@@ -511,7 +569,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = x86_64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -574,7 +631,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = x86_64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -628,6 +684,7 @@
 		};
 		2BD486D223EFE3070066F1C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1CAE6D49F4CB037FF524697F /* Pods-MoeStreamer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MoeStreamer/MoeStreamer.entitlements;
@@ -648,7 +705,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.17.0;
+				MARKETING_VERSION = 0.17.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -662,6 +719,7 @@
 		};
 		2BD486D323EFE3070066F1C4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 48C481F60F5C684444BD577C /* Pods-MoeStreamer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MoeStreamer/MoeStreamer.entitlements;
@@ -682,7 +740,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.17.0;
+				MARKETING_VERSION = 0.17.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -726,7 +784,7 @@
 				minimumVersion = 1.0.200;
 			};
 		};
-		2BA155D9254125B300BB33FF /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
+		2BA155D9254125B300BB33FF /* XCRemoteSwiftPackageReference "SwiftUI-Introspect.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/siteline/SwiftUI-Introspect.git";
 			requirement = {
@@ -734,7 +792,7 @@
 				minimumVersion = 0.1.0;
 			};
 		};
-		2BA155DC2541263800BB33FF /* XCRemoteSwiftPackageReference "Just" */ = {
+		2BA155DC2541263800BB33FF /* XCRemoteSwiftPackageReference "Just.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/dduan/Just.git";
 			requirement = {
@@ -742,7 +800,7 @@
 				minimumVersion = 0.8.0;
 			};
 		};
-		2BA155DF254126BB00BB33FF /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+		2BA155DF254126BB00BB33FF /* XCRemoteSwiftPackageReference "keychain-swift.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
 			requirement = {
@@ -750,7 +808,7 @@
 				minimumVersion = 19.0.0;
 			};
 		};
-		2BA155E22541274E00BB33FF /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+		2BA155E22541274E00BB33FF /* XCRemoteSwiftPackageReference "SwiftyJSON.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON.git";
 			requirement = {
@@ -758,7 +816,7 @@
 				minimumVersion = 5.0.0;
 			};
 		};
-		2BA155E5254127AF00BB33FF /* XCRemoteSwiftPackageReference "Deque" */ = {
+		2BA155E5254127AF00BB33FF /* XCRemoteSwiftPackageReference "Deque.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/attaswift/Deque.git";
 			requirement = {
@@ -766,7 +824,7 @@
 				minimumVersion = 3.1.1;
 			};
 		};
-		2BA155E9254127D800BB33FF /* XCRemoteSwiftPackageReference "Starscream" */ = {
+		2BA155E9254127D800BB33FF /* XCRemoteSwiftPackageReference "Starscream.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/daltoniam/Starscream.git";
 			requirement = {
@@ -784,32 +842,32 @@
 		};
 		2BA155DA254125B300BB33FF /* Introspect */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2BA155D9254125B300BB33FF /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
+			package = 2BA155D9254125B300BB33FF /* XCRemoteSwiftPackageReference "SwiftUI-Introspect.git" */;
 			productName = Introspect;
 		};
 		2BA155DD2541263800BB33FF /* Just */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2BA155DC2541263800BB33FF /* XCRemoteSwiftPackageReference "Just" */;
+			package = 2BA155DC2541263800BB33FF /* XCRemoteSwiftPackageReference "Just.git" */;
 			productName = Just;
 		};
 		2BA155E0254126BB00BB33FF /* KeychainSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2BA155DF254126BB00BB33FF /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			package = 2BA155DF254126BB00BB33FF /* XCRemoteSwiftPackageReference "keychain-swift.git" */;
 			productName = KeychainSwift;
 		};
 		2BA155E32541274E00BB33FF /* SwiftyJSON */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2BA155E22541274E00BB33FF /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			package = 2BA155E22541274E00BB33FF /* XCRemoteSwiftPackageReference "SwiftyJSON.git" */;
 			productName = SwiftyJSON;
 		};
 		2BA155E6254127AF00BB33FF /* Deque */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2BA155E5254127AF00BB33FF /* XCRemoteSwiftPackageReference "Deque" */;
+			package = 2BA155E5254127AF00BB33FF /* XCRemoteSwiftPackageReference "Deque.git" */;
 			productName = Deque;
 		};
 		2BA155EA254127D800BB33FF /* Starscream */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2BA155E9254127D800BB33FF /* XCRemoteSwiftPackageReference "Starscream" */;
+			package = 2BA155E9254127D800BB33FF /* XCRemoteSwiftPackageReference "Starscream.git" */;
 			productName = Starscream;
 		};
 /* End XCSwiftPackageProductDependency section */
