@@ -635,6 +635,7 @@
 		2BD486D223EFE3070066F1C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MoeStreamer/MoeStreamer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -669,6 +670,7 @@
 		2BD486D323EFE3070066F1C4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MoeStreamer/MoeStreamer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
