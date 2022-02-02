@@ -10,6 +10,9 @@
 		2B009AC825F3389C001364F0 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B009AC725F3389C001364F0 /* Atomic.swift */; };
 		2B125D7D253753D1000C45C5 /* MediaKeyHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */; };
 		2B22659F25412DB600F970B9 /* ListenMoeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B22659E25412DB600F970B9 /* ListenMoeController.swift */; };
+		2B23283927AA9F8F00BA4B4C /* VLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B23283827AA9F8F00BA4B4C /* VLCKit.xcframework */; };
+		2B23283A27AA9F8F00BA4B4C /* VLCKit.xcframework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2B23283827AA9F8F00BA4B4C /* VLCKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2B23283C27AAA1DE00BA4B4C /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B23283B27AAA1DE00BA4B4C /* Utils.swift */; };
 		2B2D2C7D256E9F1700ED6DB5 /* RateLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2D2C7C256E9F1700ED6DB5 /* RateLimiter.swift */; };
 		2B2D2C7F256E9F4800ED6DB5 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2D2C7E256E9F4800ED6DB5 /* Extensions.swift */; };
 		2B4077E6256D74810054F4DC /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4077E5256D74810054F4DC /* Client.swift */; };
@@ -53,8 +56,6 @@
 		2BD486F323EFF40F0066F1C4 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486F223EFF40F0066F1C4 /* VideoToolbox.framework */; };
 		2BD486F423EFF41B0066F1C4 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486E923EFF3E60066F1C4 /* libbz2.tbd */; };
 		2BD486F523EFF41F0066F1C4 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486EB23EFF3F40066F1C4 /* libiconv.tbd */; };
-		2BD486F723EFF4350066F1C4 /* VLCKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BD486F623EFF4350066F1C4 /* VLCKit.framework */; };
-		2BD486FA23EFF7520066F1C4 /* VLCKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BD486F623EFF4350066F1C4 /* VLCKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2BD486FC23EFFE0B0066F1C4 /* StreamAudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD486FB23EFFE0B0066F1C4 /* StreamAudioController.swift */; };
 		2BD83F8A23F2A01A00422034 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 2BD83F8923F2A01A00422034 /* README.md */; };
 		2BD83F8C23F331E100422034 /* Statistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD83F8B23F331E100422034 /* Statistics.swift */; };
@@ -80,8 +81,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				2B23283A27AA9F8F00BA4B4C /* VLCKit.xcframework in CopyFiles */,
 				2BA155E8254127AF00BB33FF /* Deque in CopyFiles */,
-				2BD486FA23EFF7520066F1C4 /* VLCKit.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +92,8 @@
 		2B009AC725F3389C001364F0 /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		2B125D7C253753D1000C45C5 /* MediaKeyHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKeyHandler.swift; sourceTree = "<group>"; };
 		2B22659E25412DB600F970B9 /* ListenMoeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenMoeController.swift; sourceTree = "<group>"; };
+		2B23283827AA9F8F00BA4B4C /* VLCKit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = VLCKit.xcframework; path = Carthage/Build/VLCKit.xcframework; sourceTree = "<group>"; };
+		2B23283B27AAA1DE00BA4B4C /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		2B2D2C7C256E9F1700ED6DB5 /* RateLimiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateLimiter.swift; sourceTree = "<group>"; };
 		2B2D2C7E256E9F4800ED6DB5 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		2B4077E5256D74810054F4DC /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
@@ -177,11 +180,11 @@
 				2BD486E023EFF3BD0066F1C4 /* CoreGraphics.framework in Frameworks */,
 				2B4077EB256D8B8C0054F4DC /* Socket in Frameworks */,
 				2BD486D823EFF3A40066F1C4 /* AudioToolbox.framework in Frameworks */,
+				2B23283927AA9F8F00BA4B4C /* VLCKit.xcframework in Frameworks */,
 				2BA155E42541274E00BB33FF /* SwiftyJSON in Frameworks */,
 				2BCEB21B25EE16BD00F731DD /* CoreAudio.framework in Frameworks */,
 				2BA155E1254126BB00BB33FF /* KeychainSwift in Frameworks */,
 				2BE995EA23FB9F210092023C /* iTunesLibrary.framework in Frameworks */,
-				2BD486F723EFF4350066F1C4 /* VLCKit.framework in Frameworks */,
 				2BD486F123EFF40A0066F1C4 /* Security.framework in Frameworks */,
 				2BA155EB254127D800BB33FF /* Starscream in Frameworks */,
 				2BD486E623EFF3DA0066F1C4 /* CoreVideo.framework in Frameworks */,
@@ -254,6 +257,7 @@
 				2B520C9D2537E9C200FECA0E /* system */,
 				2BA9071823F0731300782C94 /* Settings.swift */,
 				2BCFF60123F1DF9700A58EFE /* Logger.swift */,
+				2B23283B27AAA1DE00BA4B4C /* Utils.swift */,
 				2BD83F8B23F331E100422034 /* Statistics.swift */,
 				2B9DB59F23F0085E00950421 /* ServiceController.swift */,
 				2BD486C123EFE3030066F1C4 /* AppDelegate.swift */,
@@ -303,6 +307,7 @@
 		2BD486D623EFF3A40066F1C4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2B23283827AA9F8F00BA4B4C /* VLCKit.xcframework */,
 				2BCEB21A25EE16BD00F731DD /* CoreAudio.framework */,
 				2B520CA02537F2A400FECA0E /* DFRFoundation.framework */,
 				2BD367ED23FDBCA900926068 /* Deque.framework */,
@@ -466,6 +471,7 @@
 				2BD486FC23EFFE0B0066F1C4 /* StreamAudioController.swift in Sources */,
 				2BF4A33C254070E100942DCF /* SearchView.swift in Sources */,
 				2BE995ED23FBA0190092023C /* LocalMusic.swift in Sources */,
+				2B23283C27AAA1DE00BA4B4C /* Utils.swift in Sources */,
 				2BE995E223FB9B7A0092023C /* ActivityIndicator.swift in Sources */,
 				2BE995E823FB9BD40092023C /* ScrollView.swift in Sources */,
 				2BE995E623FB9BB10092023C /* VolumeSlider.swift in Sources */,
@@ -648,7 +654,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.17.0;
+				MARKETING_VERSION = 0.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -682,7 +688,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.17.0;
+				MARKETING_VERSION = 0.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";

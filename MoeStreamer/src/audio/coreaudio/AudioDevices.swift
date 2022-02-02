@@ -43,6 +43,7 @@ fileprivate func getOutputDevices() -> [AudioDevice]
 	return deviceIds
 		.map({ CoreAudioDeviceWrapper(deviceID: $0) })
 		.filter({ $0.name != nil && $0.uid != nil && $0.uid != systemDevice.uid && $0.hasOutput })
+		.filter({ !$0.name!.starts(with: "CADefaultDeviceAggregate") })
 		.map({ AudioDevice(uid: $0.uid!, dev: $0.audioDeviceID, name: $0.name!) })
 }
 

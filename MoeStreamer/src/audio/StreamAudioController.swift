@@ -12,6 +12,7 @@ class StreamAudioController : NSObject, AudioController, VLCMediaPlayerDelegate
 	private var streamBuffer: Int = Settings.get(.streamBufferMs())
 
 	private var stopped = true
+	private var volume: Int = Settings.get(.audioVolume())
 
 	private let pauseable: Bool
 	private let streamUrl: URL
@@ -42,23 +43,21 @@ class StreamAudioController : NSObject, AudioController, VLCMediaPlayerDelegate
 
 	func setVolume(volume: Int)
 	{
-		let vol = volume < 0 ? 0 : volume > 100 ? 100 : volume
+		self.volume = volume.clamped(from: 0, to: 100)
+		Settings.set(.audioVolume(), value: self.volume)
 
 		let scale: Int = Settings.get(.audioVolumeScale())
-		let scaledVol = Int(Float(vol) * (Float(scale) / 100.0))
+		let scaledVol = Double(self.volume * scale) / 100.0
 
 		if !self.muted {
 			// only actually change the volume if we aren't muted.
 			self.vlcMP.audio.volume = Int32(scaledVol)
 		}
-
-		// also change the saved volume
-		Settings.set(.audioVolume(), value: vol)
 	}
 
 	func getVolume() -> Int
 	{
-		return Int(self.vlcMP.audio.volume)
+		return self.volume
 	}
 
 	func isMuted() -> Bool

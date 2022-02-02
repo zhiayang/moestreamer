@@ -14,14 +14,6 @@ private extension MusicItem
 	}
 }
 
-private extension Comparable
-{
-	func clamped(from min: Self, to max: Self) -> Self
-	{
-		return (self < min ? min : (self > max ? max : self))
-	}
-}
-
 class LocalAudioController : NSObject, AudioController, AVAudioPlayerDelegate
 {
 	private var playing: Bool = false
