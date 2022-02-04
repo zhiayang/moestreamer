@@ -48,7 +48,7 @@ fileprivate func hash(of string: String) -> AlbumHash
 	return ret
 }
 
-fileprivate func getDiscordToken() -> String?
+fileprivate func getLocalDiscordToken() -> String?
 {
 	guard let appsup = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
 		print("could not find Application Support folder (what...)")
@@ -105,7 +105,7 @@ class DiscordRPC
 	private var socket: Socket? = nil
 	private var dispatch: DispatchQueue
 	private var rateLimiter: RateLimiter!
-	private var uploadToken: (String?, Bool) = (nil, false)
+	private var uploadToken = Synchronised<(String?, Bool)>(value: (nil, false))
 
 	// part of me feels like this is super thread-unsafe, and that part of me would be right.
 	private var cancelPresenceUpdate: Bool = false
@@ -139,29 +139,42 @@ class DiscordRPC
 			}
 		})
 
-		DispatchQueue.main.async {
-			if !Settings.get(.discordAutoFetchToken())
-			{
-				let token = Settings.getKeychain(.discordUserToken())
-				if !token.isEmpty
-				{
-					self.uploadToken = (token, true)
-					return
-				}
-			}
-
-			if let token = getDiscordToken()
-			{
-				self.uploadToken = (token, true)
-				Logger.log("discord", msg: "found auth token")
-//				print("token = \(token)")
-			}
-		}
+		self.loadDiscordToken()
 	}
 
 	deinit
 	{
 		self.disconnect()
+	}
+
+	private func loadDiscordToken()
+	{
+		if !Settings.get(.discordAutoFetchToken())
+		{
+			let token = Settings.getKeychain(.discordUserToken())
+			if !token.isEmpty
+			{
+				self.uploadToken.set(value: (token, true))
+				Logger.log("discord", msg: "loaded auth token")
+				return
+			}
+		}
+
+		let _ = Settings.observe(.discordUserToken(), callback: { key in
+			let token = Settings.getKeychain(.discordUserToken())
+			guard !token.isEmpty else { return }
+
+			Logger.log("discord", msg: "token updated")
+			self.uploadToken.set(value: (token, true))
+		})
+
+		DispatchQueue.main.async {
+			if let token = getLocalDiscordToken()
+			{
+				self.uploadToken.set(value: (token, true))
+				Logger.log("discord", msg: "found auth token")
+			}
+		}
 	}
 
 	private func createSocket() -> Socket?
@@ -300,7 +313,8 @@ class DiscordRPC
 
 	private func getAlbumArtAsset(for song: Song, callback: @escaping (Asset) -> Void) -> Asset?
 	{
-		guard self.uploadToken.1, let token = self.uploadToken.0, let albumName = song.album.0 else {
+		let uploadToken = self.uploadToken.value()
+		guard uploadToken.1, let token = uploadToken.0, let albumName = song.album.0 else {
 			return nil
 		}
 
@@ -337,7 +351,7 @@ class DiscordRPC
 				self.existingRemoteAssets.removeValue(forKey: victim.key)
 			}
 
-			print("attempting to upload art for album \(albumName) (hash \(albumHash.hexString))")
+			Logger.log("discord", msg: "attempting to upload art for album \(albumName) (hash \(albumHash.hexString))")
 
 			let resp = self.just.post(self.assetsURL, json: [
 				"image": base64,
@@ -346,7 +360,7 @@ class DiscordRPC
 			], headers: ["Authorization": token])
 
 			guard let status = resp.statusCode, let body = resp.text, (200...299).contains(status) else {
-				print("art upload failed: \(resp.text ?? "none")")
+				Logger.log("discord", msg: "failed to upload art; error: \(resp.text ?? "none")")
 				return
 			}
 
@@ -386,7 +400,8 @@ class DiscordRPC
 
 	private func updateExistingAssets()
 	{
-		guard self.uploadToken.1, let token = self.uploadToken.0 else {
+		let uploadToken = self.uploadToken.value()
+		guard uploadToken.1, let token = uploadToken.0 else {
 			return
 		}
 

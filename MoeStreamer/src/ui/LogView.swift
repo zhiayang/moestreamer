@@ -68,7 +68,7 @@ struct LogView : View
 
 			VStack() {
 				GeometryReader { (geometry) in
-					ScrollView(.vertical, scrollTo: self.$scrollPos) {
+					ScrollView([ .vertical, .horizontal ], scrollTo: self.$scrollPos) {
 						if self.logger.getLines().isEmpty
 						{
 							EmptyView().frame(height: 40)
@@ -80,14 +80,14 @@ struct LogView : View
 									Text(line.string())
 										.font(.custom("Menlo", size: 10))
 										.multilineTextAlignment(.leading)
-										.frame(width: geometry.size.width, alignment: .leading)
+										.frame(width: geometry.size.width * 0.9, height: 14, alignment: .leading)
 										.foregroundColor(line.isError() ? .red : nil)
 										.opacity(self.textOpacity)
 
-									Spacer()
+									 Spacer()
 								}
 								.padding(.leading, 4)
-								.padding(.vertical, 2)
+								.padding(.vertical, 0)
 								.onAppear() {
 									self.scrollPos = CGPoint(x: 0, y: 100000)
 								}
