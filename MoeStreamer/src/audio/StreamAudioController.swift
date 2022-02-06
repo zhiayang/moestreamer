@@ -67,18 +67,16 @@ class StreamAudioController : NSObject, AudioController, VLCMediaPlayerDelegate
 	
 	func mute()
 	{
-		self.vlcMP.audio.volume = 0
 		self.muted = true
+		self.vlcMP.audio.volume = 0
 
 		Settings.set(.audioMuted(), value: true)
 	}
 
 	func unmute()
 	{
-		let vol: Int = Settings.get(.audioVolume())
-
-		self.vlcMP.audio.volume = Int32(vol)
 		self.muted = false
+		self.setVolume(volume: self.volume)
 
 		Settings.set(.audioMuted(), value: false)
 	}
