@@ -62,5 +62,6 @@ class AppDelegate : NSObject, NSApplicationDelegate
 	func applicationWillTerminate(_ aNotification: Notification)
 	{
 		globalMediaKeyHandler.enable(false, musicCon: self.controller.getModel().controller())
+		self.controller.shutdown()
 	}
 }

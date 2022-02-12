@@ -10,7 +10,6 @@ enum SettingKey : Hashable
 {
 	case shouldAutoRefresh(key: String = "refreshMetadataOnOpen", default: Bool = true)
 	case shouldNotifySongChange(key: String = "notifyOnSongChange", default: Bool = false)
-	case shouldUseKeyboardShortcuts(key: String = "useKeyboardShortcuts", default: Bool = false)
 	case shouldUseMediaKeys(key: String = "useMediaKeys", default: Bool = false)
 	case shouldResumeOnWake(key: String = "resumeOnWake", default: Bool = false)
 	case shouldUpdateNowPlaying(key: String = "updateNowPlaying", default: Bool = false)
@@ -33,18 +32,23 @@ enum SettingKey : Hashable
 	case streamBufferMs(key: String = "streamBufferMilliseconds", default: Int = 2000)
 	case logLinesRetain(key: String = "logLinesRetain", default: Int = 200)
 
-	case musicBackend(key: String = "musicBackend", default: MusicBackend = .ListenMoe())
+	case musicBackend(key: String = "musicBackend", default: MusicBackend = .LocalMusic())
+	case settingsSection(key: String = "settingsSection", default: SettingsSection = .LocalMusic)
 
 	case discordAppId(key: String = "discordAppId", default: String = "")
 	case discordUserToken(key: String = "discordUserToken", default: String = "")
 	case discordAutoFetchToken(key: String = "discordAutoFetchToken", default: Bool = true)
+
+	case ikuraEnabled(key: String = "ikuraEnabled", default: Bool = false)
+	case ikuraConsoleIp(key: String = "ikuraConsoleIp", default: String = "")
+	case ikuraConsolePort(key: String = "ikuraConsolePort", default: Int = 6969)
+	case ikuraConsolePassword(key: String = "ikuraConsolePassword", default: String = "")
 
 	var key: String {
 		switch self
 		{
 			case .shouldAutoRefresh(let key, _):            return key
 			case .shouldNotifySongChange(let key, _):       return key
-			case .shouldUseKeyboardShortcuts(let key, _):   return key
 			case .shouldUseMediaKeys(let key, _):           return key
 			case .shouldResumeOnWake(let key, _):           return key
 			case .shouldUpdateNowPlaying(let key, _):       return key
@@ -62,9 +66,14 @@ enum SettingKey : Hashable
 			case .streamBufferMs(let key, _):               return key
 			case .logLinesRetain(let key, _):               return key
 			case .musicBackend(let key, _):                 return key
+			case .settingsSection(let key, _):              return key
 			case .discordUserToken(let key, _):             return key
 			case .discordAppId(let key, _):                 return key
 			case .discordAutoFetchToken(let key, _):        return key
+			case .ikuraEnabled(let key, _):                 return key
+			case .ikuraConsoleIp(let key, _):               return key
+			case .ikuraConsolePort(let key, _):             return key
+			case .ikuraConsolePassword(let key, _):         return key
 		}
 	}
 
@@ -73,7 +82,6 @@ enum SettingKey : Hashable
 		{
 			case .shouldAutoRefresh(_, let def):            return def
 			case .shouldNotifySongChange(_, let def):       return def
-			case .shouldUseKeyboardShortcuts(_, let def):   return def
 			case .shouldUseMediaKeys(_, let def):           return def
 			case .shouldResumeOnWake(_, let def):           return def
 			case .shouldUpdateNowPlaying(_, let def):       return def
@@ -91,9 +99,14 @@ enum SettingKey : Hashable
 			case .streamBufferMs(_, let def):               return def
 			case .logLinesRetain(_, let def):               return def
 			case .musicBackend(_, let def):                 return def
+			case .settingsSection(_, let def):              return def
 			case .discordUserToken(_, let def):             return def
 			case .discordAppId(_, let def):                 return def
 			case .discordAutoFetchToken(_, let def):        return def
+			case .ikuraEnabled(_, let def):                 return def
+			case .ikuraConsoleIp(_, let def):               return def
+			case .ikuraConsolePort(_, let def):             return def
+			case .ikuraConsolePassword(_, let def):         return def
 		}
 	}
 

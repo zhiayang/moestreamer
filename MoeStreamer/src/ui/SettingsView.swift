@@ -40,6 +40,48 @@ private func changeControllerFor(_ oldController: Binding<ServiceController>, ba
 	globalMediaKeyHandler.setController(con)
 }
 
+enum SettingsSection : CaseIterable, CustomStringConvertible, KeyedEnum
+{
+	case LocalMusic
+	case ListenMoe
+	case DiscordRPC
+	case IkuraRPC
+
+	static var values: [SettingsSection] = [ .LocalMusic, .ListenMoe, .DiscordRPC, .IkuraRPC ]
+
+	var description: String {
+		switch self
+		{
+			case .LocalMusic:  return "Local Music"
+			case .ListenMoe:   return "LISTEN.moe"
+			case .DiscordRPC:  return "Discord RPC"
+			case .IkuraRPC:    return "Ikurabot RPC"
+		}
+	}
+
+	var keyedValue: String {
+		switch self
+		{
+			case .LocalMusic:  return "localMusic"
+			case .ListenMoe:   return "listenMoe"
+			case .DiscordRPC:  return "discordRPC"
+			case .IkuraRPC:    return "ikurabotRPC"
+		}
+	}
+
+	init?(with: String)
+	{
+		switch(with)
+		{
+			case Self.ListenMoe.keyedValue:  self = .ListenMoe
+			case Self.LocalMusic.keyedValue: self = .LocalMusic
+			case Self.DiscordRPC.keyedValue: self = .DiscordRPC
+			case Self.IkuraRPC.keyedValue:   self = .IkuraRPC
+			default:                         return nil
+		}
+	}
+}
+
 struct SettingsView : View
 {
 	@Environment(\.colorScheme)
@@ -53,9 +95,12 @@ struct SettingsView : View
 																		 getter: Settings.getKE,
 																		 setter: Settings.setKE)
 
-	@ObservedObject var shouldUseDiscord = SavedSettingModel<Bool>(.shouldUseDiscordPresence())
-
 	@State var mirrorPlaybackDevice: AudioDevice = mirrorDevice
+
+	@State var selectedSettingsSection: SettingsSection = Settings.getKE(.settingsSection())
+	@ObservedObject var settingsSectionSetting = SavedSettingModel<SettingsSection>(.settingsSection(),
+																					getter: Settings.getKE,
+																					setter: Settings.setKE)
 
 	init(musicCon: Binding<ServiceController>)
 	{
@@ -65,12 +110,12 @@ struct SettingsView : View
 	var body: some View {
 		ZStack() {
 			VStack(spacing: 16) {
-				PrimarySettingsView(con: self.$musicCon, discord: self.$shouldUseDiscord.value)
+				PrimarySettingsView(con: self.$musicCon)
 
 				VStack(spacing: 4) {
 					HStack() {
 						Text("mirrors")
-							.padding(.leading, 30)
+							.padding(.leading, 24)
 							.tooltip("mirror playback to the selected audio device")
 
 						Spacer()
@@ -80,12 +125,13 @@ struct SettingsView : View
 							self.mirrorPlaybackDevice = $0
 							self.musicCon.audioController().setPlaybackMirrorDevice(to: $0)
 						})
-						.frame(width: 180)
+						.frame(width: 160)
+						.padding(.trailing, 16)
 					}
 
 					HStack() {
 						Text("source")
-							.padding(.leading, 30)
+							.padding(.leading, 24)
 							.tooltip("which music backend to use")
 
 						Spacer()
@@ -98,22 +144,45 @@ struct SettingsView : View
 								// time to change the controller.
 								changeControllerFor(self.$musicCon, backend: self.backend)
 							}
-						}).frame(width: 180)
+						})
+						.frame(width: 160)
+						.padding(.trailing, 16)
 					}
-				}
 
-				if self.backend == .ListenMoe()
-				{
-					ListenMoeSettingsView(con: self.$musicCon)
-				}
-				else
-				{
-					LocalMusicSettingsView(con: self.$musicCon)
-				}
+					HStack() {
+						Text("section")
+							.padding(.leading, 24)
+							.tooltip("settings section")
 
-				if self.shouldUseDiscord.value
-				{
-					DiscordSettingsView()
+						Spacer()
+
+						PopupButton(selectedValue: self.$selectedSettingsSection, items: SettingsSection.values,
+							onChange: {
+								if self.settingsSectionSetting.value != $0 {
+									self.settingsSectionSetting.value = $0
+								}
+							})
+							.frame(width: 160)
+							.padding(.trailing, 16)
+					}
+					.padding(.top, 12)
+
+					Divider().frame(width: 260).padding(.bottom, 8).padding(.top, 1)
+
+					switch self.selectedSettingsSection
+					{
+						case .LocalMusic:
+							LocalMusicSettingsView(con: self.$musicCon)
+
+						case .ListenMoe:
+							ListenMoeSettingsView(con: self.$musicCon)
+
+						case .DiscordRPC:
+							DiscordSettingsView()
+
+						case .IkuraRPC:
+							IkurabotSettingsView()
+					}
 				}
 			}
 		}
@@ -125,39 +194,23 @@ struct SettingsView : View
 
 private struct PrimarySettingsView : View
 {
-	@ObservedObject var shouldAutoRefresh       = SavedSettingModel<Bool>(.shouldAutoRefresh())
-	@ObservedObject var shouldUseKeyboard       = SavedSettingModel<Bool>(.shouldUseKeyboardShortcuts())
 	@ObservedObject var shouldUseMediaKeys      = SavedSettingModel<Bool>(.shouldUseMediaKeys())
 	@ObservedObject var shouldResumeOnWake      = SavedSettingModel<Bool>(.shouldResumeOnWake())
 	@ObservedObject var shouldPreventIdleSleep  = SavedSettingModel<Bool>(.shouldPreventIdleSleep())
-
-	@ObservedObject var streamBufferMs = SavedSettingModel<Int>(.streamBufferMs(), willset: {
-		return (100 ... 10000).contains($0)
-	})
 
 	@ObservedObject var audioVolumeScale = SavedSettingModel<Int>(.audioVolumeScale(), willset: {
 		return (1 ... 100).contains($0)
 	})
 
-	@Binding var shouldUseDiscord: Bool
 	@Binding var controller: ServiceController
 
-	init(con: Binding<ServiceController>, discord: Binding<Bool>)
+	init(con: Binding<ServiceController>)
 	{
 		self._controller = con
-		self._shouldUseDiscord = discord
 	}
 
 	var body: some View {
 		VStack(alignment: .leading, spacing: 3) {
-
-			HStack() {
-				Toggle(isOn: self.$shouldUseKeyboard.value) {
-					Text("keyboard shortcuts")
-						.padding(.leading, 2)
-						.tooltip("spacebar to play/pause, m to mute/unmute")
-				}
-			}
 
 			HStack() {
 				Toggle(isOn: Binding(get: { self.shouldUseMediaKeys.value },
@@ -176,22 +229,6 @@ private struct PrimarySettingsView : View
 					Text("resume on wake")
 						.padding(.leading, 2)
 						.tooltip("resume playback when waking from sleep")
-				}
-			}
-
-			HStack() {
-				Toggle(isOn: self.$shouldAutoRefresh.value) {
-					Text("automatically refresh metadata")
-						.padding(.leading, 2)
-						.tooltip("force a metadata refresh every time the app is opened")
-				}
-			}
-
-			HStack() {
-				Toggle(isOn: self.$shouldUseDiscord) {
-					Text("discord rich presence")
-						.padding(.leading, 2)
-						.tooltip("show now playing information on discord through rich presence")
 				}
 			}
 
@@ -219,23 +256,6 @@ private struct PrimarySettingsView : View
 					})).frame(width: 48)
 				}
 			}.padding(.top, 8)
-
-			HStack() {
-				Text("stream buffer (ms)")
-					.padding(.leading, 2)
-					.tooltip("how much audio to buffer (effectively stream delay)")
-					.frame(width: 120)
-
-				Stepper(value: self.$streamBufferMs.value, in: 100 ... 10000, step: 100) {
-					TextField("", text: Binding(get: {
-						String(self.streamBufferMs.value)
-					}, set: { new in
-						if let int = Int(new) {
-							self.streamBufferMs.value = int
-						}
-					})).frame(width: 48)
-				}
-			}
 
 		}.frame(width: settingsFrameWidth)
 	}
@@ -271,12 +291,10 @@ private struct LocalMusicSettingsView : View
 
 	var body: some View {
 		VStack(spacing: 0) {
-			Text("iTunes settings")
-			Divider().frame(width: 200).padding(.bottom, 8).padding(.top, 1)
 
 			HStack() {
 				Text("playlist")
-					.padding(.leading, 30)
+					.padding(.leading, 24)
 					.tooltip("which iTunes playlist to use")
 
 				Spacer()
@@ -285,12 +303,12 @@ private struct LocalMusicSettingsView : View
 					if let con = self.controller as? LocalMusicController {
 						con.setCurrentPlaylist(playlist: $0)
 					}
-				}).frame(width: 180)
+				}).frame(width: 160).padding(.trailing, 16)
 			}.padding(.bottom, 4)
 
 			HStack() {
 				Text("shuffle")
-					.padding(.leading, 30)
+					.padding(.leading, 24)
 					.tooltip("how to shuffle the playlist")
 
 				Spacer()
@@ -299,9 +317,10 @@ private struct LocalMusicSettingsView : View
 					if let con = self.controller as? LocalMusicController {
 						con.setShuffleBehaviour(as: $0)
 					}
-				}).frame(width: 180)
-			}.padding(.bottom, 4)
+				}).frame(width: 160).padding(.trailing, 16)
+			}
 		}
+		.padding(.vertical, 2)
 	}
 }
 
@@ -322,11 +341,33 @@ private struct DiscordSettingsView : View
 	@ObservedObject
 	var discordAutoToken = SavedSettingModel<Bool>(.discordAutoFetchToken())
 
+	@ObservedObject
+	var enableRichPresence = SavedSettingModel<Bool>(.shouldUseDiscordPresence())
 
 	var body: some View {
 		VStack(spacing: 3) {
-			Text("discord settings")
-			Divider().frame(width: 200).padding(.bottom, 8).padding(.top, 1)
+
+			HStack() {
+				Toggle(isOn: self.$enableRichPresence.value) {
+					Text("enable rich presence")
+						.padding(.leading, 2)
+						.tooltip("show now playing information on discord through rich presence")
+				}
+				.padding(.leading, 4)
+
+				Spacer()
+			}
+
+			HStack() {
+				Toggle(isOn: self.$discordAutoToken.value) {
+					Text("automatically extract token")
+						.padding(.leading, 2)
+						.tooltip("try to extract the token from a running Discord instance on the machine")
+				}
+				.padding(.leading, 4)
+
+				Spacer()
+			}.padding(.bottom, 4)
 
 			HStack() {
 				Text("appid").frame(width: 40)
@@ -338,88 +379,13 @@ private struct DiscordSettingsView : View
 				BetterTextField<NSSecureTextField>(placeholder: "", text: self.$discordToken.value, field: self.$tokenField)
 					.disabled(self.discordAutoToken.value)
 			}
-
-			HStack() {
-				Toggle(isOn: self.$discordAutoToken.value) {
-					Text("automatically extract token")
-						.padding(.leading, 2)
-						.tooltip("try to extract the token from a running Discord instance on the machine")
-				}
-			}
-		}.frame(width: 240)
+		}
+		.frame(width: 240)
+		.padding(.vertical, 2)
 	}
 }
 
 
-private class SpinnerModel : ObservableObject, ViewModel
-{
-	@Published var dummy: Bool = false
-
-	@Published var status: String = ""
-	@Published var spinning: Int = 0
-
-	private var musicCon: ServiceController
-
-	init(controller: ServiceController)
-	{
-		self.musicCon = controller
-	}
-
-	func controller() -> ServiceController
-	{
-		return self.musicCon
-	}
-
-	func onSongChange(song: Song?)
-	{
-		// do nothing.
-	}
-
-	func poke()
-	{
-		DispatchQueue.main.async {
-			self.dummy.toggle()
-		}
-	}
-
-	func spin()
-	{
-		DispatchQueue.main.async {
-			withAnimation(.easeIn(duration: 0.35)) {
-				self.spinning += 1
-			}
-		}
-	}
-
-	func unspin()
-	{
-		DispatchQueue.main.async {
-			withAnimation(.easeOut(duration: 0.35)) {
-				if self.spinning > 0 {
-					self.spinning -= 1
-				}
-			}
-		}
-	}
-
-	func setStatus(s: String, timeout: TimeInterval? = nil)
-	{
-		DispatchQueue.main.async {
-			withAnimation(.easeIn(duration: 0.25)) {
-				self.status = s
-			}
-		}
-
-		if let t = timeout {
-			// can't update the UI in background threads.
-			DispatchQueue.main.asyncAfter(deadline: .now() + t) {
-				withAnimation(.easeOut(duration: 0.45)) {
-					self.status = ""
-				}
-			}
-		}
-	}
-}
 
 private struct ListenMoeSettingsView : View
 {
@@ -432,6 +398,13 @@ private struct ListenMoeSettingsView : View
 												setter: Settings.setKeychain)
 
 	@ObservedObject var shouldAutoLogin = SavedSettingModel<Bool>(.listenMoeAutoLogin())
+
+	@ObservedObject var shouldAutoRefresh = SavedSettingModel<Bool>(.shouldAutoRefresh())
+
+	@ObservedObject var streamBufferMs = SavedSettingModel<Int>(.streamBufferMs(), willset: {
+		return (100 ... 10000).contains($0)
+	})
+
 
 	@State var userField: NSTextField! = nil
 	@State var passField: NSSecureTextField! = nil
@@ -446,10 +419,36 @@ private struct ListenMoeSettingsView : View
 
 	var body: some View {
 		VStack(spacing: 0) {
-			Text("listen.moe credentials")
-			Divider().frame(width: 200).padding(.bottom, 8).padding(.top, 1)
 
 			VStack(spacing: 3) {
+				HStack() {
+					Toggle(isOn: self.$shouldAutoRefresh.value) {
+						Text("automatically refresh metadata")
+							.padding(.leading, 2)
+							.tooltip("force a metadata refresh every time the app is opened")
+					}
+				}.padding(.bottom, 4)
+
+				HStack() {
+					Text("stream buffer (ms)")
+						.padding(.leading, 2)
+						.tooltip("how much audio to buffer (effectively stream delay)")
+						.frame(width: 120)
+
+					Stepper(value: self.$streamBufferMs.value, in: 100 ... 10000, step: 100) {
+						TextField("", text: Binding(get: {
+							String(self.streamBufferMs.value)
+						}, set: { new in
+							if let int = Int(new) {
+								self.streamBufferMs.value = int
+							}
+						})).frame(width: 48)
+					}
+				}
+				.padding(.bottom, 8)
+
+				Divider().frame(width: 200).padding(.bottom, 8).padding(.top, 1)
+
 				HStack() {
 					Text("username").frame(width: 70)
 					BetterTextField<NSTextField>(placeholder: "", text: self.$moeUsername.value, field: self.$userField)
@@ -521,3 +520,140 @@ private struct ListenMoeSettingsView : View
 	}
 }
 
+
+
+private struct IkurabotSettingsView : View
+{
+	@State var ikuraConsoleIpField: NSTextField! = nil
+	@State var ikuraConsolePasswordField: NSSecureTextField! = nil
+
+	@ObservedObject
+	var ikuraConsoleIp = SavedSettingModel<String>(.ikuraConsoleIp())
+
+	@ObservedObject
+	var ikuraConsolePort = SavedSettingModel<Int>(.ikuraConsolePort())
+
+	@ObservedObject
+	var ikuraConsolePassword = SavedSettingModel<String>(.ikuraConsolePassword(), disableLogging: true,
+														 getter: Settings.getKeychain,
+														 setter: Settings.setKeychain)
+
+	@ObservedObject
+	var enableIkuraScrobbling = SavedSettingModel<Bool>(.ikuraEnabled())
+
+	var body: some View {
+		VStack(alignment: .leading, spacing: 3) {
+
+			HStack() {
+				Toggle(isOn: self.$enableIkuraScrobbling.value) {
+					Text("enable ikurabot scrobbling")
+						.padding(.leading, 2)
+						.tooltip("send current song information to an instance of ikurabot")
+				}
+				.padding(.leading, 4 + 20)
+			}
+			.padding(.bottom, 6)
+
+			HStack() {
+				Text("address").frame(width: 70)
+				BetterTextField<NSTextField>(placeholder: "", text: self.$ikuraConsoleIp.value, field: self.$ikuraConsoleIpField)
+
+				Stepper(value: self.$ikuraConsolePort.value, in: 1 ... 65535, step: 1) {
+					TextField("", text: Binding(get: {
+						String(self.ikuraConsolePort.value)
+					}, set: { new in
+						if let int = Int(new) {
+							self.ikuraConsolePort.value = int
+						}
+					})).frame(width: 54)
+				}
+			}
+
+			HStack() {
+				Text("password").frame(width: 70)
+				BetterTextField<NSSecureTextField>(placeholder: "",
+												   text: self.$ikuraConsolePassword.value,
+												   field: self.$ikuraConsolePasswordField)
+			}
+		}
+//		.frame(width: 240)
+		.padding(.vertical, 2)
+	}
+}
+
+
+
+
+
+
+
+
+private class SpinnerModel : ObservableObject, ViewModel
+{
+	@Published var dummy: Bool = false
+
+	@Published var status: String = ""
+	@Published var spinning: Int = 0
+
+	private var musicCon: ServiceController
+
+	init(controller: ServiceController)
+	{
+		self.musicCon = controller
+	}
+
+	func controller() -> ServiceController
+	{
+		return self.musicCon
+	}
+
+	func onSongChange(song: Song?)
+	{
+		// do nothing.
+	}
+
+	func poke()
+	{
+		DispatchQueue.main.async {
+			self.dummy.toggle()
+		}
+	}
+
+	func spin()
+	{
+		DispatchQueue.main.async {
+			withAnimation(.easeIn(duration: 0.35)) {
+				self.spinning += 1
+			}
+		}
+	}
+
+	func unspin()
+	{
+		DispatchQueue.main.async {
+			withAnimation(.easeOut(duration: 0.35)) {
+				if self.spinning > 0 {
+					self.spinning -= 1
+				}
+			}
+		}
+	}
+
+	func setStatus(s: String, timeout: TimeInterval? = nil)
+	{
+		DispatchQueue.main.async {
+			withAnimation(.easeIn(duration: 0.25)) {
+				self.status = s
+			}
+		}
+
+		if let t = timeout {
+			// can't update the UI in background threads.
+			DispatchQueue.main.asyncAfter(deadline: .now() + t) {
+				withAnimation(.easeOut(duration: 0.45)) {
+					self.status = ""
+				}
+			}
+		}
+	}
+}

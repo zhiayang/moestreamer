@@ -130,6 +130,7 @@ class StreamAudioController : NSObject, AudioController, VLCMediaPlayerDelegate
 
 	func setPlaybackMirrorDevice(to: AudioDevice)
 	{
+		// TODO: listen.moe mirroring!
 	}
 
 	func getPlaybackMirrorDevice() -> AudioDevice

@@ -34,7 +34,9 @@ class ViewController : NSObject, NSPopoverDelegate
 
 	private var viewModel: MainModel! = nil
 	private var rootView: MainView! = nil
+	private var ikuraRPC: IkuraRPC? = nil
 	private var discordRPC: DiscordRPC? = nil
+
 	private var nowPlayingCentre: NowPlayingCentre! = nil
 	private var insomniaInducer = InsomniaInducer()
 
@@ -75,6 +77,17 @@ class ViewController : NSObject, NSPopoverDelegate
 			}
 		})
 
+		let _ = Settings.observe(.ikuraEnabled(), callback: { key in
+			let v: Bool = Settings.get(key)
+			if v && self.ikuraRPC == nil {
+				self.ikuraRPC = IkuraRPC(model: self.viewModel)
+				let _ = self.ikuraRPC?.connect()
+			} else if !v {
+				self.ikuraRPC?.disconnect()
+				self.ikuraRPC = nil
+			}
+		})
+
 		let _ = Settings.observe(.shouldPreventIdleSleep(), callback: { key in
 			Settings.get(key)
 				? self.insomniaInducer.enable()
@@ -101,6 +114,7 @@ class ViewController : NSObject, NSPopoverDelegate
 		// the rpc client does the ipc open + album art upload + other nonsense.
 		DispatchQueue.main.async {
 			Settings.notifyObservers(for: .shouldUseDiscordPresence())
+			Settings.notifyObservers(for: .ikuraEnabled())
 		}
 
 		statusBarButton.image = NSImage(named: "Icon")
@@ -115,50 +129,58 @@ class ViewController : NSObject, NSPopoverDelegate
 		popover.delegate = self
 
 		popover.keydownHandler = { (event) in
-			if Settings.get(.shouldUseKeyboardShortcuts())
+			switch event.characters?.first?.asciiValue
 			{
-				switch event.characters?.first?.asciiValue
-				{
-					case UInt8(ascii: "m"):
-						self.viewModel.isMuted.toggle()
+				case UInt8(ascii: "m"):
+					self.viewModel.isMuted.toggle()
+					self.viewModel.poke()
+
+				case UInt8(ascii: " "): fallthrough
+				case UInt8(ascii: "k"):
+					self.viewModel.isPlaying.toggle()
+					self.viewModel.poke()
+
+				case UInt8(ascii: "j"):
+					self.viewModel.controller().previousSong()
+
+				case UInt8(ascii: "l"):
+					self.viewModel.controller().nextSong()
+
+				case UInt8(ascii: "f"):
+					self.viewModel.controller().toggleFavourite()
+
+				case UInt8(ascii: "\u{1b}"):
+					if self.rootView.currentSubView == .None
+					{
+						self.popover.performClose(nil)
+					}
+					else
+					{
+						self.rootView.currentSubView.toggle(into: .None)
+					}
+
+				case UInt8(ascii: "/"):
+					if self.viewModel.controller().getCapabilities().contains(.searchTracks)
+					{
+						self.rootView.currentSubView.toggle(into: .Search)
 						self.viewModel.poke()
-
-					case UInt8(ascii: " "): fallthrough
-					case UInt8(ascii: "k"):
-						self.viewModel.isPlaying.toggle()
-						self.viewModel.poke()
-
-					case UInt8(ascii: "j"):
-						self.viewModel.controller().previousSong()
-
-					case UInt8(ascii: "l"):
-						self.viewModel.controller().nextSong()
-
-					case UInt8(ascii: "f"):
-						self.viewModel.controller().toggleFavourite()
-
-					case UInt8(ascii: "\u{1b}"):
-						if self.rootView.currentSubView == .None
-						{
-							self.popover.performClose(nil)
-						}
-						else
-						{
-							self.rootView.currentSubView.toggle(into: .None)
-						}
-
-					case UInt8(ascii: "/"):
-						if self.viewModel.controller().getCapabilities().contains(.searchTracks)
-						{
-							self.rootView.currentSubView.toggle(into: .Search)
-							self.viewModel.poke()
-						}
+					}
 
 
-					default:
-						break
-				}
+				default:
+					break
 			}
+		}
+	}
+
+	func shutdown()
+	{
+		if self.discordRPC != nil {
+			self.discordRPC?.disconnect()
+		}
+
+		if self.ikuraRPC != nil {
+			self.ikuraRPC?.disconnect()
 		}
 	}
 

@@ -32,6 +32,7 @@
 		2BA283FC23F14607008E0DEB /* ViewWrappers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA283FB23F14607008E0DEB /* ViewWrappers.swift */; };
 		2BA9071923F0731300782C94 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA9071823F0731300782C94 /* Settings.swift */; };
 		2BA9071B23F07DF200782C94 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA9071A23F07DF200782C94 /* SettingsView.swift */; };
+		2BCC565427B8355E00FA797A /* Scrobbler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCC565327B8355E00FA797A /* Scrobbler.swift */; };
 		2BCEB21925EE16A400F731DD /* AudioDevices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCEB21825EE16A400F731DD /* AudioDevices.swift */; };
 		2BCEB21B25EE16BD00F731DD /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BCEB21A25EE16BD00F731DD /* CoreAudio.framework */; };
 		2BCEB21E25EE24E700F731DD /* CoreAudioWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCEB21D25EE24E700F731DD /* CoreAudioWrapper.swift */; };
@@ -108,6 +109,7 @@
 		2BA283FB23F14607008E0DEB /* ViewWrappers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewWrappers.swift; sourceTree = "<group>"; };
 		2BA9071823F0731300782C94 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		2BA9071A23F07DF200782C94 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2BCC565327B8355E00FA797A /* Scrobbler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scrobbler.swift; sourceTree = "<group>"; };
 		2BCEB21825EE16A400F731DD /* AudioDevices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioDevices.swift; sourceTree = "<group>"; };
 		2BCEB21A25EE16BD00F731DD /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		2BCEB21D25EE24E700F731DD /* CoreAudioWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreAudioWrapper.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 		2B79C81623F1FD72001C87CD /* src */ = {
 			isa = PBXGroup;
 			children = (
+				2BCC565227B8355200FA797A /* ikurabot */,
 				2B4077E4256D70CC0054F4DC /* discord */,
 				2B79C81423F1FD19001C87CD /* ui */,
 				2BE995EE23FBA0A50092023C /* audio */,
@@ -263,6 +266,14 @@
 				2BD486C123EFE3030066F1C4 /* AppDelegate.swift */,
 			);
 			path = src;
+			sourceTree = "<group>";
+		};
+		2BCC565227B8355200FA797A /* ikurabot */ = {
+			isa = PBXGroup;
+			children = (
+				2BCC565327B8355E00FA797A /* Scrobbler.swift */,
+			);
+			path = ikurabot;
 			sourceTree = "<group>";
 		};
 		2BCEB21C25EE24CE00F731DD /* coreaudio */ = {
@@ -465,6 +476,7 @@
 				2BD486C423EFE3030066F1C4 /* MainView.swift in Sources */,
 				2BCFF60223F1DF9700A58EFE /* Logger.swift in Sources */,
 				2B4077E6256D74810054F4DC /* Client.swift in Sources */,
+				2BCC565427B8355E00FA797A /* Scrobbler.swift in Sources */,
 				2B2D2C7D256E9F1700ED6DB5 /* RateLimiter.swift in Sources */,
 				2BA9071B23F07DF200782C94 /* SettingsView.swift in Sources */,
 				2B743D9D25EE737D00CC7D1D /* AudioEngine.swift in Sources */,
@@ -653,7 +665,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.17.4;
+				MARKETING_VERSION = 0.17.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -688,7 +700,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.17.4;
+				MARKETING_VERSION = 0.17.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
