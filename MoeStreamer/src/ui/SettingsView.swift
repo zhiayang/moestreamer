@@ -526,6 +526,7 @@ private struct IkurabotSettingsView : View
 {
 	@State var ikuraConsoleIpField: NSTextField! = nil
 	@State var ikuraConsolePasswordField: NSSecureTextField! = nil
+	@State var whitelistedSSIDsField: NSTextField! = nil
 
 	@ObservedObject
 	var ikuraConsoleIp = SavedSettingModel<String>(.ikuraConsoleIp())
@@ -539,7 +540,13 @@ private struct IkurabotSettingsView : View
 														 setter: Settings.setKeychain)
 
 	@ObservedObject
+	var ikuraWhitelistedSSIDs = SavedSettingModel<String>(.ikuraWhitelistedSSIDs())
+
+	@ObservedObject
 	var enableIkuraScrobbling = SavedSettingModel<Bool>(.ikuraEnabled())
+
+
+
 
 	var body: some View {
 		VStack(alignment: .leading, spacing: 3) {
@@ -555,7 +562,7 @@ private struct IkurabotSettingsView : View
 			.padding(.bottom, 6)
 
 			HStack() {
-				Text("address").frame(width: 70)
+				Text("address").frame(width: 60)
 				BetterTextField<NSTextField>(placeholder: "", text: self.$ikuraConsoleIp.value, field: self.$ikuraConsoleIpField)
 
 				Stepper(value: self.$ikuraConsolePort.value, in: 1 ... 65535, step: 1) {
@@ -570,13 +577,20 @@ private struct IkurabotSettingsView : View
 			}
 
 			HStack() {
-				Text("password").frame(width: 70)
+				Text("password").frame(width: 60)
 				BetterTextField<NSSecureTextField>(placeholder: "",
 												   text: self.$ikuraConsolePassword.value,
 												   field: self.$ikuraConsolePasswordField)
 			}
+			.padding(.bottom, 8)
+
+			HStack() {
+				Text("networks").frame(width: 60).tooltip("whitelist SSIDs: separate with ';'")
+				BetterTextField<NSTextField>(placeholder: "",
+											 text: self.$ikuraWhitelistedSSIDs.value,
+											 field: self.$whitelistedSSIDsField)
+			}
 		}
-//		.frame(width: 240)
 		.padding(.vertical, 2)
 	}
 }

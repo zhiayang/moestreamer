@@ -43,6 +43,7 @@ enum SettingKey : Hashable
 	case ikuraConsoleIp(key: String = "ikuraConsoleIp", default: String = "")
 	case ikuraConsolePort(key: String = "ikuraConsolePort", default: Int = 6969)
 	case ikuraConsolePassword(key: String = "ikuraConsolePassword", default: String = "")
+	case ikuraWhitelistedSSIDs(key: String = "ikuraWhitelistedSSIDs", default: String = "")
 
 	var key: String {
 		switch self
@@ -74,6 +75,7 @@ enum SettingKey : Hashable
 			case .ikuraConsoleIp(let key, _):               return key
 			case .ikuraConsolePort(let key, _):             return key
 			case .ikuraConsolePassword(let key, _):         return key
+			case .ikuraWhitelistedSSIDs(let key, _):        return key
 		}
 	}
 
@@ -107,6 +109,7 @@ enum SettingKey : Hashable
 			case .ikuraConsoleIp(_, let def):               return def
 			case .ikuraConsolePort(_, let def):             return def
 			case .ikuraConsolePassword(_, let def):         return def
+			case .ikuraWhitelistedSSIDs(_, let def):        return def
 		}
 	}
 
