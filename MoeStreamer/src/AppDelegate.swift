@@ -26,18 +26,19 @@ class AppDelegate : NSObject, NSApplicationDelegate
 		globalMediaKeyHandler.enable(Settings.get(.shouldUseMediaKeys()),
 									 musicCon: self.controller.getModel().controller())
 
+/*
 		// register the sleep handler, so we pause on sleep.
 		NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(AppDelegate.onSleep),
 														  name: NSWorkspace.willSleepNotification, object: nil)
 
 		NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(AppDelegate.onWake),
 														  name: NSWorkspace.didWakeNotification, object: nil)
-
+*/
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
 			self.controller.showPopover()
 		}
 	}
-
+/*
 	@objc func onSleep()
 	{
 		Logger.log(msg: "pausing playback due to sleep")
@@ -58,7 +59,7 @@ class AppDelegate : NSObject, NSApplicationDelegate
 			self.controller.getModel().poke()
 		}
 	}
-
+*/
 	func applicationWillTerminate(_ aNotification: Notification)
 	{
 		globalMediaKeyHandler.enable(false, musicCon: self.controller.getModel().controller())
