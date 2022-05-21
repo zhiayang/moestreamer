@@ -414,7 +414,7 @@ class LocalMusicController : ServiceController
 
 	func getCapabilities() -> ServiceCapabilities
 	{
-		return [ .nextTrack, .searchTracks, .timeInfo ]
+		return [ .nextTrack, .previousTrack, .searchTracks, .timeInfo ]
 	}
 
 	func setViewModel(viewModel: ViewModel)

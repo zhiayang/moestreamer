@@ -87,6 +87,11 @@ struct MainView : View
 							// .border(Color.yellow)
 
 							HStack(spacing: 2) {
+								ShortcutMaker(shortcuts: [" ", "k"]) {
+									self.model.isPlaying.toggle()
+									self.model.poke()
+								}
+
 								// play/pause button
 								Button(action: {
 									self.model.isPlaying.toggle()
@@ -105,6 +110,10 @@ struct MainView : View
 								// skip button
 								if self.model.controller().getCapabilities().contains(.nextTrack)
 								{
+									ShortcutMaker(shortcuts: ["l"]) {
+										self.model.controller().nextSong()
+									}
+
 									Button(action: {
 										self.model.controller().nextSong()
 									}) {
@@ -117,9 +126,22 @@ struct MainView : View
 									.buttonStyle(PlainButtonStyle())
 								}
 
+								// previous (but we don't have a button for this)
+								if self.model.controller().getCapabilities().contains(.previousTrack)
+								{
+									ShortcutMaker(shortcuts: ["j"], action: {
+										self.model.controller().previousSong()
+									})
+								}
+
+
 								// favourite/unfavourite button
 								if self.model.controller().getCapabilities().contains(.favourite)
 								{
+									ShortcutMaker(shortcuts: ["f"]) {
+										self.model.controller().toggleFavourite()
+									}
+
 									Button(action: {
 										self.model.controller().toggleFavourite()
 									}) {
@@ -147,6 +169,11 @@ struct MainView : View
 
 
 								// mute/unmute button
+								ShortcutMaker(shortcuts: ["m"]) {
+									self.model.isMuted.toggle()
+									self.model.poke()
+								}
+
 								Button(action: {
 									self.model.isMuted.toggle()
 									self.model.poke()
@@ -155,7 +182,6 @@ struct MainView : View
 										.resizable()
 										.frame(width: 24, height: 24)
 										.foregroundColor(self.iconColour)
-	//									.border(Color.green)
 								}
 								.buttonStyle(PlainButtonStyle())
 
@@ -197,6 +223,10 @@ struct MainView : View
 					// if the backend doesn't support search (eg. listen.moe) then don't show the button, duh
 					if self.model.controller().getCapabilities().contains(.searchTracks)
 					{
+						ShortcutMaker(shortcuts: ["/"]) {
+							self.currentSubView.toggle(into: .Search)
+						}
+
 						Button(action: {
 							self.currentSubView.toggle(into: .Search)
 						}) {

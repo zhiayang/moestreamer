@@ -128,47 +128,49 @@ class ViewController : NSObject, NSPopoverDelegate
 		popover.behavior = .transient
 		popover.delegate = self
 
-		popover.keydownHandler = { (event) in
-			switch event.characters?.first?.asciiValue
-			{
-				case UInt8(ascii: "m"):
-					self.viewModel.isMuted.toggle()
-					self.viewModel.poke()
-
-				case UInt8(ascii: " "): fallthrough
-				case UInt8(ascii: "k"):
-					self.viewModel.isPlaying.toggle()
-					self.viewModel.poke()
-
-				case UInt8(ascii: "j"):
-					self.viewModel.controller().previousSong()
-
-				case UInt8(ascii: "l"):
-					self.viewModel.controller().nextSong()
-
-				case UInt8(ascii: "f"):
-					self.viewModel.controller().toggleFavourite()
-
-				case UInt8(ascii: "\u{1b}"):
-					if self.rootView.currentSubView == .None
-					{
-						self.popover.performClose(nil)
-					}
-					else
-					{
-						self.rootView.currentSubView.toggle(into: .None)
-					}
-
-				case UInt8(ascii: "/"):
-					if self.viewModel.controller().getCapabilities().contains(.searchTracks)
-					{
-						self.rootView.currentSubView.toggle(into: .Search)
+		if #available(macOS 11.0, *)
+		{
+			popover.keydownHandler = { (event) in
+				switch event.characters?.first?.asciiValue
+				{
+					case UInt8(ascii: "m"):
+						self.viewModel.isMuted.toggle()
 						self.viewModel.poke()
-					}
 
+					case UInt8(ascii: " "): fallthrough
+					case UInt8(ascii: "k"):
+						self.viewModel.isPlaying.toggle()
+						self.viewModel.poke()
 
-				default:
-					break
+					case UInt8(ascii: "j"):
+						self.viewModel.controller().previousSong()
+
+					case UInt8(ascii: "l"):
+						self.viewModel.controller().nextSong()
+
+					case UInt8(ascii: "f"):
+						self.viewModel.controller().toggleFavourite()
+
+					case UInt8(ascii: "\u{1b}"):
+						if self.rootView.currentSubView == .None
+						{
+							self.popover.performClose(nil)
+						}
+						else
+						{
+							self.rootView.currentSubView.toggle(into: .None)
+						}
+
+					case UInt8(ascii: "/"):
+						if self.viewModel.controller().getCapabilities().contains(.searchTracks)
+						{
+							self.rootView.currentSubView.toggle(into: .Search)
+							self.viewModel.poke()
+						}
+
+					default:
+						break
+				}
 			}
 		}
 	}
@@ -192,7 +194,7 @@ class ViewController : NSObject, NSPopoverDelegate
 	func showPopover()
 	{
 		self.popover.show(relativeTo: statusBarButton.bounds, of: statusBarButton,
-						  preferredEdge: NSRectEdge.maxY)
+						  preferredEdge: NSRectEdge.minY)
 		self.popover.contentViewController?.view.window?.makeKey()
 	}
 

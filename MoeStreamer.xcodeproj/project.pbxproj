@@ -20,6 +20,8 @@
 		2B4077EB256D8B8C0054F4DC /* Socket in Frameworks */ = {isa = PBXBuildFile; productRef = 2B4077EA256D8B8C0054F4DC /* Socket */; };
 		2B520CA12537F2A400FECA0E /* DFRFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B520CA02537F2A400FECA0E /* DFRFoundation.framework */; };
 		2B743D9D25EE737D00CC7D1D /* AudioEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B743D9C25EE737D00CC7D1D /* AudioEngine.swift */; };
+		2B9B8BD22838DE78003C38F5 /* Backport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9B8BD12838DE78003C38F5 /* Backport.swift */; };
+		2B9B8BD42838DEF9003C38F5 /* KeyboardShortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9B8BD32838DEF9003C38F5 /* KeyboardShortcut.swift */; };
 		2B9DB59E23F0074500950421 /* ListenMoeSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DB59D23F0074500950421 /* ListenMoeSession.swift */; };
 		2B9DB5A023F0085E00950421 /* ServiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9DB59F23F0085E00950421 /* ServiceController.swift */; };
 		2BA155DB254125B300BB33FF /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 2BA155DA254125B300BB33FF /* Introspect */; };
@@ -102,6 +104,8 @@
 		2B520CA02537F2A400FECA0E /* DFRFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DFRFoundation.framework; path = ../../../../System/Library/PrivateFrameworks/DFRFoundation.framework; sourceTree = "<group>"; };
 		2B743D9C25EE737D00CC7D1D /* AudioEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEngine.swift; sourceTree = "<group>"; };
 		2B84385923F0208D00291BDA /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/Mac/SwiftyJSON.framework; sourceTree = "<group>"; };
+		2B9B8BD12838DE78003C38F5 /* Backport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backport.swift; sourceTree = "<group>"; };
+		2B9B8BD32838DEF9003C38F5 /* KeyboardShortcut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardShortcut.swift; sourceTree = "<group>"; };
 		2B9DB59D23F0074500950421 /* ListenMoeSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListenMoeSession.swift; sourceTree = "<group>"; };
 		2B9DB59F23F0085E00950421 /* ServiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceController.swift; sourceTree = "<group>"; };
 		2BA283F523F08201008E0DEB /* KeychainSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = KeychainSwift.framework; path = Carthage/Build/Mac/KeychainSwift.framework; sourceTree = "<group>"; };
@@ -356,6 +360,8 @@
 				2BE995E523FB9BB10092023C /* VolumeSlider.swift */,
 				2BE995E723FB9BD40092023C /* ScrollView.swift */,
 				2BE995F123FBAB340092023C /* PopupButton.swift */,
+				2B9B8BD12838DE78003C38F5 /* Backport.swift */,
+				2B9B8BD32838DEF9003C38F5 /* KeyboardShortcut.swift */,
 			);
 			path = wrappers;
 			sourceTree = "<group>";
@@ -473,6 +479,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B22659F25412DB600F970B9 /* ListenMoeController.swift in Sources */,
+				2B9B8BD22838DE78003C38F5 /* Backport.swift in Sources */,
 				2BD486C423EFE3030066F1C4 /* MainView.swift in Sources */,
 				2BCFF60223F1DF9700A58EFE /* Logger.swift in Sources */,
 				2B4077E6256D74810054F4DC /* Client.swift in Sources */,
@@ -497,6 +504,7 @@
 				2BE995F023FBA0CE0092023C /* AudioController.swift in Sources */,
 				2BD486D523EFE6C20066F1C4 /* ViewController.swift in Sources */,
 				2B125D7D253753D1000C45C5 /* MediaKeyHandler.swift in Sources */,
+				2B9B8BD42838DEF9003C38F5 /* KeyboardShortcut.swift in Sources */,
 				2B9DB5A023F0085E00950421 /* ServiceController.swift in Sources */,
 				2BA9071923F0731300782C94 /* Settings.swift in Sources */,
 				2BECD3EB2577852F00FF2544 /* InsomniaInducer.swift in Sources */,
@@ -665,7 +673,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.17.7;
+				MARKETING_VERSION = 0.17.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -700,7 +708,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 0.17.7;
+				MARKETING_VERSION = 0.17.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhiayang.MoeStreamer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
