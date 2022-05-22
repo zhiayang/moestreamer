@@ -128,7 +128,7 @@ class ViewController : NSObject, NSPopoverDelegate
 		popover.behavior = .transient
 		popover.delegate = self
 
-		if #available(macOS 11.0, *)
+		if #unavailable(macOS 11.0)
 		{
 			popover.keydownHandler = { (event) in
 				switch event.characters?.first?.asciiValue
