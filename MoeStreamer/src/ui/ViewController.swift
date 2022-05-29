@@ -123,7 +123,7 @@ class ViewController : NSObject, NSPopoverDelegate
 		statusBarButton.action = #selector(togglePopover(sender:))
 		statusBarButton.target = self
 
-		popover.contentSize = NSSize(width: 240, height: 240)
+		popover.contentSize = NSSize(width: 320, height: 500)
 		popover.contentViewController = NSHostingController(rootView: self.rootView)
 		popover.behavior = .transient
 		popover.delegate = self
