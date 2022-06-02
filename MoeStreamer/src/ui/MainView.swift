@@ -38,6 +38,9 @@ class SubViewKind : ObservableObject
 
 struct MainView : View
 {
+	static let VIEW_WIDTH: CGFloat = 320
+	static let VIEW_HEIGHT: CGFloat = 128
+
 	@Environment(\.colorScheme)
 	var colourScheme: ColorScheme
 
@@ -289,7 +292,7 @@ struct MainView : View
 				}
 				.padding(.trailing, -12)
 			}
-			.frame(width: 320, height: 128, alignment: .leading)
+			.frame(width: MainView.VIEW_WIDTH, height: MainView.VIEW_HEIGHT, alignment: .leading)
 			.padding(.horizontal, 16)
 			.onAppear {
 				if let x: Bool = Settings.get(.shouldAutoRefresh()), x {

@@ -123,7 +123,6 @@ class ViewController : NSObject, NSPopoverDelegate
 		statusBarButton.action = #selector(togglePopover(sender:))
 		statusBarButton.target = self
 
-		popover.contentSize = NSSize(width: 320, height: 500)
 		popover.contentViewController = NSHostingController(rootView: self.rootView)
 		popover.behavior = .transient
 		popover.delegate = self
@@ -193,6 +192,7 @@ class ViewController : NSObject, NSPopoverDelegate
 
 	func showPopover()
 	{
+		self.popover.contentSize = NSSize(width: MainView.VIEW_WIDTH, height: MainView.VIEW_HEIGHT)
 		self.popover.show(relativeTo: statusBarButton.bounds, of: statusBarButton,
 						  preferredEdge: NSRectEdge.minY)
 		self.popover.contentViewController?.view.window?.makeKey()
