@@ -9,13 +9,18 @@ extension Backport
 {
 	@ViewBuilder func keyboardShortcut(key: Character) -> some View
 	{
-		if #available(macOS 11.0, *)
+		// this shit is broken on ventura (13), and doesn't exist on catalina (10.15)
+		if #available(macOS 13.0, *)
 		{
-			content.keyboardShortcut(KeyEquivalent(key), modifiers: [])
+			self.content
+		}
+		else if #unavailable(macOS 11.0)
+		{
+			self.content
 		}
 		else
 		{
-			self.content
+			content.keyboardShortcut(KeyEquivalent(key), modifiers: [])
 		}
 	}
 }
@@ -28,12 +33,12 @@ struct ShortcutMaker: View
 	var body: some View {
 		ZStack {
 			ForEach(self.shortcuts, id: \.self) { key in
-				Button(action: self.action) {
+				Button(action: { print("AAAAA"); self.action() }) {
 					EmptyView()
 				}
 				.montereyCompat
 				.keyboardShortcut(key: key)
-				.buttonStyle(.borderless)
+//				.buttonStyle(.plain)
 				.fixedSize()
 				.frame(width: 0.0, height: 0.0)
 				.padding(0)

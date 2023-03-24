@@ -127,8 +127,7 @@ class ViewController : NSObject, NSPopoverDelegate
 		popover.behavior = .transient
 		popover.delegate = self
 
-		if #unavailable(macOS 11.0)
-		{
+		let setupShortcuts = { [self] in
 			popover.keydownHandler = { (event) in
 				switch event.characters?.first?.asciiValue
 				{
@@ -171,6 +170,16 @@ class ViewController : NSObject, NSPopoverDelegate
 						break
 				}
 			}
+		}
+
+		// for some obscure reason, this method works on 10.15, not 11, and not 13.
+		if #unavailable(macOS 11.0)
+		{
+			setupShortcuts()
+		}
+		else if #available(macOS 13.0, *)
+		{
+			setupShortcuts()
 		}
 	}
 
