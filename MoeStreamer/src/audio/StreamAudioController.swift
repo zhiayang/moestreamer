@@ -33,10 +33,10 @@ class StreamAudioController : NSObject, AudioController, VLCMediaPlayerDelegate
 	private func reset()
 	{
 		self.vlcMP.media = VLCMedia(url: self.streamUrl)
-		self.vlcMP.media.addOptions([ "network-caching": self.streamBuffer ])
+		self.vlcMP.media?.addOptions([ "network-caching": self.streamBuffer ])
 
 		let vol: Int = Settings.get(.audioVolume())
-		self.vlcMP.audio.volume = self.muted ? 0 : Int32(vol)
+		self.vlcMP.audio?.volume = self.muted ? 0 : Int32(vol)
 
 		self.stopped = false
 	}
@@ -51,7 +51,7 @@ class StreamAudioController : NSObject, AudioController, VLCMediaPlayerDelegate
 
 		if !self.muted {
 			// only actually change the volume if we aren't muted.
-			self.vlcMP.audio.volume = Int32(scaledVol)
+			self.vlcMP.audio?.volume = Int32(scaledVol)
 		}
 	}
 
@@ -68,7 +68,7 @@ class StreamAudioController : NSObject, AudioController, VLCMediaPlayerDelegate
 	func mute()
 	{
 		self.muted = true
-		self.vlcMP.audio.volume = 0
+		self.vlcMP.audio?.volume = 0
 
 		Settings.set(.audioMuted(), value: true)
 	}
@@ -108,7 +108,7 @@ class StreamAudioController : NSObject, AudioController, VLCMediaPlayerDelegate
 
 
 
-	func mediaPlayerStateChanged(_ notif: Notification!)
+    func mediaPlayerStateChanged(_ notif: Notification)
 	{
 		switch self.vlcMP.state
 		{

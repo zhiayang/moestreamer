@@ -1,1 +1,1 @@
-binary "./VLCKit.json" "3.3.18"
+binary "https://code.videolan.org/videolan/VLCKit/raw/master/Packaging/VLCKit.json" "3.4.0"

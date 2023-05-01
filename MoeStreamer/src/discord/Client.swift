@@ -226,7 +226,7 @@ class DiscordRPC
 			}
 
 			// handshake.
-			if !socket.send(opcode: .Handshake, json: JSON([ "v": DiscordRPC.rpcVersion, "client_id": self.clientId ])) {
+            if !socket.send(opcode: .Handshake, json: JSON([ "v": DiscordRPC.rpcVersion, "client_id": self.clientId ] as [String: Any])) {
 				Logger.log("discord", msg: "handshake failed")
 				return false
 			}
@@ -299,12 +299,12 @@ class DiscordRPC
 					"assets": [
 						"large_image": (asset != nil) ? "album-art-\(asset!.hash)" : "default-cover",
 						"large_text": song.title
-					],
+					] as [String: Any],
 					"timestamps": ts == -1 ? [String: Any]() : [
 						"end": ts
-					]
-				]
-			]
+					] as [String: Any]
+				] as [String: Any]
+			] as [String: Any]
 		]
 	}
 
@@ -357,7 +357,7 @@ class DiscordRPC
 				"image": base64,
 				"name": "album-art-\(albumHash.hexString)",
 				"type": 1
-			], headers: ["Authorization": token])
+			] as [String: Any], headers: ["Authorization": token])
 
 			guard let status = resp.statusCode, let body = resp.text, (200...299).contains(status) else {
 				Logger.log("discord", msg: "failed to upload art; error: \(resp.text ?? "none")")
