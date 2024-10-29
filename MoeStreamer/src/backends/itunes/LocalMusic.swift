@@ -61,7 +61,7 @@ class LocalMusicController : ServiceController
 
 	required init(viewModel: ViewModel?)
 	{
-		self.library = try! ITLibrary(apiVersion: "1.0")
+        self.library = try! ITLibrary(apiVersion: "1.1")
 		self.shuffleBehaviour = Settings.getKE(.localMusicShuffle())
 		self.viewModel = viewModel
 

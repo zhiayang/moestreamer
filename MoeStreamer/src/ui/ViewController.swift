@@ -205,6 +205,7 @@ class ViewController : NSObject, NSPopoverDelegate
 		self.popover.show(relativeTo: statusBarButton.bounds, of: statusBarButton,
 						  preferredEdge: NSRectEdge.minY)
 		self.popover.contentViewController?.view.window?.makeKey()
+        self.becomeFirstResponder()
 	}
 
 	func closePopover(sender: AnyObject?)
@@ -242,6 +243,7 @@ class CustomPopover : NSPopover
 
 	override func keyDown(with event: NSEvent)
 	{
+        print("key went down bitch")
 		self.keydownHandler?(event)
 	}
 }

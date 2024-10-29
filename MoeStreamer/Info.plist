@@ -34,6 +34,8 @@
 	<string>NSApplication</string>
 	<key>NSSupportsAutomaticTermination</key>
 	<true/>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>For playing music obviously</string>
 	<key>NSSupportsSuddenTermination</key>
 	<false/>
 </dict>
